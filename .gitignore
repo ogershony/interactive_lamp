@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Cozmo dataset: raw/ is the 574MB pycozmo resource download, re-fetchable
+# with `PYCOZMO_DIR=data/cozmo_retargeting/cozmo_data/raw pycozmo_resources.py download`
+# (plus raw/cozmo_animation_labels.csv, kept in git via the exception below).
+data/cozmo_retargeting/cozmo_data/raw/*
+!data/cozmo_retargeting/cozmo_data/raw/cozmo_animation_labels.csv
+
+# Regenerated deterministically from raw/ by
+# data_preprocessing_pipeline/run_all.py (see REPORT.md)
+data/cozmo_retargeting/cozmo_data/animations/
+
+# Visualizer renders (scripts/visualize.py)
+data/cozmo_retargeting/cozmo_data/output/
+
+# MuJoCo
+MUJOCO_LOG.TXT
