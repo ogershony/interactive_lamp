@@ -16,6 +16,20 @@ data/cozmo_data/animations/
 # Visualizer renders (scripts/visualize.py)
 data/cozmo_data/output/
 
+# Retargeted lamp trajectories (one run dir per `data/pipeline.py
+# retarget --all` invocation), previews, review GIFs, metrics CSVs, and
+# exported datasets -- all regenerable from a run. curation.csv and
+# CURATION.md stay tracked (human labor).
+data/lamp_data/npz/
+data/lamp_data/preview/
+data/lamp_data/review_gifs/
+data/lamp_data/metrics/
+data/lamp_data/dataset/
+
+# Flow-matching training runs (checkpoints live on the GPU box / local
+# scratch; code and README stay tracked)
+style-model/runs/
+
 # MuJoCo
 MUJOCO_LOG.TXT
 

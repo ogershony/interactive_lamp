@@ -1,0 +1,927 @@
+clip_name,verdict,reason_tags,note,reviewed_at,run_reviewed,mapping_version_reviewed
+anim_bored_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bored_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bored_event_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bored_event_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bored_event_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bored_event_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bored_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bored_getout_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bouncer_getin_01,keep,,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_bouncer_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bouncer_ideatoplay_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bouncer_intoscore_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bouncer_intoscore_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bouncer_intoscore_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bouncer_requesttoplay_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bouncer_rerequest_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bouncer_timeout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_bouncer_wait_01,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_bouncer_wait_02,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_bouncer_wait_03,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_codelab_123go,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_bored_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_chicken_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_chicken_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_chicken_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_chicken_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_cow_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_cow_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_cow_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_cubetap,drop,,,2026-08-04T17:03:06,v1.3,1.3
+anim_codelab_duck_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_elephant_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_frightenedcozmo_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_frog_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_ghoulish_creeping_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_kitchen_eating_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_kitchen_yucky_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_lightshow_idle,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_magicfortuneteller_inquistive,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_rooster_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_rooster_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_scarycozmo_01,keep,,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_sheep_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_staring_loop,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_codelab_tiger_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_tiger_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_tiger_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_tinyorchestra_conducting,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_tinyorchestra_takataka_01,keep,,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_vampirebite_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_codelab_zombiecrawl_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_app_getin,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_app_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_app_getout_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_badword_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_badword_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_badword_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_badword_02_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_badword_02_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_badword_02_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getin_long_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getin_long_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getin_long_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getin_medium_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getin_medium_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getin_medium_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getin_medium_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getin_short_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getin_short_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getin_short_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getout_long_01_head_angle_-20,keep,,,2026-08-04T16:52:38,v1.3,1.3
+anim_cozmosays_getout_long_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getout_long_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getout_medium_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getout_medium_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getout_medium_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getout_short_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getout_short_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_getout_short_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosays_speakloop_01,drop,,,2026-08-04T16:54:27,v1.3,1.3
+anim_cozmosays_speakloop_02,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_cozmosays_speakloop_03,drop,,,2026-08-04T16:51:10,v1.3,1.3
+anim_cozmosings_100_song_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosings_120_song_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosings_80_song_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosings_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosings_getin_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosings_getin_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_cozmosings_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_dancing_mambo_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_dizzy_pickup_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_dizzy_pickup_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_dizzy_pickup_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_dizzy_reaction_hard_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_dizzy_reaction_medium_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_dizzy_reaction_medium_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_dizzy_reaction_medium_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_dizzy_reaction_soft_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_dizzy_reaction_soft_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_dizzy_reaction_soft_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_dizzy_shake_loop_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_dizzy_shake_stop_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_driving_upset_end_01,drop,too-short,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_driving_upset_loop_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_driving_upset_loop_02,keep,,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_driving_upset_loop_03,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_driving_upset_start_01,drop,too-short,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_endmambo,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubedone_01,keep,,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubedone_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubedonelvl1_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubedown_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubedown_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubedownlvl1_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubedownlvl1_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubedownlvl2_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubedownlvl2_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubenotfound_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubenotfound_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubeshake_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubeshake_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubeshake_lv2_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubeshake_lv2_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubeshakelvl1_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_cubeshakelvl1_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_drivegeout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_drivegetin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_driveloop_01,keep,,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_energy_driveloop_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_driveloop_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_eat_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_eat_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_eat_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_eat_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_eat_lvl1_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_eat_lvl1_06,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_eat_lvl1_07,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_eat_lvl1_08,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_eat_lvl1_09,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_eat_lvl2_05,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_failgetout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_failgetout_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_idlel1_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_idlel1_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_idlel1_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_idlel2_01_nohead,keep,,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_energy_idlel2_02_nohead,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_idlel2_03_nohead,drop,source-static,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_energy_idlel2_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_idlel2_05,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_idlel2_06,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_idlel2_search_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_idlel2_search_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_idlel2_search_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_liftoncube_01,keep,,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_energy_liftoncube_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_react_stop_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_reacttocliff_lv2_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_requestlvlone_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_requestlvltwo_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_requestshortlvl1_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_requestshortlvl2_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_shortreact_lvl2_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_stuckonblock_lv2,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_successgetout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_successgetout_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_energy_wakeup_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_end_01_head_angle_-10,drop,too-short,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_end_01_head_angle_-20,drop,too-short,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_end_01_head_angle_10,drop,too-short,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_end_01_head_angle_20,drop,too-short,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_end_01_head_angle_30,drop,too-short,audit: visual contact-sheet review (claude),2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_end_01_head_angle_40,drop,untranslatable,audit: sibling of human-dropped base clip,2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_loop_01_head_angle_-10,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_loop_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_loop_01_head_angle_10,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_loop_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_loop_01_head_angle_30,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_loop_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_loop_02_head_angle_-10,drop,,,2026-08-04T16:55:15,v1.3,1.3
+anim_explorer_driving01_loop_02_head_angle_-20,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_explorer_driving01_loop_02_head_angle_10,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_explorer_driving01_loop_02_head_angle_20,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_explorer_driving01_loop_02_head_angle_30,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_explorer_driving01_loop_02_head_angle_40,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_explorer_driving01_loop_03_head_angle_-10,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_loop_03_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_loop_03_head_angle_10,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_loop_03_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_loop_03_head_angle_30,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_loop_03_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_start_01,keep,,audit: visual contact-sheet review (agent): subtle dip-and-recover nod reads,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_driving01_start_01_head_angle_-10,keep,,audit: visual contact-sheet review (agent): small intentional nod arc legible,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_driving01_start_01_head_angle_-20,keep,,audit: visual contact-sheet review (agent): gentle look-down arc reads,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_driving01_start_01_head_angle_10,keep,,"audit: visual contact-sheet review (agent): clean subtle nod, intentional",2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_driving01_start_01_head_angle_20,keep,,audit: visual contact-sheet review (agent): sorrow head-lower reads clearly,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_driving01_start_01_head_angle_30,keep,,audit: visual contact-sheet review (agent): look-down-then-up arc legible,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_driving01_start_01_head_angle_40,keep,,audit: visual contact-sheet review (agent): small shake reads as gesture,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_driving01_start_02_head_angle_-10,keep,,audit: visual contact-sheet review (agent): wake-up dip arc reads,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_driving01_start_02_head_angle_-20,keep,,audit: visual contact-sheet review (agent): look-down-then-forward legible,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_driving01_start_02_head_angle_10,keep,,audit: visual contact-sheet review (agent): survey-then-realize arc reads,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_driving01_start_02_head_angle_20,keep,,audit: visual contact-sheet review (agent): down-then-up nod legible,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_driving01_start_02_head_angle_30,keep,,audit: visual contact-sheet review (agent): surprise head-pop reads,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_driving01_start_02_head_angle_40,keep,,audit: visual contact-sheet review (agent): squeeze-then-pop arc intentional,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_driving01_turbo_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_turbo_01_head_angle_-10,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_turbo_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_turbo_01_head_angle_10,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_turbo_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_turbo_01_head_angle_30,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_driving01_turbo_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_drvback_end_01,drop,too-short,"audit: visual contact-sheet review (agent): T=11 blip, tiny range",2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_drvback_loop_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_drvback_loop_02,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_explorer_drvback_loop_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_drvback_start_01,keep,,audit: visual contact-sheet review (agent): sad dip gesture reads,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_drvback_start_02,keep,,audit: visual contact-sheet review (agent): down-then-up arc legible,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_huh_01,drop,untranslatable,audit: sibling of human-dropped base clip,2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_huh_01_head_angle_-10,drop,,,2026-08-04T16:51:23,v1.3,1.3
+anim_explorer_huh_01_head_angle_-20,drop,,,2026-08-04T16:51:38,v1.3,1.3
+anim_explorer_huh_01_head_angle_10,drop,untranslatable,audit: sibling of human-dropped base clip,2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_huh_01_head_angle_20,drop,untranslatable,audit: sibling of human-dropped base clip,2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_huh_01_head_angle_30,drop,untranslatable,audit: sibling of human-dropped base clip,2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_huh_01_head_angle_40,drop,untranslatable,audit: sibling of human-dropped base clip,2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_idle_01_head_angle_-10,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_idle_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_idle_01_head_angle_10,keep,,audit: visual contact-sheet review (agent): quick look-up plus light lift,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_idle_01_head_angle_20,keep,,audit: visual contact-sheet review (agent): heads-up pop reads clearly,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_idle_01_head_angle_30,keep,,"audit: visual contact-sheet review (agent): look-around idle, gentle mood",2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_idle_01_head_angle_40,keep,,audit: visual contact-sheet review (agent): head-raise with bright light,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_idle_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_idle_02_head_angle_-10,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_idle_02_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_idle_02_head_angle_10,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_idle_02_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_idle_02_head_angle_30,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_idle_02_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_explorer_idle_03_head_angle_-10,drop,source-static,"audit: visual contact-sheet review (agent): static frames, no story",2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_idle_03_head_angle_-20,keep,,audit: visual contact-sheet review (agent): quick look-down in calm idle,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_idle_03_head_angle_10,keep,,audit: visual contact-sheet review (agent): slight head-raise idle reads,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_idle_03_head_angle_20,keep,,audit: visual contact-sheet review (agent): look-up event in idle,2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_idle_03_head_angle_30,keep,,"audit: visual contact-sheet review (agent): head-raise arc, calm idle",2026-08-04T18:33:35,v1.3,1.3
+anim_explorer_idle_03_head_angle_40,keep,,audit: visual contact-sheet review (agent): gentle look-up idle legible,2026-08-04T18:33:35,v1.3,1.3
+anim_factory_audio_test_01,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_factory_audio_test_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_fistbump_fail_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_fistbump_idle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_fistbump_idle_02,drop,not-cute,"audit: visual contact-sheet review (agent): 0.05rad, flat light, awkward pose",2026-08-04T18:33:35,v1.3,1.3
+anim_fistbump_idle_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_fistbump_requestonce_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_fistbump_requestonce_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_fistbump_requestoncelong_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_fistbump_requesttwice_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_fistbump_success_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_fistbump_success_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_fistbump_success_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_identified_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_identified_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_identified_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_identified_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_identified_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_identified_02_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_identified_02_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_identified_02_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_identified_03_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_identified_03_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_identified_03_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_like_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_longname_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_sayname_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_sayname_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_sayname_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_sayname_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_sayname_02_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_sayname_02_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_sayname_02_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_sayname_03_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_sayname_03_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_sayname_03_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_freeplay_reacttoface_wiggle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gamesetup_getin_01_head_angle_-20,keep,,audit: visual contact-sheet review (agent): clean flop-down arc reads,2026-08-04T18:33:35,v1.3,1.3
+anim_gamesetup_getin_01_head_angle_20,keep,,audit: visual contact-sheet review (agent): big legible down-swing gesture,2026-08-04T18:33:35,v1.3,1.3
+anim_gamesetup_getin_01_head_angle_40,keep,,audit: visual contact-sheet review (agent): frustrated slam-down arc clear,2026-08-04T18:33:35,v1.3,1.3
+anim_gamesetup_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gamesetup_idle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gamesetup_idle_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gamesetup_idle_03,drop,source-static,"audit: visual contact-sheet review (agent): 0.07rad flat light, mush",2026-08-04T18:33:35,v1.3,1.3
+anim_gamesetup_reaction_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gif_gleeserious_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gif_idk_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gif_no_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gotosleep_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gotosleep_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gotosleep_getout_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gotosleep_getout_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gotosleep_getout_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gotosleep_off_01,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_gotosleep_sleeping_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_gotosleep_sleeploop_01,keep,,"audit: visual contact-sheet review (agent): sleepy droop, dim light mood",2026-08-04T18:33:35,v1.3,1.3
+anim_greeting_happy_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_greeting_happy_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_greeting_happy_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_greeting_happy_03_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_greeting_happy_03_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_greeting_happy_03_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_guarddog_cubedisconnect_01,keep,,audit: visual contact-sheet review (agent): excited nod reads cleanly,2026-08-04T18:33:35,v1.3,1.3
+anim_guarddog_fakeout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_guarddog_fakeout_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_guarddog_fakeout_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_guarddog_getout_busted_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_guarddog_getout_playersucess_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_guarddog_getout_timeout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_guarddog_getout_timeout_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_guarddog_getout_touched_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_guarddog_getout_untouched_01,keep,,audit: visual contact-sheet review (agent): look-up with light fade-on,2026-08-04T18:33:35,v1.3,1.3
+anim_guarddog_getout_untouched_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_guarddog_interruption_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_guarddog_pulse_01,drop,too-short,"audit: visual contact-sheet review (agent): T=10 blip, too short",2026-08-04T18:33:35,v1.3,1.3
+anim_guarddog_settle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_guarddog_sleeploop_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_guarddog_sleeploop_02,keep,,"audit: visual contact-sheet review (agent): depressed slump, dim light story",2026-08-04T18:33:35,v1.3,1.3
+anim_hiccup_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiccup_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiccup_faceplant_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiccup_faceplant_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiccup_getin,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiccup_playercure_getout,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiccup_playercure_pickupreact,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiccup_selfcure_getout,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiccup_turtleroll_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiccup_withreaction_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_driving_end_01,drop,too-short,"audit: visual contact-sheet review (agent): T=11 blip, too short",2026-08-04T18:33:35,v1.3,1.3
+anim_hiking_driving_end_02,keep,,"audit: visual contact-sheet review (agent): clean look-down arc, 0.22rad",2026-08-04T18:33:35,v1.3,1.3
+anim_hiking_driving_loop_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_driving_loop_02,drop,,,2026-08-04T16:55:00,v1.3,1.3
+anim_hiking_driving_loop_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_driving_loop_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_driving_loop_05,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_driving_loop_06,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_driving_start_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_driving_start_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_driving_start_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_driving_start_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_edgesquintgetin_01,keep,,"audit: visual contact-sheet review (agent): relief sigh, strong light arc",2026-08-04T18:33:35,v1.3,1.3
+anim_hiking_edgesquintgetout_01,keep,,audit: visual contact-sheet review (agent): blink light story reads,2026-08-04T18:33:35,v1.3,1.3
+anim_hiking_edgesquintloop_01,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_hiking_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_getin_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_getin_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_lookaround_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_lookaround_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_lookaround_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_observe_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_react_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_react_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_react_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_react_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_react_05,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_rtnewarea_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_rtnewarea_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_rtnewarea_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_hiking_rtpmarker_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepalive_blink_01,keep,,,2026-08-04T22:34:17,v1.4,1.4
+anim_keepalive_eyes_01_forward,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepalive_eyes_01_right,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepalive_eyes_01_updown,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepalive_eyesonly_loop_02,keep,,"audit: visual contact-sheet review (agent): long idle, breathing light glow",2026-08-04T18:33:35,v1.3,1.3
+anim_keepalive_eyesonly_loop_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_fakeout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_fakeout_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_fakeout_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_fakeout_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_fakeout_05,keep,,audit: visual contact-sheet review (agent): raise gesture plus light swing,2026-08-04T18:33:35,v1.3,1.3
+anim_keepaway_fakeout_06,keep,,,2026-08-04T16:53:59,v1.3,1.3
+anim_keepaway_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_getin_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_getin_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_getout_02,keep,,audit: visual contact-sheet review (agent): big clean head-rise arc,2026-08-04T18:33:35,v1.3,1.3
+anim_keepaway_getout_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_getready_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_getready_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_getready_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_idle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_idle_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_idle_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_losegame_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_losegame_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_losegame_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_losehand_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_losehand_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_losehand_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_pounce_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_pounce_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_pounce_03,keep,,audit: visual contact-sheet review (agent): pounce crouch arc reads,2026-08-04T18:33:35,v1.3,1.3
+anim_keepaway_pounce_04,keep,,,2026-08-04T22:34:26,v1.4,1.4
+anim_keepaway_wingame_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_wingame_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_wingame_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_winhand_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_winhand_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_keepaway_winhand_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_laser_drive_01,drop,source-static,"audit: visual contact-sheet review (agent): 0.05rad, flat dim, dead",2026-08-04T18:33:35,v1.3,1.3
+anim_laser_drive_02,keep,,audit: visual contact-sheet review (agent): light brightening tells story,2026-08-04T18:33:35,v1.3,1.3
+anim_laser_drive_03,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_launch_altwakeup_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_backpackidle,drop,,,2026-08-04T16:54:32,v1.3,1.3
+anim_launch_blankscreen,drop,,,2026-08-04T16:52:57,v1.3,1.3
+anim_launch_cubediscovery,keep,,audit: visual contact-sheet review (agent): big expressive discovery bounce,2026-08-04T18:33:35,v1.3,1.3
+anim_launch_drivingloop_01,keep,,"audit: visual contact-sheet review (agent): mopey bow, dim light mood",2026-08-04T18:33:35,v1.3,1.3
+anim_launch_drivingloop_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_drivingloop_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_enddriving_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_eyeson_01,keep,,audit: visual contact-sheet review (agent): defeated droop reads intentional,2026-08-04T18:33:35,v1.3,1.3
+anim_launch_firsttimewakeup,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_firsttimewakeup_helloplayer_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_firsttimewakeup_helloplayer_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_firsttimewakeup_helloplayer_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_firsttimewakeup_helloworld,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_idle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_idle_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_idle_03,keep,,audit: visual contact-sheet review (agent): gentle look-down idle legible,2026-08-04T18:33:35,v1.3,1.3
+anim_launch_lifteffortpickup_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_lifteffortplacehigh_01,drop,not-cute,"audit: visual contact-sheet review (agent): near-identical frames, invisible blink",2026-08-04T18:33:35,v1.3,1.3
+anim_launch_lifteffortplacelow_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_launch_reacttocubepickup,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_reacttoputdown,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_search_head_angle_-20,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_launch_search_head_angle_20,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_launch_search_head_angle_40,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_launch_sleeping_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_startdriving_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_launch_startsleeping_01,drop,,,2026-08-04T18:37:01,v1.3,1.3
+anim_launch_wakeup_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_wakeup_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_wakeup_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_wakeup_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_wakeup_05,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_wakeup_drivingloop_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_launch_wakeup_drivingloop_02,drop,,,2026-08-04T16:54:36,v1.3,1.3
+anim_launch_wakeup_enddriving_01,drop,too-short,audit: visual contact-sheet review (agent): short mush,2026-08-04T18:33:35,v1.3,1.3
+anim_launch_wakeup_startdriving_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_loco_driving01_end_01,drop,source-static,audit: visual contact-sheet review (agent): residue twitch,2026-08-04T18:33:35,v1.3,1.3
+anim_loco_driving01_loop_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_loco_driving01_loop_02,drop,source-static,audit: visual contact-sheet review (agent): illegible mush,2026-08-04T18:33:35,v1.3,1.3
+anim_loco_driving01_loop_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_loco_driving01_start_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_loco_driving01_start_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_lookinplaceforfaces_keepalive_long_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_lookinplaceforfaces_keepalive_long_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_lookinplaceforfaces_keepalive_long_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_lookinplaceforfaces_keepalive_medium_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_lookinplaceforfaces_keepalive_medium_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_lookinplaceforfaces_keepalive_medium_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_lookinplaceforfaces_keepalive_short_head_angle_-20,drop,,,2026-08-04T16:51:19,v1.3,1.3
+anim_lookinplaceforfaces_keepalive_short_head_angle_20,drop,,,2026-08-04T16:51:15,v1.3,1.3
+anim_lookinplaceforfaces_keepalive_short_head_angle_40,drop,,,2026-08-04T18:37:01,v1.3,1.3
+anim_majorfail,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_majorwin,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_celebration,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_celebration_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_celebration_02_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_celebration_02_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_celebration_02_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_getin_head_angle_-20,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_meetcozmo_getin_head_angle_20,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_meetcozmo_getin_head_angle_40,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_meetcozmo_lookface,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_lookface_02,drop,,,2026-08-04T16:55:11,v1.3,1.3
+anim_meetcozmo_lookface_getin_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_lookface_getin_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_lookface_getin_head_angle_40,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_meetcozmo_lookface_getout_head_angle_-20,drop,too-short,audit: visual contact-sheet review (agent): T=13 blip,2026-08-04T18:33:35,v1.3,1.3
+anim_meetcozmo_lookface_getout_head_angle_20,drop,too-short,audit: visual contact-sheet review (agent): T=13 illegible,2026-08-04T18:33:35,v1.3,1.3
+anim_meetcozmo_lookface_getout_head_angle_40,keep,,,2026-08-04T22:34:09,v1.4,1.4
+anim_meetcozmo_lookface_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_lookface_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_lookface_head_angle_40,drop,source-static,audit: visual contact-sheet review (agent): dead frames,2026-08-04T18:33:35,v1.3,1.3
+anim_meetcozmo_lookface_interrupt,drop,too-short,audit: visual contact-sheet review (agent): T=13 twitch,2026-08-04T18:33:35,v1.3,1.3
+anim_meetcozmo_reenrollment_sayname_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_reenrollment_sayname_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_reenrollment_sayname_03,keep,,,2026-08-04T18:16:49,v1.3,1.3
+anim_meetcozmo_sayname_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_sayname_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_sayname_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_sayname_02_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_sayname_02_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_meetcozmo_sayname_02_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_failgame_cozmo_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_failgame_cozmo_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_failgame_cozmo_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_failgame_player_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_failgame_player_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_failgame_player_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_failhand_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_failhand_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_failhand_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_failhand_player_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_failhand_player_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_failhand_player_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_getout_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_idle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_idle_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_idle_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_point_player_audio,drop,,,2026-08-04T18:36:52,v1.3,1.3
+anim_memorymatch_pointbigleft_01,drop,,,2026-08-04T16:53:23,v1.3,1.3
+anim_memorymatch_pointbigleft_02,drop,,,2026-08-04T16:53:33,v1.3,1.3
+anim_memorymatch_pointbigleft_fast_01,drop,,,2026-08-04T16:52:42,v1.3,1.3
+anim_memorymatch_pointbigleft_fast_02,drop,,,2026-08-04T16:52:00,v1.3,1.3
+anim_memorymatch_pointbigright_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_pointbigright_02,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_pointbigright_fast_01,drop,,,2026-08-04T16:52:20,v1.3,1.3
+anim_memorymatch_pointbigright_fast_02,drop,,,2026-08-04T18:16:30,v1.3,1.3
+anim_memorymatch_pointcenter_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_pointcenter_02,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_pointcenter_03,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_pointcenter_fast_01,drop,too-short,audit: visual contact-sheet review (agent): T=12 short,2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_pointcenter_fast_02,drop,,,2026-08-04T16:51:51,v1.3,1.3
+anim_memorymatch_pointcenter_fast_03,drop,too-short,audit: visual contact-sheet review (agent): T=12 blip,2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_pointsmallleft_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_pointsmallleft_02,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_pointsmallleft_fast_01,keep,,,2026-08-04T18:16:39,v1.3,1.3
+anim_memorymatch_pointsmallleft_fast_02,drop,too-short,audit: visual contact-sheet review (agent): T=10 blip,2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_pointsmallright_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_pointsmallright_02,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_pointsmallright_fast_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_pointsmallright_fast_02,drop,,,2026-08-04T16:53:48,v1.3,1.3
+anim_memorymatch_reacttopattern_01,drop,too-short,audit: visual contact-sheet review (agent): T=12 short,2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_reacttopattern_02,drop,not-cute,audit: visual contact-sheet review (agent): blink twitch,2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_reacttopattern_standard_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_reacttopattern_struggle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_reacttopattern_struggle_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_reacttopattern_struggle_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_solo_failhand_player_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_solo_failhand_player_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_solo_failhand_player_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_solo_reacttopattern_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_solo_reacttopattern_02,drop,source-static,audit: visual contact-sheet review (agent): no story,2026-08-04T18:33:35,v1.3,1.3
+anim_memorymatch_solo_reacttopattern_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_solo_successgame_player_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_solo_successgame_player_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_solo_successgame_player_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_successhand_cozmo_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_successhand_cozmo_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_successhand_cozmo_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_successhand_cozmo_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_successhand_player_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_successhand_player_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_memorymatch_successhand_player_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_mm_newidea,drop,source-static,audit: visual contact-sheet review (agent): dead,2026-08-04T18:33:35,v1.3,1.3
+anim_mm_thinking,drop,,,2026-08-04T16:51:17,v1.3,1.3
+anim_motiontrack_turnsmall,drop,,,2026-08-04T16:51:05,v1.3,1.3
+anim_neutral_eyes_01,drop,,,2026-08-04T18:36:53,v1.3,1.3
+anim_pause_idle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pause_idle_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pause_idle_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_fail_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_failgetout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_idle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_idle_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_idle_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_requestonce_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_requestshorts_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_requestthrice_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_requesttwice_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_success_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_success_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_success_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_peekaboo_successgetout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_cat_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_cat_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_cat_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_cat_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_cat_02_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_cat_02_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_cat_02_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_dog_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_dog_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_dog_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_dog_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_dog_02_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_dog_02_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_dog_02_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_dog_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_dog_03_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_dog_03_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_dog_03_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_misc_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_misc_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_misc_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_shortreaction_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_shortreaction_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_shortreaction_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_shortreaction_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_shortreaction_02_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_shortreaction_02_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_petdetection_shortreaction_02_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_play_driving_end_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_play_driving_loop_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_play_driving_loop_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_play_driving_loop_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_play_driving_start_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_play_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_play_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_play_idle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_play_idle_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_play_idle_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_play_requestplay_level1_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_play_requestplay_level1_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_play_requestplay_level2_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_play_requestplay_level2_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_poked_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_poked_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_poked_giggle,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_pokedreaction_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_pounce_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_pounce_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pounce_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pounce_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pounce_drive_01,drop,source-static,audit: visual contact-sheet review (agent): dead,2026-08-04T18:33:35,v1.3,1.3
+anim_pounce_drive_02,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_pounce_drive_03,drop,,,2026-08-04T16:55:13,v1.3,1.3
+anim_pounce_fail_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pounce_fail_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pounce_fail_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pounce_fail_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pounce_long_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_pounce_lookgetout_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_pounce_lookloop_01,drop,source-static,audit: visual contact-sheet review (agent): dead,2026-08-04T18:33:35,v1.3,1.3
+anim_pounce_lookloop_02,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_pounce_lookloop_03,drop,,,2026-08-04T16:54:51,v1.3,1.3
+anim_pounce_reacttoobj_01_shorter,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pounce_success_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pounce_success_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pounce_success_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pounce_success_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pyramid_lookinplaceforfaces_long_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pyramid_lookinplaceforfaces_long_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pyramid_lookinplaceforfaces_long_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pyramid_lookinplaceforfaces_medium,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_pyramid_lookinplaceforfaces_medium_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pyramid_lookinplaceforfaces_medium_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pyramid_lookinplaceforfaces_medium_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pyramid_lookinplaceforfaces_short_head_angle_-20,drop,,,2026-08-04T18:37:02,v1.3,1.3
+anim_pyramid_lookinplaceforfaces_short_head_angle_20,drop,,,2026-08-04T16:51:07,v1.3,1.3
+anim_pyramid_lookinplaceforfaces_short_head_angle_40,drop,,,2026-08-04T16:51:12,v1.3,1.3
+anim_pyramid_reacttocube_frustrated_high_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pyramid_reacttocube_frustrated_low_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pyramid_reacttocube_frustrated_mid_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pyramid_reacttocube_happy_high_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pyramid_reacttocube_happy_mid_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pyramid_success_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_pyramid_thankyou_01_head_angle_20,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_react2block_02,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_reacttoblock_admirecubetower_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_ask_01_0,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_ask_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_ask_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_ask_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_audioblockcrash,drop,,,2026-08-04T18:37:03,v1.3,1.3
+anim_reacttoblock_focusedeyes_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_reacttoblock_frustrated_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_reacttoblock_frustrated_int1_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_reacttoblock_frustrated_int2_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_reacttoblock_happydetermined_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_reacttoblock_happydetermined_02,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_reacttoblock_lifteffortpickup_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_lifteffortplacehigh_01,drop,source-static,audit: visual contact-sheet review (agent): illegible,2026-08-04T18:33:35,v1.3,1.3
+anim_reacttoblock_lifteffortplacelow_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_reacttoblock_lifteffortroll_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_reacttoblock_placeblock_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_putdown2nd_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_react_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_react_01_0,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_react_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_react_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_react_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_react_short_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_react_short_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_react_short_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_react_short_02_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_react_short_02_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_react_short_02_head_angle_40,drop,source-static,audit: visual contact-sheet review (agent): residue,2026-08-04T18:33:35,v1.3,1.3
+anim_reacttoblock_reacttotopple_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_stuckonblock_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_success_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_success_01_0,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_success_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_success_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_success_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoblock_triestoreach_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_edge_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_edgeliftup_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_faceplantroll_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_faceplantroll_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_faceplantroll_armup_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_faceplantroll_armup_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_huh_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_reacttocliff_pickup_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_pickup_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_pickup_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_pickup_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_pickup_05,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_pickup_06,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_stuckleftside_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_stuckleftside_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_stuckleftside_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_stuckrightside_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_stuckrightside_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_stuckrightside_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_turtleroll_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_turtleroll_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_turtleroll_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_turtleroll_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_turtleroll_05,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_turtleroll_06,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_turtlerollfail_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_turtlerollfail_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_turtlerollfail_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_wheely_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_wheely_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttocliff_wheely_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoface_unidentified_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoface_unidentified_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoface_unidentified_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoface_unidentified_02_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoface_unidentified_02_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoface_unidentified_02_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoface_unidentified_03_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoface_unidentified_03_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttoface_unidentified_03_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_reacttppl_surprise,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_getout_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_getout_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_getready_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_head_down_01,keep,,,2026-08-04T22:34:25,v1.4,1.4
+anim_repair_fix_head_up_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_repair_fix_idle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_idle_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_idle_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_idle_fullyfull_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_idle_fullyfull_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_idle_fullyfull_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_lift_down_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_repair_fix_lift_up_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_repair_fix_lowerlift_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_raiselift_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_roundreact_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_fix_wheels_back_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_repair_fix_wheels_forward_01,drop,source-static,audit: visual contact-sheet review (agent): residue,2026-08-04T18:33:35,v1.3,1.3
+anim_repair_mild_fix_fail_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_mild_fix_head_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_mild_fix_head_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_mild_fix_lift_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_mild_fix_lift_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_mild_fix_tread_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_mild_fix_tread_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_mild_reaction_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_react_fall_01,drop,too-short,audit: visual contact-sheet review (agent): T=11 short,2026-08-04T18:33:35,v1.3,1.3
+anim_repair_react_hit_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_react_stop_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_reaction_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_driving_end_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_repair_severe_driving_loop_01,drop,source-static,audit: visual contact-sheet review (agent): dead loop,2026-08-04T18:33:35,v1.3,1.3
+anim_repair_severe_driving_loop_02,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_repair_severe_driving_loop_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_driving_start_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_fix_fail_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_fix_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_fix_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_fix_getout_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_fix_getout_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_fix_getready_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_fix_head_down_01,keep,,,2026-08-04T22:34:25,v1.4,1.4
+anim_repair_severe_fix_lift_down_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_repair_severe_fix_lift_up_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_repair_severe_fix_lowerlift_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_fix_raiselift_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_fix_roundreaction_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_fix_wheels_back_01,drop,too-short,audit: visual contact-sheet review (agent): T=11 short,2026-08-04T18:33:35,v1.3,1.3
+anim_repair_severe_fix_wheels_forward_01,drop,source-static,audit: visual contact-sheet review (agent): jerk residue,2026-08-04T18:33:35,v1.3,1.3
+anim_repair_severe_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_getout_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_repair_severe_idle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_idle_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_idle_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_interruption_edge_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_interruption_offcube_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_reaction_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_reaction_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_repair_severe_wakeup_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rollblock_fail_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtc_react_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_rtpkeepaway_askforgame_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_askforgame_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_ideatoplay_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_ideatoplay_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_ideatoplay_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_idle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_idle_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_idle_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_playerno_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_playerno_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_playerno_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_playeryes_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_playeryes_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_playeryes_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_reacttocube_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_rtpkeepaway_reacttocube_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpkeepaway_reacttocube_03,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_rtpmemorymatch_no_01,keep,,,2026-08-04T22:34:22,v1.4,1.4
+anim_rtpmemorymatch_no_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpmemorymatch_request_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpmemorymatch_request_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpmemorymatch_request_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpmemorymatch_yes_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpmemorymatch_yes_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_rtpmemorymatch_yes_03,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_rtpmemorymatch_yes_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_sdk_speak_01,drop,,,2026-08-04T16:55:16,v1.3,1.3
+anim_sparking_driving_loop_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_sparking_driving_loop_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_sparking_driving_loop_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_sparking_driving_start_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_sparking_driving_stop_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_sparking_earnsparks_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_sparking_fail_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_sparking_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_sparking_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_sparking_idle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_sparking_idle_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_sparking_idle_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_sparking_success_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_sparking_success_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_ask2play_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_drivingloop_01,drop,source-static,auto: near-static (max joint range < 0.05 rad),2026-08-04T16:56:48,v1.3,1.3
+anim_speedtap_drivingloop_02,drop,,,2026-08-04T16:54:46,v1.3,1.3
+anim_speedtap_enddriving_01,drop,source-static,audit: visual contact-sheet review (agent): dead,2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_findsplayer_01,drop,source-static,audit: visual contact-sheet review (agent): mush,2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_foundblock_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_getout_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_idle_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_idle_02,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_look4block_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_lookatplayer,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_losegame_intensity02_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_losegame_intensity02_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_losegame_intensity02_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_losegame_intensity03_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_losegame_intensity03_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_losegame_intensity03_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_losehand_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_losehand_02,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_losehand_03,drop,too-short,audit: visual contact-sheet review (agent): T=11 short,2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_loseround_intensity01_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_loseround_intensity02_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_loseround_intensity02_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_player_idle_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_playerno_01,keep,,,2026-08-04T21:33:56,v1.4,1.4
+anim_speedtap_playeryes_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_startdriving_01,drop,source-static,audit: visual contact-sheet review (agent): blink residue,2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_tap_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_tap_02,drop,too-short,audit: visual contact-sheet review (agent): T=11 short,2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_tap_03,drop,too-short,audit: visual contact-sheet review (agent): T=11 short,2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_wait_long,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_wait_medium_02,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_wait_medium_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_wait_short,drop,,,2026-08-04T16:51:11,v1.3,1.3
+anim_speedtap_wingame_intensity02_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_wingame_intensity02_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_wingame_intensity02_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_wingame_intensity02_04,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_wingame_intensity03_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_wingame_intensity03_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_wingame_intensity03_03,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_winhand_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_winhand_02,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_winhand_03,drop,too-short,audit: visual contact-sheet review (agent): T=12 short,2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_winround_intensity01_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_speedtap_winround_intensity02_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_speedtap_winround_intensity02_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_test_shiver,drop,too-short,audit: visual contact-sheet review (agent): T=7 blip,2026-08-04T18:33:35,v1.3,1.3
+anim_upgrade_reaction_lift_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_upgrade_reaction_tracks_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_vc_alrighty_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_vc_laser_lookdown_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_vc_listening_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_vc_reaction_alreadyhere_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_vc_reaction_alreadyhere_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_vc_reaction_alreadyhere_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_vc_reaction_nofaceheardyou_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_vc_reaction_nofaceheardyou_getout_01,keep,,audit: visual contact-sheet review (agent),2026-08-04T18:33:35,v1.3,1.3
+anim_vc_reaction_whatwasthat_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_vc_reaction_yesfaceheardyou_01_head_angle_-20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_vc_reaction_yesfaceheardyou_01_head_angle_20,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_vc_reaction_yesfaceheardyou_01_head_angle_40,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_vc_refuse_energy_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_vc_refuse_nosparks_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_vc_refuse_repair_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_highenergy_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_highenergy_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_highenergy_getready_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_highenergy_strong_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_highenergy_trans_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_highenergy_weak_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_lowenergy_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_lowenergy_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_lowenergy_getout_02,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_lowenergy_getready_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_lowenergy_strong_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_lowenergy_trans_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_lowenergy_weak_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_mediumenergy_getin_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_mediumenergy_getout_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_mediumenergy_getready_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_mediumenergy_strong_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_mediumenergy_trans_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
+anim_workout_mediumenergy_weak_01,keep,,"audit: rule T>=30,range>=0.15 (16/16 visual sample ok)",2026-08-04T18:30:20,v1.3,1.3
