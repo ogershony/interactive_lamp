@@ -31,9 +31,10 @@ data/lamp_data/
                         disk: v1.0-baseline + v1.4 (dataset freeze);
                         v1.1-v1.3 deleted 2026-08-05, regenerable from
                         git history of the mapping.
-  metrics/<run>.csv     per-clip quality metrics (gitignored; keep the
-                        local copies -- v1.1-v1.3 CSVs are the only
-                        remaining record of those runs)
+  metrics/<run>.csv     per-clip quality metrics (git-tracked history;
+                        the v1.1-v1.3 CSVs are the only remaining
+                        record of those runs -- their npz dirs were
+                        deleted and their code predates the repo)
   metrics/<run>_emotions.md   emotion-preservation report
   curation.csv          human verdicts (git-tracked; the audit log is
                         git history). Survives all re-runs by design.

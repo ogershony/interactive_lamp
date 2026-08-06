@@ -18,7 +18,7 @@ cozmo_data/labels.csv           16-dim soft emotion labels + descriptions
 lamp_data/npz/<run>/            one directory per mapping iteration
   |  pipeline.py metrics [--diff] [--emotions]
   v
-lamp_data/metrics/<run>.csv     per-clip quality metrics (gitignored)
+lamp_data/metrics/<run>.csv     per-clip quality metrics (git-tracked history)
   |  scripts/curate.py render / serve / panel / verdict   (optional, human)
   v
 lamp_data/curation.csv          keep/drop verdicts (git-tracked, survives re-runs)
@@ -47,10 +47,12 @@ command once curation verdicts exist.
 
 Kept run directories: `v1.0-baseline` (the reference point) and `v1.4`
 (the frozen dataset's mapping). Intermediate runs v1.1-v1.3 were deleted
-to save disk (their metrics CSVs remain in `lamp_data/metrics/`, so the
-cross-run summary table still covers them); regenerate any of them by
-checking out the matching `pipeline.py` (formerly `retarget.py`) version
-from git history and re-running.
+to save disk. Their code predates the repo's first commit and was
+iterated in place, so those runs are NOT regenerable; the git-tracked
+metrics CSVs, emotion reports, and diffs in `lamp_data/metrics/` are
+their permanent record (the cross-run summary table still covers them),
+and CURATION.md's changelog documents each version's exact constant
+changes.
 
 ## Mapping history (see lamp_data/CURATION.md for details)
 
