@@ -26,9 +26,13 @@ data/lamp_retargeting/npz/
 data/lamp_retargeting/preview/
 data/lamp_retargeting/review_gifs/
 
-# Flow-matching training runs (checkpoints live on the GPU box / local
-# scratch; code and README stay tracked) and ad-hoc inference outputs
-motion_prior/runs/
+# Flow-matching training runs and ad-hoc inference outputs stay local,
+# EXCEPT the frozen production checkpoint, which is tracked so a fresh
+# clone can run infer.py out of the box
+motion_prior/runs/*
+!motion_prior/runs/fm-v0/
+motion_prior/runs/fm-v0/*
+!motion_prior/runs/fm-v0/ckpt_best.pt
 motion_prior/outputs/
 
 # MuJoCo

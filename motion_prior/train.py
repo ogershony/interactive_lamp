@@ -37,8 +37,10 @@ DEFAULTS = dict(
     d=160, heads=4, ff=640, layers=5,
     # data
     batch=32, mirror_p=0.5, warp=0.15, amp=0.10, noise=0.005,
-    # optimization
-    steps=30000, lr=3e-4, warmup=500, weight_decay=1e-2, grad_clip=1.0,
+    # optimization -- steps: the fm-v0 run (740-clip v1.4 dataset) hit
+    # best val at step 10500 and degraded monotonically after ~12k;
+    # 30k was ~3x overtraining
+    steps=12000, lr=3e-4, warmup=500, weight_decay=1e-2, grad_clip=1.0,
     cond_dropout=0.12, ema_decay=0.999,
     val_every=500, log_every=100,
     # wandb project name ("" = disabled) and optional run name

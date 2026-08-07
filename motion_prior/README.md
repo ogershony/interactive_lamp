@@ -47,25 +47,28 @@ python motion_prior/train.py --device cuda \
     --npz path/to/lamp_dataset_v1.4.npz --out-dir runs/fm-v0
 ```
 
-Defaults: 30k steps, batch 32, lr 3e-4 cosine + 500 warmup, condition
+Defaults: 12k steps, batch 32, lr 3e-4 cosine + 500 warmup, condition
 dropout 0.12, EMA 0.999, augmentation (mirror ×2, ±15% time warp with a
 1.8 rad/s cap guard, ±10% amplitude, σ=0.005 lowpassed noise). A full
 run is ~10–30 min on an RTX 2080-class GPU (22 min measured, 22.5 it/s
 on an RTX 2080 Ti). Any config key is a CLI flag (`--steps`, `--d`,
 `--layers`, `--cond-dropout`, …).
 
-**`--steps 30000` overtrains this 740-clip set by roughly 3×.** Measured
-on the v1.4 dataset: val loss bottoms at step 10500 (0.2841) and then
-degrades monotonically to 0.3499 by step 30000 while train loss keeps
-falling to 0.138. `ckpt_best.pt` still captures the right model, so the
-run is not wasted, but ~2/3 of it is. Prefer `--steps 12000`.
+**Why 12k steps:** the fm-v0 run went 30k, and val loss bottomed at
+step 10500 (0.2841) then degraded monotonically to 0.3499 by 30000
+while train loss kept falling to 0.138 — ~3× overtraining on this
+740-clip set. `ckpt_best.pt` still captured the right model, but ~2/3
+of the run was wasted, so 12000 is now the default. Revisit if the
+dataset grows.
 
 Add `--wandb PROJECT` (and optionally `--wandb-name`) to stream loss,
 lr, throughput and val curves to Weights & Biases; omitted = no-op.
 Auth: `wandb login` (~/.netrc) or put `WANDB_API_KEY` in `.env` (see
 `.env.example`) and run via `uv run --env-file .env ...`.
 
-Copy `runs/fm-v0/ckpt_best.pt` (a few MB) back to the demo box.
+`runs/fm-v0/ckpt_best.pt` (20 MB) is git-tracked — the one exception
+in the otherwise-ignored `runs/` — so a fresh clone runs `infer.py`
+out of the box. After a retrain, commit the new best checkpoint.
 Locally, torch is pinned to the CPU wheel via the `pytorch-cpu` index in
 `pyproject.toml`; inference (10 Euler steps, ~100–250 ms/clip on the
 i7-10700) runs there.
