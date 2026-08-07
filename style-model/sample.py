@@ -15,11 +15,18 @@ Sample clips from a trained flow-matching checkpoint.
                                     1 = conditional, >1 exaggerated
                                     (intensity knob), 0 = unconditional
     --steps N --method euler|midpoint   ODE integration (default 10 Euler)
+    --no-project                    skip the rate/slew projection (see below)
 
 Outputs <out>/<tag>_<i>.npz in the retarget-run clip format (t, qpos,
 light01, rgb + provenance) so the MuJoCo validator and runtime can
 consume them directly. --gif additionally renders a lamp-only GIF per
 sample (requires mujoco, i.e. the demo box, not the training box).
+
+Sampled clips are projected back onto the mapping's output invariants by
+default (`project()`), because raw model output can exceed RATE_CAP even
+though no training clip does. The projection is what makes the default
+cfg 2.5 safe: it clips physically-illegal velocity peaks while leaving
+the affect-carrying mean speed essentially intact.
 """
 
 import argparse
@@ -121,6 +128,38 @@ def write_clip_npz(path, x, label, meta):
         generator=np.array(json.dumps(meta)))
 
 
+def project(x):
+    """Re-apply the mapping's output invariants to a sampled clip:
+    |dq|/dt <= RATE_CAP via ease_track, and |d light| <= LIGHT_SLEW*dt via
+    the causal slew clamp. Identity for clips that already comply.
+
+    Unlike pipeline.py:492-493 this does NOT prefilter with `lowpass`.
+    There, lowpass cleans the jagged raw Cozmo retarget before tracking;
+    here the model's output is already band-limited (it learned from
+    post-lowpass data), so a second pass only removes motion -- measured
+    over 8 affects at cfg 2.5, lowpass+ease_track retains 84% of mean
+    speed while ease_track alone retains 99%, both at 0/8 validator
+    failures. Keeping the motion is the point, so the filter is skipped.
+
+    Only calm_light's slew clamp is reused, not the whole function: it
+    also applies the LIGHT_FLOOR affine remap, which the training data
+    already went through, so calling it here would lift the floor a
+    second time (0.15 -> 0.28) and visibly compress the LED range.
+    """
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent
+                           / "data"))
+    from pipeline import LIGHT_SLEW, ease_track
+    y = x.copy()
+    y[:, :5] = np.column_stack([ease_track(x[:, j]) for j in range(5)])
+    light = np.clip(x[:, LIGHT_CH], 0.0, 1.0).astype(np.float64)
+    step = LIGHT_SLEW * DT
+    for i in range(1, len(light)):
+        light[i] = light[i - 1] + np.clip(light[i] - light[i - 1],
+                                          -step, step)
+    y[:, LIGHT_CH] = light
+    return y
+
+
 def render_gif(x, path, fps=30):
     """Lamp-only GIF via the data pipeline's renderer (needs mujoco)."""
     sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent
@@ -142,7 +181,7 @@ def main():
     p.add_argument("--affect", required=True,
                    help='e.g. "joy" or "joy=0.7,sorrow=0.3"')
     p.add_argument("--seconds", type=float, default=None)
-    p.add_argument("--cfg", type=float, default=1.5)
+    p.add_argument("--cfg", type=float, default=2.5)
     p.add_argument("--steps", type=int, default=10)
     p.add_argument("--method", choices=["euler", "midpoint"],
                    default="euler")
@@ -153,6 +192,8 @@ def main():
     p.add_argument("--device", default="cpu")
     p.add_argument("--raw-weights", action="store_true",
                    help="use raw (non-EMA) weights")
+    p.add_argument("--no-project", action="store_true",
+                   help="skip the RATE_CAP / light-slew projection")
     args = p.parse_args()
 
     model, ck = load_model(args.ckpt, args.device,
@@ -170,12 +211,15 @@ def main():
                   device=args.device, seed=args.seed)
     dt_gen = (_time.time() - t0) / args.n
     x = denormalize(xn, ck["norm_stats"])
+    if not args.no_project:
+        x = np.stack([project(x[i]) for i in range(args.n)]).astype(np.float32)
 
     out = pathlib.Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     tag = args.affect.replace("=", "").replace(",", "+").replace(".", "")
     meta = dict(ckpt=str(args.ckpt), affect=args.affect, cfg=args.cfg,
-                steps=args.steps, method=args.method, step=ck["step"])
+                steps=args.steps, method=args.method, step=ck["step"],
+                projected=not args.no_project)
     for i in range(args.n):
         path = out / f"{tag}_{i}.npz"
         write_clip_npz(path, x[i], label, meta)

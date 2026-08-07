@@ -41,6 +41,8 @@ DEFAULTS = dict(
     steps=30000, lr=3e-4, warmup=500, weight_decay=1e-2, grad_clip=1.0,
     cond_dropout=0.12, ema_decay=0.999,
     val_every=500, log_every=100,
+    # wandb project name ("" = disabled) and optional run name
+    wandb="", wandb_name="",
     # smoke mode: train on the first N train clips only (0 = off)
     overfit=0,
 )
@@ -122,6 +124,11 @@ def main():
     print(f"device {device}; params {count_params(model) / 1e6:.2f}M; "
           f"train clips {len(train_loader.dataset)}; "
           f"val clips {len(val_loader.dataset)}")
+    run = None
+    if cfg["wandb"]:
+        import wandb
+        run = wandb.init(project=cfg["wandb"], name=cfg["wandb_name"] or None,
+                         config={**cfg, "params": count_params(model)})
     opt = torch.optim.AdamW(model.parameters(), lr=cfg["lr"],
                             weight_decay=cfg["weight_decay"])
     ema = EMA(model, decay=cfg["ema_decay"])
@@ -152,6 +159,10 @@ def main():
                       f"loss {loss_acc / loss_n:.4f}  "
                       f"lr {opt.param_groups[0]['lr']:.2e}  "
                       f"{rate:.1f} it/s")
+                if run:
+                    run.log({"train/loss": loss_acc / loss_n,
+                             "train/lr": opt.param_groups[0]["lr"],
+                             "train/it_per_s": rate}, step=step)
                 t0, loss_acc, loss_n = time.time(), 0.0, 0
             if step % cfg["val_every"] == 0 or step == cfg["steps"]:
                 vl = val_loss(model, val_loader, device)
@@ -164,9 +175,14 @@ def main():
                 save_ckpt(out_dir / "ckpt_last.pt", model, ema, cfg,
                           stats, table, step, best_val)
                 print(f"step {step}  val {vl:.4f}{marker}")
+                if run:
+                    run.log({"val/loss": vl, "val/best": best_val}, step=step)
             if step >= cfg["steps"]:
                 break
     print(f"done; checkpoints in {out_dir}")
+    if run:
+        run.summary["best_val"] = best_val
+        run.finish()
 
 
 if __name__ == "__main__":

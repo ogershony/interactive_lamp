@@ -49,8 +49,18 @@ python style-model/train.py --device cuda \
 Defaults: 30k steps, batch 32, lr 3e-4 cosine + 500 warmup, condition
 dropout 0.12, EMA 0.999, augmentation (mirror ×2, ±15% time warp with a
 1.8 rad/s cap guard, ±10% amplitude, σ=0.005 lowpassed noise). A full
-run is ~10–30 min on an RTX 2080-class GPU. Any config key is a CLI
-flag (`--steps`, `--d`, `--layers`, `--cond-dropout`, …).
+run is ~10–30 min on an RTX 2080-class GPU (22 min measured, 22.5 it/s
+on an RTX 2080 Ti). Any config key is a CLI flag (`--steps`, `--d`,
+`--layers`, `--cond-dropout`, …).
+
+**`--steps 30000` overtrains this 740-clip set by roughly 3×.** Measured
+on the v1.4 dataset: val loss bottoms at step 10500 (0.2841) and then
+degrades monotonically to 0.3499 by step 30000 while train loss keeps
+falling to 0.138. `ckpt_best.pt` still captures the right model, so the
+run is not wasted, but ~2/3 of it is. Prefer `--steps 12000`.
+
+Add `--wandb PROJECT` (and optionally `--wandb-name`) to stream loss,
+lr, throughput and val curves to Weights & Biases; omitted = no-op.
 
 Copy `runs/fm-v0/ckpt_best.pt` (a few MB) back to the demo box.
 Locally, torch is pinned to the CPU wheel via the `pytorch-cpu` index in
@@ -59,9 +69,12 @@ i7-10700) runs there.
 
 ### Gates (from lamp_plan.md Phase 5)
 
-- **G0 (before any full run):** `--overfit 10 --steps 500 --device cpu`
-  must reach near-zero train loss and `sample.py --gif` must render
-  recognizable motion. Catches masking/normalization/conditioning bugs.
+- **G0 (before any full run):** `--overfit 10 --steps 2500 --warmup 100
+  --device cpu` must reach near-zero train loss and `sample.py --gif`
+  must render recognizable motion. Catches masking/normalization/
+  conditioning bugs. (The old `--steps 500` recipe cannot pass: `warmup`
+  also defaults to 500, so the entire run is LR ramp-up and loss stalls
+  around 0.75. With warmup shortened it reaches 0.034.)
 - **G1 (go/no-go after the first full run):** `evaluate.py` — probe on
   generated ≥ 2× chance, validator pass ≥ 90%, no gross memorization.
   Fallback ladder on failure: drop highest-label-entropy clips →
@@ -72,14 +85,50 @@ i7-10700) runs there.
 
 ```bash
 uv run style-model/sample.py --ckpt style-model/runs/fm-v0/ckpt_best.pt \
-    --affect "joy=0.7,surprise=0.3" --cfg 2.0 --n 4 --out /tmp/s --gif
+    --affect "joy=0.7,surprise=0.3" --cfg 2.5 --n 4 --out /tmp/s --gif
 ```
 
 `--cfg` is the intensity knob (1 conditional, >1 exaggerated, <1
-subtle, 0 unconditional). Duration defaults to the per-affect empirical
-median; `--seconds` overrides. Output npz uses the retarget-run clip
-format, so the MuJoCo validator, review tooling, and runtime consume it
-directly. `--gif` needs mujoco (demo box).
+subtle, 0 unconditional), default **2.5**. Duration defaults to the
+per-affect empirical median; `--seconds` overrides. Output npz uses the
+retarget-run clip format, so the MuJoCo validator, review tooling, and
+runtime consume it directly. `--gif` needs mujoco (demo box).
+
+### Projection (on by default)
+
+Raw model output exceeds `RATE_CAP` on a minority of frames even though
+no training clip does, which failed the G1 validator gate (57%) and
+capped usable guidance. Every sampled clip is therefore run through
+`project()`, which applies `pipeline.ease_track` per joint and the
+causal light-slew clamp — the same invariants `data/pipeline.py` asserts
+on retarget output. It is identity for already-compliant motion.
+
+Measured over 8 affects at cfg 2.5: validator 0/8 → 8/8 pass, mean speed
+99% retained (`ease_track` clips illegal *peaks*, not the affect-carrying
+*average*). Note this deliberately skips pipeline's `lowpass` prefilter —
+that stage exists to clean the jagged raw Cozmo retarget, and re-applying
+it to already-band-limited model output cost 16% of mean speed for no
+extra validity. `--no-project` disables.
+
+Guidance and projection together are what recovered affect
+distinctiveness: generated mean-speed spread went from 1.98× of the real
+data's 3.24× (cfg 1.5, unprojected) to 3.21×, i.e. 99%. See
+`evaluate.py` stage 7.
+
+### Rendering GIFs on a headless GPU node
+
+```bash
+export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+export MUJOCO_GL=egl
+```
+
+Without the first line libglvnd loads Mesa's ICD, which needs
+`/dev/dri/card*` (root:video, normally not readable) and fails; NVIDIA's
+ICD uses the world-readable `renderD*` nodes. PyOpenGL must be **3.1.9** —
+the 3.1.10 wheel ships without `OpenGL/version.py` and breaks both EGL and
+OSMesa. mujoco swallows the resulting ImportError and silently leaves
+`mujoco.Renderer` unbound, so the symptom is a confusing AttributeError.
+An `EGLError` at interpreter exit is a teardown artifact and is harmless.
 
 ## Evaluation
 

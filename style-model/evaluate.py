@@ -26,6 +26,15 @@ Reports:
    (the same invariants the runtime gate enforces). The full MuJoCo
    torque/collision check lives in data/pipeline.py (dynamics_check) and
    can be run on the exported sample npz separately.
+7. AFFECT SPREAD: with the NOISE HELD FIXED, generate one clip per
+   well-supported affect (>=20 train clips) and report how far apart they
+   land -- mean pairwise RMS, plus the generated mean-speed spread ratio
+   against the ratio actually present in the real data. This is the
+   direct measure of "do the affects look different from each other";
+   the other stages can all pass while every clip still looks the same.
+
+Generation is projected through sample.py's `project()` by default (the
+RATE_CAP / light-slew invariants); --no-project evaluates raw output.
 
 Numbers print as a markdown report; --out writes it to a file.
 """
@@ -38,7 +47,7 @@ import numpy as np
 
 from dataset import (DT, EMOTIONS, JOINT_HI, JOINT_LO, RATE_CAP,
                      load_clips, unit)
-from sample import denormalize, generate, load_model
+from sample import denormalize, generate, load_model, project
 
 LIGHT_SLEW = 0.8   # from data/pipeline.py: max |d light01| / s
 
@@ -167,10 +176,14 @@ def validator(x):
 # Evaluation stages
 # ---------------------------------------------------------------------------
 
+PROJECT = True   # sample.py's rate/slew projection; --no-project clears it
+
+
 def gen_batch(model, ck, label, T, n, cfg_w, steps, device, seed):
     xn = generate(model, label, T, n=n, cfg_w=cfg_w, steps=steps,
                   device=device, seed=seed)
-    return [denormalize(xn[i], ck["norm_stats"]) for i in range(n)]
+    xs = [denormalize(xn[i], ck["norm_stats"]) for i in range(n)]
+    return [project(x) for x in xs] if PROJECT else xs
 
 
 def main():
@@ -179,7 +192,7 @@ def main():
     p.add_argument("--npz",
                    default="data/lamp_data/dataset/lamp_dataset_v1.4.npz")
     p.add_argument("--device", default="cpu")
-    p.add_argument("--cfg", type=float, default=1.5,
+    p.add_argument("--cfg", type=float, default=2.5,
                    help="guidance weight for the main generated set")
     p.add_argument("--steps", type=int, default=10)
     p.add_argument("--k-diversity", type=int, default=8)
@@ -187,7 +200,12 @@ def main():
     p.add_argument("--quick", action="store_true",
                    help="skip DTW memorization (the slow stage)")
     p.add_argument("--out", default=None, help="write the report here")
+    p.add_argument("--no-project", action="store_true",
+                   help="evaluate raw model output, unprojected")
     args = p.parse_args()
+
+    global PROJECT
+    PROJECT = not args.no_project
 
     model, ck = load_model(args.ckpt, args.device)
     clips, _ = load_clips(args.npz)
@@ -201,7 +219,7 @@ def main():
 
     log(f"# style-model evaluation: {args.ckpt}")
     log(f"step {ck['step']}, cfg {args.cfg}, {args.steps} ODE steps, "
-        f"seed {args.seed}")
+        f"seed {args.seed}, projection {'on' if PROJECT else 'OFF'}")
     log()
 
     # ---- generated set: one sample per val clip, same label + duration
@@ -325,6 +343,45 @@ def main():
         f"{fails or 'none'}")
     log("(full torque/collision check: export samples with sample.py and "
         "run data/pipeline.py dynamics on them)")
+
+    # ---- 7. affect spread: does changing the affect change the motion?
+    log()
+    log("## 7. Affect spread (noise held fixed, affect varied)")
+    by_aff = {}
+    for c in train:
+        by_aff.setdefault(EMOTIONS[int(np.argmax(c["label"]))], []).append(c)
+    big = sorted(e for e, cs in by_aff.items() if len(cs) >= 20)
+
+    def clip_speed(x):   # deg/s; local name avoids shadowing mean_speed
+        return float(np.rad2deg(np.abs(np.diff(x[:, :5], axis=0)).mean() / DT))
+
+    real_sp = {e: float(np.mean([clip_speed(c["x"]) for c in by_aff[e]]))
+               for e in big}
+    gen_sp, qs = {}, []
+    for e in big:
+        onehot = np.zeros(len(EMOTIONS), np.float32)
+        onehot[EMOTIONS.index(e)] = 1.0
+        x = gen_batch(model, ck, unit(onehot), 90, 1, args.cfg, args.steps,
+                      args.device, seed=args.seed)[0]
+        gen_sp[e] = clip_speed(x)
+        qs.append(x[:, :5])
+    q = np.stack(qs)
+    rms = float(np.mean([np.sqrt(((q[i] - q[j]) ** 2).mean())
+                         for i in range(len(big))
+                         for j in range(i + 1, len(big))]))
+    rr = max(real_sp.values()) / min(real_sp.values())
+    gr = max(gen_sp.values()) / min(gen_sp.values())
+    log(f"{len(big)} affects with >=20 train clips: {', '.join(big)}")
+    log(f"mean pairwise RMS between affects: {rms:.4f} rad "
+        f"({np.rad2deg(rms):.2f} deg) -- same noise, so this is entirely "
+        f"the conditioning")
+    log(f"mean-speed spread: generated {gr:.2f}x vs real {rr:.2f}x "
+        f"({gr / rr:.0%} of the spread present in the data)")
+    log()
+    log("| affect | real deg/s | generated deg/s |")
+    log("|---|---|---|")
+    for e in sorted(big, key=lambda e: -real_sp[e]):
+        log(f"| {e} | {real_sp[e]:.1f} | {gen_sp[e]:.1f} |")
 
     if args.out:
         pathlib.Path(args.out).write_text("\n".join(L) + "\n")
