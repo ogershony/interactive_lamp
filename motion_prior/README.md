@@ -62,6 +62,8 @@ run is not wasted, but ~2/3 of it is. Prefer `--steps 12000`.
 
 Add `--wandb PROJECT` (and optionally `--wandb-name`) to stream loss,
 lr, throughput and val curves to Weights & Biases; omitted = no-op.
+Auth: `wandb login` (~/.netrc) or put `WANDB_API_KEY` in `.env` (see
+`.env.example`) and run via `uv run --env-file .env ...`.
 
 Copy `runs/fm-v0/ckpt_best.pt` (a few MB) back to the demo box.
 Locally, torch is pinned to the CPU wheel via the `pytorch-cpu` index in
