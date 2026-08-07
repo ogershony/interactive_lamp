@@ -17,14 +17,14 @@ data/cozmo_data/animations/
 data/cozmo_data/output/
 
 # Retargeted lamp trajectories (one run dir per `data/pipeline.py
-# retarget --all` invocation), previews, review GIFs, and exported
-# datasets -- all regenerable. curation.csv, CURATION.md, and metrics/
-# stay tracked: the metrics CSVs are the only surviving record of
-# mapping runs v1.1-v1.3 (code was iterated in place pre-git).
+# retarget --all` invocation), previews, and review GIFs -- all
+# regenerable. curation.csv, CURATION.md, metrics/, and dataset/ stay
+# tracked: the metrics CSVs are the only surviving record of mapping
+# runs v1.1-v1.3 (code was iterated in place pre-git), and dataset/
+# holds the frozen versioned exports the GPU box trains against.
 data/lamp_data/npz/
 data/lamp_data/preview/
 data/lamp_data/review_gifs/
-data/lamp_data/dataset/
 
 # Flow-matching training runs (checkpoints live on the GPU box / local
 # scratch; code and README stay tracked)
