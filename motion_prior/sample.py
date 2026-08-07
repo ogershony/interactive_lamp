@@ -2,7 +2,7 @@
 """
 Sample clips from a trained flow-matching checkpoint.
 
-    uv run style-model/sample.py --ckpt style-model/runs/fm-v0/ckpt_best.pt \\
+    uv run motion_prior/sample.py --ckpt motion_prior/runs/fm-v0/ckpt_best.pt \\
         --affect joy --cfg 2.0 --n 4 --out /tmp/samples --gif
 
     --affect joy                    pure affect
@@ -147,7 +147,7 @@ def project(x):
     second time (0.15 -> 0.28) and visibly compress the LED range.
     """
     sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent
-                           / "data"))
+                           / "data" / "lamp_retargeting"))
     from pipeline import LIGHT_SLEW, ease_track
     y = x.copy()
     y[:, :5] = np.column_stack([ease_track(x[:, j]) for j in range(5)])
@@ -163,7 +163,7 @@ def project(x):
 def render_gif(x, path, fps=30):
     """Lamp-only GIF via the data pipeline's renderer (needs mujoco)."""
     sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent
-                           / "data"))
+                           / "data" / "lamp_retargeting"))
     from pipeline import Lamp, LampRenderer
     from PIL import Image
     lamp = Lamp()

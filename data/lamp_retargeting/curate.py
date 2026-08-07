@@ -3,20 +3,20 @@
 Optional human-curation tooling for retarget runs: GIF rendering, a local
 web review app, a mapping A/B panel, batch verdicts, and contact sheets.
 
-    uv run data/scripts/curate.py render  [--run R] [--clips A B] [--force]
-    uv run data/scripts/curate.py serve   [--run R] [--port 7788]
-    uv run data/scripts/curate.py panel   [--run R] [--tag NAME]
-    uv run data/scripts/curate.py verdict --flag STATIC --verdict drop \
+    uv run data/lamp_retargeting/curate.py render  [--run R] [--clips A B] [--force]
+    uv run data/lamp_retargeting/curate.py serve   [--run R] [--port 7788]
+    uv run data/lamp_retargeting/curate.py panel   [--run R] [--tag NAME]
+    uv run data/lamp_retargeting/curate.py verdict --flag STATIC --verdict drop \
         --tags source-static [--run R] [--note "..."] [--overwrite]
-    uv run data/scripts/curate.py sheet --clips-file list.txt --out DIR \
+    uv run data/lamp_retargeting/curate.py sheet --clips-file list.txt --out DIR \
         [--run R] [--per-sheet 4]
 
-render  writes side-by-side Cozmo|lamp GIFs to data/lamp_data/review_gifs/,
+render  writes side-by-side Cozmo|lamp GIFs to data/lamp_retargeting/review_gifs/,
         cached by npz sha1 (only clips whose qpos actually changed between
         runs re-render); resumable.
 serve   browser UI at http://localhost:7788 -- keyboard: k keep, d drop,
         f fix-mapping, 1-9/0/- toggle reason tags, n note, arrows navigate,
-        u back. Verdicts persist to data/lamp_data/curation.csv (atomic
+        u back. Verdicts persist to data/lamp_retargeting/curation.csv (atomic
         rewrite, git-tracked).
 panel   renders a fixed ~10-clip panel into review_gifs/panel/<tag>/ for
         side-by-side comparison of mapping variants at /panel.
@@ -43,17 +43,16 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import numpy as np
 
-DATA = pathlib.Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(DATA))
+RETARGET_DIR = pathlib.Path(__file__).resolve().parent
+sys.path.insert(0, str(RETARGET_DIR))
 from pipeline import (  # noqa: E402
-    METRICS_DIR, NPZ_IN, Lamp, LampRenderer, _font, latest_run,
-    load_labels, pick_gif_samples, read_run_json, run_dir, top_emotions)
+    CURATION_CSV, METRICS_DIR, NPZ_IN, Lamp, LampRenderer, _font,
+    latest_run, load_labels, pick_gif_samples, read_run_json, run_dir,
+    top_emotions)
 
-LAMP_DATA = DATA / "lamp_data"
-GIF_DIR = LAMP_DATA / "review_gifs"
+GIF_DIR = RETARGET_DIR / "review_gifs"
 PANEL_DIR = GIF_DIR / "panel"
 MANIFEST_PATH = GIF_DIR / "render_manifest.json"
-CURATION_CSV = LAMP_DATA / "curation.csv"
 
 CURATION_FIELDS = ["clip_name", "verdict", "reason_tags", "note",
                    "reviewed_at", "run_reviewed", "mapping_version_reviewed"]
@@ -556,7 +555,7 @@ PANEL_PAGE = r"""<!doctype html>
 <script>
 fetch('/api/panel').then(r=>r.json()).then(tags=>{
   if(!tags.length){document.getElementById('grid').textContent=
-    'no panels yet: uv run data/scripts/curate.py panel --tag <name>';return}
+    'no panels yet: uv run data/lamp_retargeting/curate.py panel --tag <name>';return}
   const clips=[...new Set(tags.flatMap(t=>t.clips))];
   let h='<table><tr><th>clip</th>'+
     tags.map(t=>`<th>${t.tag}</th>`).join('')+'</tr>';

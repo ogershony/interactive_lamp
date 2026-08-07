@@ -3,7 +3,7 @@
 Rater-free evaluation of a trained flow-matching checkpoint (the Phase 5
 G1 go/no-go gate).
 
-    uv run style-model/evaluate.py --ckpt style-model/runs/fm-v0/ckpt_best.pt
+    uv run motion_prior/evaluate.py --ckpt motion_prior/runs/fm-v0/ckpt_best.pt
 
 Reports:
 1. PROBE TRANSFER (headline): a ridge probe trained on REAL train clips
@@ -190,7 +190,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__.split("\n")[1])
     p.add_argument("--ckpt", required=True)
     p.add_argument("--npz",
-                   default="data/lamp_data/dataset/lamp_dataset_v1.4.npz")
+                   default="data/dataset/lamp_dataset_v1.4.npz")
     p.add_argument("--device", default="cpu")
     p.add_argument("--cfg", type=float, default=2.5,
                    help="guidance weight for the main generated set")
@@ -217,7 +217,7 @@ def main():
         L.append(s)
         print(s)
 
-    log(f"# style-model evaluation: {args.ckpt}")
+    log(f"# motion_prior evaluation: {args.ckpt}")
     log(f"step {ck['step']}, cfg {args.cfg}, {args.steps} ODE steps, "
         f"seed {args.seed}, projection {'on' if PROJECT else 'OFF'}")
     log()

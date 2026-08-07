@@ -2,8 +2,8 @@
 """
 Train the conditional flow-matching style model.
 
-    uv run style-model/train.py --device cpu --steps 200 --overfit 10   # G0 smoke
-    python style-model/train.py --device cuda                          # full run
+    uv run motion_prior/train.py --device cpu --steps 200 --overfit 10   # G0 smoke
+    python motion_prior/train.py --device cuda                          # full run
 
 Flow matching: x0 ~ N(0, I), x1 = normalized clip, x_t = (1-t) x0 + t x1,
 regress v_theta(x_t, t | cond) onto (x1 - x0) with a masked MSE (padding
@@ -29,8 +29,8 @@ from dataset import build
 from model import EMA, Denoiser, count_params
 
 DEFAULTS = dict(
-    npz="data/lamp_data/dataset/lamp_dataset_v1.4.npz",
-    out_dir="style-model/runs/fm-v0",
+    npz="data/dataset/lamp_dataset_v1.4.npz",
+    out_dir="motion_prior/runs/fm-v0",
     device="cuda" if torch.cuda.is_available() else "cpu",
     seed=0,
     # model

@@ -32,7 +32,7 @@ def main():
         "with:",
         "",
         "```",
-        "/home/oren/miniconda3/bin/python data_preprocessing_pipeline/run_all.py",
+        "python data_preprocessing_pipeline/run_all.py",
         "```",
         "",
         "Inputs (never modified): `raw/assets/` (pycozmo 0.8.0 resource "

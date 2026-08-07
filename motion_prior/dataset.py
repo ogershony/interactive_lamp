@@ -2,7 +2,7 @@
 """
 Dataset + augmentation for the lamp flow-matching style model.
 
-Loads data/lamp_data/dataset/lamp_dataset_v1.4.npz (see its manifest for
+Loads data/dataset/lamp_dataset_v1.4.npz (see its manifest for
 schema) and yields whole variable-length clips as (T, 9) float32 frames:
 
     channels 0-4   qpos J1..J5 (rad)

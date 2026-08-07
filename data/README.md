@@ -1,87 +1,114 @@
-# Data pipeline: Cozmo animations -> curated lamp trajectories
+# Data: from Cozmo animations to a lamp motion dataset
 
-Everything below turns 926 Cozmo robot animation clips into a curated,
-emotion-labeled motion dataset for training the flow-matching style
-model (style-model/) that drives the 5-DOF LeLamp (assets/robot.xml) as
-a cute, calm, Pixar-like character.
+Everything under `data/` exists to produce one thing: an
+emotion-labeled dataset of expressive 5-DOF lamp motion
+(`dataset/lamp_dataset_v1.4.npz`) that the flow-matching model in
+`motion_prior/` trains on. The motion is not authored by hand — it is
+*retargeted* from 926 animation clips of Anki's Cozmo robot, each
+annotated with crowd-sourced emotion labels.
 
-## Pipeline (in order)
+## Layout: three siblings
+
+| directory | what it is |
+|---|---|
+| `cozmo_data/` | the source: raw Cozmo animation download, its preprocessing pipeline, and the emotion labels |
+| `lamp_retargeting/` | the machinery: Cozmo→lamp retargeting, quality metrics, human curation, media/review tooling — plus the git-tracked records of every mapping iteration |
+| `dataset/` | the product: frozen, diffusion-ready training exports (npz + manifest), git-tracked |
+
+## The retargeting problem, in plain terms
+
+Cozmo is a wheeled robot with a lift, a head, and an OLED face. The
+lamp is a 5-joint arm with an LED. No joint maps one-to-one, so the
+retarget works in *feature space*: for each 30 Hz frame of a Cozmo
+clip, extract what the motion **means** (attention direction, body
+lean, lift energy, face brightness), then synthesize a lamp pose that
+expresses the same thing with its own body.
+
+`lamp_retargeting/pipeline.py` runs four stages per clip:
+
+1. **Extract** (`extract_features`) — head pitch, body yaw, lift
+   height, face/eye brightness from the Cozmo channel arrays.
+2. **Synthesize** (`synthesize`) — map those to the 5 lamp joints:
+   yaw follows body yaw (J1), gaze elevation drives the arm chain
+   (J2/J3/J5), the wrist banks into turns (J4, added in v1.4), eye
+   brightness becomes LED level.
+3. **Calm** (`ease_track`, `calm_light`, `lowpass`) — the raw mapping
+   is jittery and blinky. Filter to 2.5 Hz, track through an
+   accel/velocity-limited easer (1.8 rad/s rate cap — the "Pixar-calm"
+   character), de-blink the LED and slew-limit it into fades. These
+   caps are the dataset's physical invariants; everything downstream
+   (the exporter, the model's sampler, the runtime validator) enforces
+   the same ones.
+4. **Verify** (`verify_clip`, `dynamics_check`) — joint limits, rate
+   caps, and a MuJoCo torque/collision check on a sample.
+
+One full-corpus invocation = one **run** (`--run v1.X-slug`), writing
+`lamp_retargeting/npz/<run>/`. Runs are cheap (seconds) and
+disposable; what persists in git is each run's *metrics*.
+
+## How a mapping iteration works
 
 ```
-cozmo_data/raw/                 pycozmo resource download (574 MB, re-fetchable)
-  |  data_preprocessing_pipeline/run_all.py
+edit mapping constants in pipeline.py (bump MAPPING_VERSION)
+  |  uv run data/lamp_retargeting/pipeline.py retarget --all --run v1.X-slug
   v
-cozmo_data/animations/npz/      926 clips as 30 Hz channel arrays
-cozmo_data/labels.csv           16-dim soft emotion labels + descriptions
-  |  pipeline.py retarget --all --run <name>   (feature-space retargeting)
+lamp_retargeting/npz/v1.X-slug/          retargeted clips (gitignored)
+  |  uv run data/lamp_retargeting/pipeline.py metrics --diff <prev> --emotions
   v
-lamp_data/npz/<run>/            one directory per mapping iteration
-  |  pipeline.py metrics [--diff] [--emotions]
+lamp_retargeting/metrics/v1.X-slug.csv   per-clip quality (git-tracked)
+  |  human review: uv run data/lamp_retargeting/curate.py serve
   v
-lamp_data/metrics/<run>.csv     per-clip quality metrics (git-tracked history)
-  |  scripts/curate.py render / serve / panel / verdict   (optional, human)
+lamp_retargeting/curation.csv            keep/drop verdicts (git-tracked)
+  |  uv run data/lamp_retargeting/pipeline.py export
   v
-lamp_data/curation.csv          keep/drop verdicts (git-tracked, survives re-runs)
-  |  pipeline.py export
-  v
-lamp_data/dataset/              final training set + manifest
+dataset/lamp_dataset_<run>.npz           frozen training set + manifest
 ```
 
-`pipeline.py all --run <name>` chains retarget + metrics + export in one
-command once curation verdicts exist.
+`pipeline.py all --run <name>` chains retarget + metrics + export once
+curation verdicts exist. The metrics step is the feedback loop: it
+scores every clip (saturation, rate-cap fraction, jerk, light flicker,
+source-correlation), diffs against the previous run, and reports
+per-emotion feature preservation — so every mapping change is judged
+by numbers before eyes.
 
-## Directory map
+## Curation (the human part)
 
-| path | what it is | regenerable? |
-|---|---|---|
-| `cozmo_data/` | source dataset + its own preprocessing pipeline and REPORT.md | raw is re-fetchable; the rest deterministic |
-| `pipeline.py` | THE pipeline: mapping (MAPPING_VERSION, all style constants) + metrics + export | - |
-| `scripts/curate.py` | optional curation: GIF rendering (sha1-cached), web review app, mapping A/B panel, batch verdicts, contact sheets | - |
-| `lamp_data/npz/<run>/` | retargeted trajectories, run.json marks complete | yes (seconds) |
-| `lamp_data/metrics/` | per-clip CSVs, diffs, emotion reports, summary.csv | yes (minutes) |
-| `lamp_data/curation.csv` | human + audited verdicts | **NO - human labor** |
-| `lamp_data/CURATION.md` | iteration protocol + mapping changelog | **NO** |
-| `lamp_data/review_gifs/` | side-by-side GIFs for review (gitignored) | yes (hours) |
-| `lamp_data/preview/` | keypose sheet + sample GIFs of the latest run | yes |
-| `lamp_data/dataset/` | exported training sets (gitignored) | yes (seconds) |
+`curate.py` subcommands — all optional except that export only emits
+reviewed clips:
 
-Kept run directories: `v1.0-baseline` (the reference point) and `v1.4`
-(the frozen dataset's mapping). Intermediate runs v1.1-v1.3 were deleted
-to save disk. Their code predates the repo's first commit and was
-iterated in place, so those runs are NOT regenerable; the git-tracked
-metrics CSVs, emotion reports, and diffs in `lamp_data/metrics/` are
-their permanent record (the cross-run summary table still covers them),
-and CURATION.md's changelog documents each version's exact constant
-changes.
+| command | does |
+|---|---|
+| `render` | side-by-side Cozmo\|lamp GIFs, sha1-cached, resumable |
+| `serve` | keyboard-driven review app at :7788 (k keep / d drop / tags) |
+| `panel` | fixed 10-clip A/B panel for comparing mapping variants |
+| `verdict` | batch-apply a verdict to all clips carrying a metric flag |
+| `sheet` | contact-sheet PNGs (8 keyframes, source over lamp) for audits |
 
-## Mapping history (see lamp_data/CURATION.md for details)
+Verdicts live in `lamp_retargeting/curation.csv` — **human labor, not
+regenerable**, survives all re-runs by design. Policy details and the
+per-version changelog: `lamp_retargeting/CURATION.md`.
+
+## Mapping history
 
 - **1.0** baseline feature-space mapping
-- **1.1** motion easing (`ease_track`) + light calming (`calm_light`): flicker 242 clips -> 0
+- **1.1** motion easing + light calming: flicker 242 clips → 0
 - **1.2** slower (2.5 rad/s) + smoother (4 Hz)
-- **1.3** Pixar-calm: 1.8 rad/s, 15 rad/s^2, 2.5 Hz; light 11-frame de-blink,
-  1 Hz fades, 0.15 glow floor, 0.8/s slew. Corpus jerk -84% vs 1.0.
-- **1.4** head-tilt secondary motion: J4 banks into turns (was dead at
-  HOME4 in every frame through 1.3). Dataset v1 exported from this run.
+- **1.3** Pixar-calm: 1.8 rad/s, 15 rad/s², 2.5 Hz; light de-blink,
+  fades, 0.15 glow floor. Corpus jerk −84% vs 1.0.
+- **1.4** head-tilt secondary motion: J4 banks into turns. **Dataset
+  v1 exported from this run.**
 
-## Curation policy (how verdicts were made)
+Runs v1.1–v1.3 predate the repo's first commit and their npz dirs were
+deleted — the git-tracked metrics CSVs and diffs in
+`lamp_retargeting/metrics/` are their only surviving record.
 
-1. Manual review by Oren in the web app (47 verdicts) - the taste anchor.
-2. `curate.py verdict --flag STATIC` - near-static clips dropped (sticky).
-3. Audited rules calibrated against the manual verdicts:
-   drop T<=13 twitch-stubs and expression-less clips; keep T>=30 with
-   range >= 0.15 rad (visually validated); short clips and subtle movers
-   judged individually on contact sheets (visual audit).
-4. Explicit `keep` verdicts override the exporter's minimum-length filter;
-   unreviewed clips are excluded from export.
+## Cozmo source data
 
-## Common commands
-
-```
-uv run data/pipeline.py retarget --all --run v1.X-<slug>   # new mapping iteration
-uv run data/pipeline.py metrics --diff <prev>              # did it help?
-uv run data/pipeline.py metrics --emotions                 # emotion preservation
-uv run data/pipeline.py export                             # final dataset
-uv run data/scripts/curate.py panel                        # 10-clip A/B column
-uv run data/scripts/curate.py serve                        # review UI :7788
-```
+`cozmo_data/` is self-contained with its own README-grade report
+(`REPORT.md`): a deterministic pipeline
+(`data_preprocessing_pipeline/run_all.py`) that decodes the raw
+FlatBuffers animation containers, repairs and aggregates the crowd
+emotion annotations, enforces a strict 1:1 label↔clip bijection
+(926 clips), and resamples everything onto a 33 ms grid. The 574 MB
+`raw/` download is gitignored and re-fetchable:
+`PYCOZMO_DIR=data/cozmo_data/raw pycozmo_resources.py download`.

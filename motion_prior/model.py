@@ -64,6 +64,10 @@ class Block(nn.Module):
 
 
 class Denoiser(nn.Module):
+    """Velocity-field transformer: (noisy clip, mask, t, affect,
+    log-duration) -> per-frame velocity toward the data. See the module
+    docstring for how conditioning enters (AdaLN-Zero + learned null)."""
+
     def __init__(self, d=160, heads=4, ff=640, layers=5, t_max=240,
                  n_affect=16, extra_cond_dim=0):
         super().__init__()

@@ -1,9 +1,9 @@
-# style-model: conditional flow matching for expressive lamp motion
+# motion_prior: conditional flow matching for expressive lamp motion
 
 Generates whole variable-length lamp clips — 5 joint trajectories + LED
 brightness + LED color, 9 channels at 30 Hz — conditioned on a 16-d
 affect vector. Trained on the curated Cozmo-retarget dataset
-(`data/lamp_data/dataset/lamp_dataset_v1.4.npz`, 740 train / 79 val
+(`data/dataset/lamp_dataset_v1.4.npz`, 740 train / 79 val
 clips, 87k frames). See `lamp_plan.md` §7 for the design rationale.
 
 ## Files
@@ -12,9 +12,10 @@ clips, 87k frames). See `lamp_plan.md` §7 for the design rationale.
 |---|---|
 | `dataset.py` | npz loading, label group-averaging + unit-L2 normalization, on-the-fly augmentation, length-bucketed masked batching |
 | `model.py` | masked transformer denoiser (AdaLN-Zero, learned CFG null, ~2.4M params at defaults) |
-| `train.py` | flow-matching training loop, EMA, checkpointing |
-| `sample.py` | ODE sampling with classifier-free guidance, npz + GIF export |
-| `evaluate.py` | rater-free eval: probe transfer, feature agreement, interpolation/CFG monotonicity, diversity, validator pass rate |
+| `train.py` | flow-matching training loop, EMA, checkpointing, optional wandb |
+| `sample.py` | ODE sampling with classifier-free guidance, projection, npz + GIF export |
+| `infer.py` | one-shot CLI front-end over sample.py: `infer.py "joy=0.7,surprise=0.3" --seconds 3` → `outputs/` |
+| `evaluate.py` | rater-free eval: probe transfer, feature agreement, interpolation/CFG monotonicity, diversity, validator pass rate, affect spread |
 
 ## Data contract
 
@@ -42,7 +43,7 @@ Needs only this directory + the dataset npz + manifest json. Setup:
 
 ```bash
 pip install numpy "torch>=2.5"       # CUDA wheel on the GPU box
-python style-model/train.py --device cuda \
+python motion_prior/train.py --device cuda \
     --npz path/to/lamp_dataset_v1.4.npz --out-dir runs/fm-v0
 ```
 
@@ -83,8 +84,18 @@ i7-10700) runs there.
 
 ## Sampling
 
+Day-to-day, use the one-shot front-end — checkpoint, cfg, projection
+and output location all default sensibly:
+
 ```bash
-uv run style-model/sample.py --ckpt style-model/runs/fm-v0/ckpt_best.pt \
+uv run motion_prior/infer.py "joy=0.7,surprise=0.3" --seconds 3
+# -> motion_prior/outputs/joy07+surprise03_0.npz   (add --gif for a render)
+```
+
+`sample.py` is the full-control version:
+
+```bash
+uv run motion_prior/sample.py --ckpt motion_prior/runs/fm-v0/ckpt_best.pt \
     --affect "joy=0.7,surprise=0.3" --cfg 2.5 --n 4 --out /tmp/s --gif
 ```
 
@@ -133,7 +144,7 @@ An `EGLError` at interpreter exit is a teardown artifact and is harmless.
 ## Evaluation
 
 ```bash
-uv run style-model/evaluate.py --ckpt ... --out eval_report.md
+uv run motion_prior/evaluate.py --ckpt ... --out eval_report.md
 ```
 
 Runs the six G1 stages (see `evaluate.py` docstring). `--quick` skips

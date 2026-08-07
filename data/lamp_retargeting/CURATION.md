@@ -6,13 +6,13 @@
 > 168 ambiguous clips). v1.4 re-audited: J4 banking validated on the
 > 12 highest-yaw keeps, 0 real regressions, 0 rescues (3 candidates
 > examined, still inexpressive). Final: **819 keep / 107 drop** ->
-> `dataset/lamp_dataset_v1.4.npz`: 740 train / 79 val clips (grouped
+> `data/dataset/lamp_dataset_v1.4.npz`: 740 train / 79 val clips (grouped
 > by base animation, no head-angle leakage), 86,855 frames, 47.3 min,
 > every emotion covered by >= 77 clips at fraction >= 0.5, and all
 > five joints alive (J4: 0.49 rad of banking; was 0 through v1.3).
 
 Goal: iteratively improve the Cozmo->lamp mapping (now in
-`data/pipeline.py`; was `data/retarget.py` when the runs below were made)
+`data/lamp_retargeting/pipeline.py`; was `data/retarget.py` when the runs below were made)
 and curate the trajectory set until it is ready for generative-model
 training (flow matching as of plan v2; was CVAE). Cuteness is the lamp's
 *identity*: it lives in the mapping and in curation, so that everything
@@ -22,7 +22,7 @@ vector (content), never on a "cute" knob.
 ## Layout
 
 ```
-data/lamp_data/
+data/lamp_retargeting/
   npz/<run>/            one directory per retarget run (gitignored).
                         run.json marks a run complete; tools default to
                         the newest complete run. scratch/ = single-clip
@@ -39,17 +39,19 @@ data/lamp_data/
   curation.csv          human verdicts (git-tracked; the audit log is
                         git history). Survives all re-runs by design.
   review_gifs/          sha1-cached side-by-side GIFs (gitignored)
-  dataset/              exported training sets (gitignored)
+
+data/dataset/           exported training sets + manifests (git-tracked
+                        frozen versions the GPU box trains against)
 ```
 
 Never store precious files inside an npz run directory.
 
 ## The loop (one mapping change per cycle; regeneration is ~4 s)
 
-1. Implement **one** mapping change in `data/pipeline.py`, bump
+1. Implement **one** mapping change in `data/lamp_retargeting/pipeline.py`, bump
    `MAPPING_VERSION`, add a changelog line below.
-2. `uv run data/pipeline.py retarget --all --run v1.X-<slug>`
-3. `uv run data/pipeline.py metrics --diff <prev-run> --emotions`
+2. `uv run data/lamp_retargeting/pipeline.py retarget --all --run v1.X-<slug>`
+3. `uv run data/lamp_retargeting/pipeline.py metrics --diff <prev-run> --emotions`
    -- check the flag deltas, regressed-clip list, and that no emotion's
    probe R^2 collapsed.
 4. `uv run data/scripts/curate.py panel` then open `/panel` -- judge the
@@ -66,7 +68,7 @@ Never store precious files inside an npz run directory.
    else re-queues after the next version bump.
 7. Cluster the fix_mapping notes into the next cycle's hypothesis.
 
-When the queue is clean: `uv run data/pipeline.py export` (drop
+When the queue is clean: `uv run data/lamp_retargeting/pipeline.py export` (drop
 `--include-unreviewed` once review is complete).
 
 ## Cuteness hypothesis backlog (A/B on the panel, one per version)
