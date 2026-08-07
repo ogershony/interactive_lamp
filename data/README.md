@@ -24,7 +24,25 @@ clip, extract what the motion **means** (attention direction, body
 lean, lift energy, face brightness), then synthesize a lamp pose that
 expresses the same thing with its own body.
 
-`lamp_retargeting/pipeline.py` runs four stages per clip:
+The retargeting code lives in `lamp_retargeting/` as focused modules
+behind one entry point — `pipeline.py` is the CLI and the stable import
+surface (`from pipeline import ...` reaches everything):
+
+| module | role |
+|---|---|
+| `config.py` | paths + all mapping constants (single source of truth) |
+| `filters.py` | `lowpass` / `ease_track` / `calm_light` signal primitives |
+| `lamp_model.py` | Lamp kinematics + load-time calibration, renderer |
+| `mapping.py` | the mapping itself (extract → synthesize → postprocess) |
+| `verify.py` | invariant checks, dynamics tracking, determinism |
+| `media.py` | side-by-side GIFs, keypose sheet (the only GL-dependent code) |
+| `corpus.py` | full-corpus runs + per-run report |
+| `metrics.py` | per-clip CSVs, flags, cross-run diffs + summary |
+| `emotions.py` | emotion-preservation report |
+| `export.py` | curation-filtered dataset export |
+| `labels.py` / `runs.py` | label access, run bookkeeping |
+
+The pipeline runs four stages per clip:
 
 1. **Extract** (`extract_features`) — head pitch, body yaw, lift
    height, face/eye brightness from the Cozmo channel arrays.
