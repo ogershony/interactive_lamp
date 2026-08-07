@@ -118,7 +118,7 @@ def save_manifest(man):
 
 class GifFactory:
     """Reusable renderers; composes the side-by-side frame like
-    retarget.render_gif but downscaled and optimized for a ~900-GIF corpus."""
+    pipeline.render_gif but downscaled and optimized for a ~900-GIF corpus."""
 
     def __init__(self, lamp, labels):
         from cozmo_model import ClipRenderer
@@ -126,7 +126,6 @@ class GifFactory:
         self.cozmo = ClipRenderer(420, 300)
         self.lampr = LampRenderer(lamp)
         self.labels = labels
-        from retarget import _font
         self.font = _font(15)
         self.small = _font(12)
 
