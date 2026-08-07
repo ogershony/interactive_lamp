@@ -36,3 +36,7 @@ MUJOCO_LOG.TXT
 
 # Local planning notes, kept out of the repo
 lamp_plan.md
+
+# Secrets: real values live in .env (never committed); .env.example
+# documents the expected variables
+.env
