@@ -58,7 +58,7 @@ uv run runtime/eval/replay.py runtime/sessions/<name>   # -> replay.mp4
 installed (`apt/dnf install portaudio` — this repo's dev box has no
 sound hardware at all, so it runs on the Pi or a laptop), the `voice`
 dependency group (faster-whisper; first run downloads the small.en
-model), `ANTHROPIC_API_KEY` for `--llm anthropic`, and espeak-ng or
+model), `GEMINI_API_KEY` in `.env` for dialogue, and espeak-ng or
 piper for audible speech (silent otherwise). Servos attach with
 `--port /dev/ttyACM0`; without it motion goes to mock drivers.
 
@@ -72,6 +72,24 @@ available.
 
 `main.py` reports the safety numbers after every run; a nonzero
 invariant count on the commanded stream is a hard failure (exit 1).
+
+## Where motion comes from
+
+Every clip the lamp plays is a sample from the flow-matching prior;
+what varies is *when* it was sampled. The runtime prefers the
+**clip cache** (`runtime/cache/`, built offline by
+`runtime/tools/build_clip_cache.py`) — lookup is microseconds, which
+is what makes the sub-200 ms REACT clip, seamless chaining, and the
+ambient filler possible at all. **Live generation** (`--engine`) runs
+only when the cache misses badly (affect cosine below
+`CACHE_COS_THRESHOLD`) and must beat `TIMEOUT_MOTION` (1.5 s) or the
+cache is used anyway. On this dev box live generation measures
+0.2–5 s/clip, so in practice near-100% of played frames are cached
+samples; the recorded demo (`gemini-recorded-v2`) is 100% cache
+(71% speak, 19% react, 9% ambient frames). The engine's share should
+grow on hardware with headroom, for affect mixtures the bank doesn't
+cover. Each session logs `motion_source` events, and `main.py` prints
+the split (`eval/metrics.motion_sources`) after every run.
 
 ## Invariant policy
 

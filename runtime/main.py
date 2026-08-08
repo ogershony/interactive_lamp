@@ -265,6 +265,7 @@ def run_conversation(args, sched, rec, out):
     print(f"ticks {scan['n_frames']}  trims {sched.trims}  "
           f"violations {sched.violations}")
     print(f"invariant scan: {scan}")
+    print(f"motion sources: {metrics.motion_sources(events, frames)}")
     if scan["total"] or sched.violations:
         sys.exit("FAIL: invariant violations in the commanded stream")
 

@@ -111,6 +111,13 @@ def test_full_turn_from_audio(convo):
     assert sched.violations == 0
     assert invariant_scan(cmds)["total"] == 0
 
+    # provenance: every motion request logged a source; without an
+    # engine everything resolves to the cache (forced when the affect
+    # mixture lands below the cosine threshold)
+    sources = rec.of("motion_source")
+    assert sources
+    assert {e["source"] for e in sources} <= {"cache", "cache_forced"}
+
     # every planned speak segment actually started, on its planned frame
     starts = {e["tag"]: e["frame"] for e in rec.of("clip_start")}
     for seg in summary["segments"]:

@@ -5,7 +5,9 @@ Emotion-conditioned motion generation for a 5-DOF desk-lamp robot
 retargeted in feature space onto the lamp, curated into a training set,
 and used to train a conditional flow-matching model that generates
 whole motion clips — 5 joint trajectories + LED brightness + color,
-9 channels at 30 Hz — from an 11-d affect vector.
+9 channels at 30 Hz — from an 11-d affect vector. On top of that
+offline pipeline, `runtime/` is the conversational loop: speak to the
+lamp, it replies with speech-aligned, affect-conditioned motion.
 
 ## Quickstart (CPU inference, no setup beyond the clone)
 
@@ -13,6 +15,10 @@ whole motion clips — 5 joint trajectories + LED brightness + color,
 uv sync
 uv run motion_generator/infer.py "joy=0.7,surprise=0.3" --seconds 3
 # -> motion_generator/outputs/joy07+surprise03_0.npz   (add --gif to render)
+
+# talk to the lamp (typed turns; --llm canned needs no key):
+uv run runtime/tools/build_clip_cache.py --affects joy,interest --samples 2 --cfgs 2.5
+uv run --env-file .env runtime/main.py --turn "hello lamp"
 ```
 
 The production checkpoint (`motion_generator/runs/fm-v1/ckpt_best.pt`,
@@ -28,6 +34,7 @@ steps, ~100–250 ms/clip on CPU.
 | `data/lamp_retargeting/` | feature-space retargeting (no joint copying: attention/posture/drive/gaze features re-synthesized as lamp poses), per-clip quality metrics, human curation, export. `pipeline.py` = CLI + import surface over 12 focused modules |
 | `data/dataset/` | frozen training exports: v1.5 = 812 clips (734/78 grouped split), 86k frames, 11-label affect space |
 | `motion_generator/` | the model: masked transformer denoiser (AdaLN-Zero, 2.5M params), flow-matching training, CFG sampling + projection, rater-free eval, `infer.py` |
+| `runtime/` | the conversational loop (`lamp_voice_integration_plan.md`): VAD/endpointing, ASR, Gemini structured dialogue, TTS-aligned motion from a clip cache + live generation, 30 Hz scheduler with continuity blending and a safety governor, drivers, session replay to video |
 
 Each directory has its own README with the details; `data/README.md`
 explains the retargeting concept and iteration loop.

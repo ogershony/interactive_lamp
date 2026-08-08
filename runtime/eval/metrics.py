@@ -85,6 +85,27 @@ def boundary_offsets(events):
                 p90=float(np.percentile(d, 90)), max=float(np.max(d)))
 
 
+# ---- motion provenance ----------------------------------------------------
+
+def motion_sources(events, frames=None):
+    """Where motion came from. `requests` counts per-clip requests by
+    source (cache / engine / cache_forced / none). With the commanded
+    stream, `frame_share` gives the fraction of played frames per clip
+    family -- react and ambient clips are cache-only by construction,
+    speak clips follow the per-request sources."""
+    req = {}
+    for e in events:
+        if e["kind"] == "motion_source":
+            req[e["source"]] = req.get(e["source"], 0) + 1
+    out = {"requests": req}
+    if frames is not None:
+        tags = [str(t).split(":")[0] for t in frames["tag"]]
+        n = max(1, len(tags))
+        out["frame_share"] = {k: round(tags.count(k) / n, 3)
+                              for k in sorted(set(tags))}
+    return out
+
+
 # ---- latency / sync -------------------------------------------------------
 
 def stage_latencies(events, stages):

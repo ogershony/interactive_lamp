@@ -240,27 +240,34 @@ class Conversation:
     async def _motion_for(self, req):
         """Cache if it is a good hit, else live generation with a
         timeout, else cache regardless of threshold, else None (the
-        scheduler holds pose / breathes)."""
+        scheduler holds pose / breathes). Every request logs a
+        `motion_source` event so sessions can report their live-vs-
+        cached split (eval/metrics.motion_sources)."""
         hit = self.cache.lookup(req.affect, seconds=req.seconds,
                                 cfg=req.cfg, rng=self.rng) \
             if self.cache is not None else None
         if hit is not None:
+            self._event("motion_source", tag=req.tag, source="cache")
             return hit["x"].copy()
         if self.engine is not None:
             try:
-                return await asyncio.wait_for(
+                x = await asyncio.wait_for(
                     asyncio.to_thread(self.engine.clip, req),
                     C.TIMEOUT_MOTION)
+                self._event("motion_source", tag=req.tag, source="engine")
+                return x
             except Exception as e:  # noqa: BLE001 -- timeout or torch error
                 self._event("motion_fallback", error=type(e).__name__)
         if self.cache is not None and len(self.cache):
             best = self.cache.lookup(req.affect, seconds=req.seconds,
                                      rng=self.rng)
+            self._event("motion_source", tag=req.tag, source="cache_forced")
             if best is None:        # below threshold: take nearest anyway
                 cos = self.cache._A @ (req.affect
                                        / np.linalg.norm(req.affect))
                 return self.cache.entries[int(np.argmax(cos))]["x"].copy()
             return best["x"].copy()
+        self._event("motion_source", tag=req.tag, source="none")
         return None
 
     # ---- hardware loop (Pi): mic ring -> turns -----------------------------
