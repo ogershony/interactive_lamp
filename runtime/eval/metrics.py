@@ -89,10 +89,12 @@ def boundary_offsets(events):
 
 def motion_sources(events, frames=None):
     """Where motion came from. `requests` counts per-clip requests by
-    source (cache / engine / cache_forced / none). With the commanded
+    source (engine / pool_forced / none -- engine covers both the
+    remote service and a local in-process model). With the commanded
     stream, `frame_share` gives the fraction of played frames per clip
-    family -- react and ambient clips are cache-only by construction,
-    speak clips follow the per-request sources."""
+    family -- react and ambient clips come from the prefetched
+    MotionPool by construction, speak clips follow the per-request
+    sources."""
     req = {}
     for e in events:
         if e["kind"] == "motion_source":

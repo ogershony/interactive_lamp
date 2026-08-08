@@ -35,9 +35,7 @@ motion_generator/runs/fm-v1/*
 !motion_generator/runs/fm-v1/ckpt_best.pt
 motion_generator/outputs/
 
-# Runtime artifacts: the clip cache is rebuilt from the checkpoint by
-# tools/build_clip_cache.py; sessions are per-run logs
-runtime/cache/
+# Runtime artifacts: per-run session logs
 runtime/sessions/
 
 # MuJoCo

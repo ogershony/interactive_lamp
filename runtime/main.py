@@ -10,25 +10,25 @@ Clip playback (P0/P1 software half):
     uv run runtime/main.py --play a.npz --realtime --port /dev/ttyACM0
 
 Conversation (P2), no mic needed -- typed turns through the full
-reply pipeline (LLM -> TTS -> affect -> motion -> scheduler):
+reply pipeline (Gemini -> TTS -> affect -> motion -> scheduler).
+Motion comes from the generation service (start it on the GPU box:
+`uv run runtime/motion/service.py --device cuda --host 0.0.0.0`, then
+point MOTION_SERVICE_URL at it) or in-process with --motion local:
 
-    uv run runtime/main.py --turn "hello lamp" --turn "how are you?"
-    uv run runtime/main.py --turn "hi" --llm anthropic --tts espeak
-    uv run runtime/main.py --turn "hi" --engine    # live generation too
+    uv run --env-file .env runtime/main.py --turn "hello lamp"
+    uv run --env-file .env runtime/main.py --turn "hi" --motion local
 
-Full interactive loop (mic -> VAD -> ASR -> LLM -> TTS -> speaker +
+Full interactive loop (mic -> VAD -> ASR -> Gemini -> TTS -> speaker +
 motion). Needs audio hardware + PortAudio, faster-whisper (or a future
-cloud ASR), and ideally espeak-ng/piper and an Anthropic key:
+cloud ASR), GEMINI_API_KEY, and espeak-ng/piper for audible speech:
 
     uv run --env-file .env --group voice runtime/main.py --converse \\
         --tts auto [--port /dev/ttyACM0]
 
-Dialogue defaults to Gemini when GEMINI_API_KEY is set (run with
-`uv run --env-file .env ...`), else the canned offline agent;
---llm anthropic is the alternative backend. Reaction/reply motion
-comes from the clip cache (build it first:
-uv run runtime/tools/build_clip_cache.py); --engine additionally allows live
-generation on cache misses.
+Dialogue is Gemini-only (GEMINI_API_KEY in .env). A prefetched
+MotionPool (react bank + ambient clips) covers the sub-200 ms reaction
+and rides out service outages; with the service down the lamp still
+speaks and breathes.
 
 Without --realtime, ticks run as fast as possible (desk development,
 eval). --converse is always realtime.
@@ -84,14 +84,12 @@ def main():
                    help="interactive mic loop (needs audio hardware)")
     p.add_argument("--asr", choices=["whisper", "scripted"],
                    default="whisper", help="--converse ASR backend")
-    p.add_argument("--llm", choices=["canned", "gemini", "anthropic"],
-                   default=None,
-                   help="dialogue backend (default: config LLM_BACKEND "
-                        "when its key is set, else canned)")
     p.add_argument("--tts", choices=["auto", "silent", "espeak"],
                    default="auto")
-    p.add_argument("--engine", action="store_true",
-                   help="load the checkpoint for live motion generation")
+    p.add_argument("--motion", choices=["remote", "local", "none"],
+                   default="remote",
+                   help="remote = generation service (MOTION_SERVICE_URL); "
+                        "local = in-process checkpoint; none = speech only")
     args = p.parse_args()
 
     out = pathlib.Path(args.out) if args.out else \
@@ -147,33 +145,52 @@ def main():
         sys.exit("FAIL: invariant violations in the commanded stream")
 
 
-def make_agent(choice):
-    """Resolve the dialogue backend: explicit flag wins; otherwise the
-    configured default when its key is present, else canned (offline)."""
+def make_agent():
+    """Gemini is the dialogue backend. Fails fast with a clear message
+    when the key is missing."""
     import os
-    if choice is None:
-        if C.LLM_BACKEND == "gemini" and (os.environ.get("GEMINI_API_KEY")
-                                          or os.environ.get("GOOGLE_API_KEY")):
-            choice = "gemini"
-        elif C.LLM_BACKEND == "anthropic" \
-                and os.environ.get("ANTHROPIC_API_KEY"):
-            choice = "anthropic"
-        else:
-            choice = "canned"
-    if choice == "gemini":
-        from runtime.dialogue.agent import GeminiAgent
-        print("dialogue: gemini", C.GEMINI_MODEL)
-        return GeminiAgent()
-    if choice == "anthropic":
-        from runtime.dialogue.agent import AnthropicAgent
-        print("dialogue: anthropic", C.ANTHROPIC_MODEL)
-        return AnthropicAgent()
-    from runtime.dialogue.agent import CannedAgent
-    print("dialogue: canned (offline)")
-    return CannedAgent()
+    if not (os.environ.get("GEMINI_API_KEY")
+            or os.environ.get("GOOGLE_API_KEY")):
+        sys.exit("GEMINI_API_KEY is not set -- run with "
+                 "`uv run --env-file .env ...` (see .env.example)")
+    from runtime.dialogue.agent import GeminiAgent
+    print("dialogue: gemini", C.GEMINI_MODEL)
+    return GeminiAgent()
 
 
-def run_interactive(args, sched, rec, out, cache, engine, agent):
+def make_motion(args):
+    """(engine, pool) for the chosen --motion mode. `remote` talks to
+    the generation service (GPU box); `local` runs the checkpoint
+    in-process (one-box mode, slow on CPU); `none` -> speech only."""
+    import os
+    if args.motion == "none":
+        return None, None
+    if args.motion == "local":
+        from runtime.motion.engine import MotionEngine
+        engine = MotionEngine()
+        print("motion: local engine (in-process)")
+    else:
+        from runtime.motion.remote import RemoteEngine
+        url = os.environ.get("MOTION_SERVICE_URL") or C.MOTION_SERVICE_URL
+        engine = RemoteEngine(url)
+        try:
+            health = engine.check()
+            print(f"motion: service at {url} "
+                  f"(ckpt step {health.get('step')}, "
+                  f"device {health.get('device')})")
+        except Exception as e:  # noqa: BLE001
+            print(f"warning: motion service unreachable at {url} ({e}); "
+                  f"the lamp will speak and breathe until it comes back")
+    from runtime.motion.prefetch import MotionPool
+    pool = MotionPool(engine)
+    made = pool.warm()
+    print(f"motion pool warmed: {made} clips "
+          f"(react bank {len(pool._react)}/{len(C.EMOTIONS)})")
+    pool.start()
+    return engine, pool
+
+
+def run_interactive(args, sched, rec, out, engine, pool, agent):
     """The full duplex loop: mic ring -> Conversation, scheduler on its
     own realtime 30 Hz thread, playback through the same stream."""
     import asyncio
@@ -186,7 +203,7 @@ def run_interactive(args, sched, rec, out, cache, engine, agent):
 
     audio = AudioIO()
     audio.start()                       # raises without PortAudio/devices
-    convo = Conversation(sched, agent=agent, cache=cache, engine=engine,
+    convo = Conversation(sched, agent=agent, engine=engine, pool=pool,
                          asr=WhisperAsr() if args.asr == "whisper"
                          else ScriptedAsr(["hello"]),
                          tts=make_tts(args.tts), audio=audio, recorder=rec)
@@ -204,6 +221,8 @@ def run_interactive(args, sched, rec, out, cache, engine, agent):
         stop.set()
         control.join(timeout=2.0)
         audio.stop()
+        if pool is not None:
+            pool.close()
         rec.event("run_end", trims=sched.trims,
                   violations=sched.violations, overruns=sched.overruns)
         rec.close()
@@ -218,26 +237,17 @@ def run_conversation(args, sched, rec, out):
     from runtime.audio.asr import ScriptedAsr
     from runtime.audio.tts import make_tts
     from runtime.behavior import Conversation
-    from runtime.motion.cache import ClipCache
 
-    cache = ClipCache()
-    if len(cache) == 0:
-        print("note: clip cache is empty -- run runtime/tools/build_clip_cache.py "
-              "for reaction/reply motion" +
-              ("" if args.engine else " (or pass --engine)"))
-    engine = None
-    if args.engine:
-        from runtime.motion.engine import MotionEngine
-        engine = MotionEngine()
-    agent = make_agent(args.llm)
+    agent = make_agent()
+    engine, pool = make_motion(args)
 
     if args.converse:
-        run_interactive(args, sched, rec, out, cache, engine, agent)
+        run_interactive(args, sched, rec, out, engine, pool, agent)
         return
 
     convo = Conversation(sched, asr=ScriptedAsr(), agent=agent,
-                         tts=make_tts(args.tts), cache=cache,
-                         engine=engine, recorder=rec)
+                         tts=make_tts(args.tts), engine=engine,
+                         pool=pool, recorder=rec)
 
     async def turns():
         for text in args.turn:
@@ -255,7 +265,11 @@ def run_conversation(args, sched, rec, out):
             else:
                 while sched.frame < end + 15:
                     sched.tick()
-    asyncio.run(turns())
+    try:
+        asyncio.run(turns())
+    finally:
+        if pool is not None:
+            pool.close()
 
     rec.event("run_end", trims=sched.trims, violations=sched.violations)
     rec.close()

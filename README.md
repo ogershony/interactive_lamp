@@ -16,8 +16,9 @@ uv sync
 uv run motion_generator/infer.py "joy=0.7,surprise=0.3" --seconds 3
 # -> motion_generator/outputs/joy07+surprise03_0.npz   (add --gif to render)
 
-# talk to the lamp (typed turns; --llm canned needs no key):
-uv run runtime/tools/build_clip_cache.py --affects joy,interest --samples 2 --cfgs 2.5
+# talk to the lamp (typed turns; needs GEMINI_API_KEY in .env, and the
+# motion service -- or --motion local to run the model in-process):
+uv run runtime/motion/service.py --device cpu &
 uv run --env-file .env runtime/main.py --turn "hello lamp"
 ```
 
@@ -34,7 +35,7 @@ steps, ~100–250 ms/clip on CPU.
 | `data/lamp_retargeting/` | feature-space retargeting (no joint copying: attention/posture/drive/gaze features re-synthesized as lamp poses), per-clip quality metrics, human curation, export. `pipeline.py` = CLI + import surface over 12 focused modules |
 | `data/dataset/` | frozen training exports: v1.5 = 812 clips (734/78 grouped split), 86k frames, 11-label affect space |
 | `motion_generator/` | the model: masked transformer denoiser (AdaLN-Zero, 2.5M params), flow-matching training, CFG sampling + projection, rater-free eval, `infer.py` |
-| `runtime/` | the conversational loop (`lamp_voice_integration_plan.md`): VAD/endpointing, ASR, Gemini structured dialogue, TTS-aligned motion from a clip cache + live generation, 30 Hz scheduler with continuity blending and a safety governor, drivers, session replay to video |
+| `runtime/` | the conversational loop (`lamp_voice_integration_plan.md`): VAD/endpointing, ASR, Gemini structured dialogue, TTS-aligned live generation via a GPU motion service (with a prefetched pool riding out latency/outages), 30 Hz scheduler with continuity blending and a safety governor, drivers, session replay to video |
 
 Each directory has its own README with the details; `data/README.md`
 explains the retargeting concept and iteration loop.

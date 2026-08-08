@@ -17,7 +17,9 @@ with offline fallbacks everywhere):
 | `types.py`, `bus.py`, `log.py` | shared datatypes, typed pub/sub, session recorder |
 | `dialogue/affect.py` | affect director: LLM segment -> unit-L2 11-d vector + cfg; reply validation |
 | `motion/engine.py` | wraps `sample.py`; per-affect duration in-distribution guard |
-| `motion/cache.py` + `tools/build_clip_cache.py` (under `runtime/`) | precomputed clip bank, cosine lookup (REACT, Pi latency, demo fallback) |
+| `motion/service.py` | HTTP generation service (runs on the GPU box): POST /generate -> projected clip npz, GET /health |
+| `motion/remote.py` | service client with circuit breaker; duck-types the local engine, no torch on the Pi |
+| `motion/prefetch.py` | MotionPool: prefetched react bank + ambient FIFO, refill thread |
 | `motion/scheduler.py` | 30 Hz tick, clip queue/preemption, L1 relative yaw, L2 tail blend, L3 offset-decay blend, causal safety governor |
 | `motion/idle.py`, `motion/modulate.py` | procedural breathing; speech-envelope overlay on J5 + LED |
 | `audio/envelope.py`, `audio/vad.py` | TTS PCM -> 30 Hz envelope; endpointing policy (VAD-agnostic) |
@@ -25,7 +27,7 @@ with offline fallbacks everywhere):
 | `eval/metrics.py` | invariant scan, correction motion, boundary offsets, latency/sync stats |
 | `audio/io.py` | duplex sounddevice stream (guarded), preallocated mic ring, half-duplex gating |
 | `audio/asr.py`, `audio/tts.py` | faster-whisper (guarded) + scripted ASR; piper/espeak (guarded) + silent TTS, durations measured from PCM |
-| `dialogue/agent.py` | structured-output LLM clients (Gemini default, Anthropic alt) + canned offline agent |
+| `dialogue/agent.py` | structured-output Gemini client (the only dialogue backend) |
 | `motion/align.py` | fit clips to measured speech durations (plan 6.2) |
 | `behavior.py` | turn state machine: endpoint -> REACT -> ASR -> LLM -> TTS -> aligned motion, chained clips + ambient filler for continuous motion, timeouts + fallback ladder |
 | `eval/replay.py` | render a session to video, conversation as subtitles |
@@ -37,15 +39,18 @@ camera/engagement.
 ## Try it
 
 ```
-uv run pytest runtime/tests -q          # incl. checkpoint smoke
+uv run pytest runtime/tests -q          # incl. checkpoint + loopback smoke
 uv run runtime/main.py --idle-seconds 5
 uv run runtime/main.py --play motion_generator/outputs/boredom_0.npz \
     motion_generator/outputs/alarm07+fear03_0.npz --gap-s 0.5
-uv run runtime/tools/build_clip_cache.py        # full clip bank (GPU box)
 
-# typed conversational turns, no mic needed:
+# the motion generation service (GPU box; --device cpu works anywhere):
+uv run runtime/motion/service.py --device cuda --host 0.0.0.0
+
+# typed conversational turns, no mic needed (needs GEMINI_API_KEY and
+# the service; or --motion local to run the model in-process):
 uv run --env-file .env runtime/main.py --turn "hello lamp" --turn "how are you?"
-uv run runtime/main.py --turn "hi" --llm canned      # offline
+uv run --env-file .env runtime/main.py --turn "hi" --motion local
 
 # full interactive mic loop (audio-capable box / the Pi):
 uv run --env-file .env --group voice runtime/main.py --converse
@@ -58,38 +63,40 @@ uv run runtime/eval/replay.py runtime/sessions/<name>   # -> replay.mp4
 installed (`apt/dnf install portaudio` — this repo's dev box has no
 sound hardware at all, so it runs on the Pi or a laptop), the `voice`
 dependency group (faster-whisper; first run downloads the small.en
-model), `GEMINI_API_KEY` in `.env` for dialogue, and espeak-ng or
-piper for audible speech (silent otherwise). Servos attach with
-`--port /dev/ttyACM0`; without it motion goes to mock drivers.
+model), `GEMINI_API_KEY` in `.env`, the generation service reachable
+(`MOTION_SERVICE_URL`), and espeak-ng or piper for audible speech
+(silent otherwise). Servos attach with `--port /dev/ttyACM0`; without
+it motion goes to mock drivers.
 
-Dialogue runs on the **Gemini API** by default (`LLM_BACKEND` /
-`GEMINI_MODEL` in `runtime/config.py`, currently `gemini-3.5-flash-lite`
-with thinking_level=low per the plan's section-7 latency budget).
-`GEMINI_API_KEY` lives in the gitignored `.env`; Vertex express-mode
-"AQ." keys are auto-detected. `--llm anthropic` (`ANTHROPIC_MODEL`,
-needs `ANTHROPIC_API_KEY`) and `--llm canned` (offline) remain
-available.
+Dialogue runs on the **Gemini API** (`GEMINI_MODEL` in
+`runtime/config.py`, currently `gemini-3.5-flash-lite` with
+thinking_level=low per the plan's section-7 latency budget).
+`GEMINI_API_KEY` lives in the gitignored `.env`.
 
 `main.py` reports the safety numbers after every run; a nonzero
 invariant count on the commanded stream is a hard failure (exit 1).
 
 ## Where motion comes from
 
-Every clip the lamp plays is a sample from the flow-matching prior;
-what varies is *when* it was sampled. The runtime prefers the
-**clip cache** (`runtime/cache/`, built offline by
-`runtime/tools/build_clip_cache.py`) — lookup is microseconds, which
-is what makes the sub-200 ms REACT clip, seamless chaining, and the
-ambient filler possible at all. **Live generation** (`--engine`) runs
-only when the cache misses badly (affect cosine below
-`CACHE_COS_THRESHOLD`) and must beat `TIMEOUT_MOTION` (1.5 s) or the
-cache is used anyway. On this dev box live generation measures
-0.2–5 s/clip, so in practice near-100% of played frames are cached
-samples; the recorded demo (`gemini-recorded-v2`) is 100% cache
-(71% speak, 19% react, 9% ambient frames). The engine's share should
-grow on hardware with headroom, for affect mixtures the bank doesn't
-cover. Each session logs `motion_source` events, and `main.py` prints
-the split (`eval/metrics.motion_sources`) after every run.
+Every clip is generated live by the flow-matching prior via the
+**generation service** (`motion/service.py`, ~20–50 ms/clip on the GPU
+box; `--motion local` runs the same engine in-process). Latency and
+outages are absorbed by the **MotionPool** (`motion/prefetch.py`):
+
+- a *react bank* — one short prefetched clip per emotion, refreshed
+  use-one-replace-one — keeps the sub-200 ms REACT promise
+  unconditional, even with the service down;
+- an *ambient FIFO* feeds the scheduler's filler between phrases and
+  turns (pop is lock-and-go inside the 30 Hz tick; a daemon thread
+  refills, biased toward the conversation's current mood).
+
+Reply motion calls the service directly (`TIMEOUT_MOTION` 1.5 s); on
+timeout or an open circuit breaker (`motion/remote.py`: 3 consecutive
+failures open it for 5–30 s, so a dead GPU box costs microseconds, not
+timeouts) the nearest pool clip stands in (`pool_forced`), and failing
+that the lamp breathes while it speaks. Each session logs
+`motion_source` events and `main.py` prints the split
+(`eval/metrics.motion_sources`) after every run.
 
 ## Invariant policy
 
@@ -105,6 +112,8 @@ the session recorder's `commanded.npz`.
 
 `motion/engine.py` asserts the checkpoint's `n_affect` matches the
 11-label taxonomy in `labels.py`, so an fm-v0-era (16-label) checkpoint
-fails loudly. When the fm-v1 retrain lands, rebuild the clip cache
-(`runtime/tools/build_clip_cache.py`, full bank on the GPU box) and re-run the
-`evaluate.py` suite to re-anchor the plan's baselines (pre-P0 step).
+fails loudly; `RemoteEngine.check()` makes the same assertion against
+the service's `/health` (a mismatched service is rejected at startup).
+When the fm-v1 retrain lands, restart the service on the new checkpoint
+and re-run the `evaluate.py` suite to re-anchor the plan's baselines
+(pre-P0 step).

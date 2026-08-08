@@ -2,15 +2,16 @@
 The behavior layer (plan sections 3 and 9): owns the turn state machine
 and drives one conversational turn end to end --
 
-    endpoint -> REACT (cached clip, instantly)
+    endpoint -> REACT (prefetched bank clip, instantly)
              -> ASR final -> LLM structured reply -> per segment:
                 TTS (measured duration) -> affect director -> motion
-                (cache or engine) -> fit to duration -> schedule aligned
+                (generation service, MotionPool fallback) -> fit to
+                duration -> schedule aligned
 
 Every slow stage has a timeout and a fallback (plan section 5): the
-ladder is cached clip, then idle breathing, and for dialogue a canned
-utterance. The lamp never freezes; worst case it breathes and says
-"give me a second".
+ladder is live generation, then the nearest prefetched pool clip, then
+idle breathing; for dialogue a one-line stall utterance. The lamp
+never freezes; worst case it breathes and says "give me a second".
 
 The audio front-end (`feed_block`) is synchronous and cheap -- it runs
 per 10 ms block on the consumer side of the mic ring. The slow half
@@ -41,15 +42,15 @@ CHAIN_MAX = 8      # clips chained to cover one long speech segment
 
 
 class Conversation:
-    def __init__(self, scheduler, asr, agent, tts, cache=None, engine=None,
+    def __init__(self, scheduler, asr, agent, tts, engine=None, pool=None,
                  audio=None, recorder=None, vad=None, endpointer=None,
                  sr=None, rng=None):
         self.sched = scheduler
         self.asr = asr
         self.agent = agent
         self.tts = tts
-        self.cache = cache
-        self.engine = engine
+        self.engine = engine       # RemoteEngine (or local MotionEngine)
+        self.pool = pool           # MotionPool: react bank + ambient FIFO
         self.audio = audio
         self.rec = recorder
         self.vad = vad or EnergyVad()
@@ -61,7 +62,7 @@ class Conversation:
         self._silent_tts = SilentTts()
         # between clips the lamp performs ambient samples from the
         # prior rather than sitting in procedural idle
-        if self.cache is not None and scheduler.filler_fn is None:
+        if self.pool is not None and scheduler.filler_fn is None:
             scheduler.filler_fn = self.ambient_filler
 
     def _event(self, kind, **kw):
@@ -108,16 +109,19 @@ class Conversation:
 
     # ---- REACT (plan 6.4): motion within 200 ms of the endpoint ------------
     def _react(self, pcm, text):
-        if self.cache is None or len(self.cache) == 0:
+        """Instant reaction from the pool's prefetched bank -- never a
+        network call, so the 200 ms promise survives service outages."""
+        if self.pool is None:
             return
         v = estimate_react_affect(text=text, pcm=pcm, sr=self.sr)
-        hit = self.cache.react_clip(v, rng=self.rng)
+        hit = self.pool.react_clip(v)
         if hit is None:
             return
+        x, tag = hit
         self.sched.preempt(ScheduledClip(
-            x=hit["x"].copy(), start_frame=self.sched.frame,
+            x=x, start_frame=self.sched.frame,
             priority=REACT_PRIORITY, tag="react"))
-        self._event("react_motion", tag=hit["tag"])
+        self._event("react_motion", tag=tag)
 
     # ---- ASR ---------------------------------------------------------------
     async def _transcribe(self, pcm):
@@ -186,6 +190,9 @@ class Conversation:
             planned.append(dict(seg=i, text=seg.text, seconds=dur,
                                 start_frame=start, has_motion=bool(parts)))
             t_cursor += dur
+        if self.pool is not None and segments:
+            # bias ambient prefetch toward the reply's closing mood
+            self.pool.set_affect(direct(segments[-1]).affect)
         return planned
 
     async def _motion_chain(self, seg, dur, i):
@@ -215,19 +222,17 @@ class Conversation:
         return parts
 
     def ambient_filler(self, frame, last_cmd):
-        """Scheduler callback for empty moments: a calm sample from the
-        prior (cache lookup, microseconds) so the lamp keeps performing
-        between phrases and turns. Lowest priority -- anything real
-        preempts it."""
-        if self.cache is None or len(self.cache) == 0:
-            return None
-        v = np.zeros(len(C.EMOTIONS), np.float32)
-        v[C.EMOTIONS.index(self.rng.choice(C.AMBIENT_AFFECTS))] = 1.0
-        hit = self.cache.lookup(v, seconds=C.AMBIENT_SECONDS, rng=self.rng)
+        """Scheduler callback for empty moments: pop a prefetched clip
+        from the pool (lock-and-go -- this runs inside the 30 Hz tick)
+        so the lamp keeps performing between phrases and turns. Empty
+        pool -> None -> procedural breathing. Lowest priority --
+        anything real preempts it."""
+        hit = self.pool.pop_ambient() if self.pool is not None else None
         if hit is None:
             return None
-        return ScheduledClip(x=hit["x"].copy(), start_frame=frame,
-                             priority=AMBIENT_PRIORITY, tag="ambient")
+        x, tag = hit
+        return ScheduledClip(x=x, start_frame=frame,
+                             priority=AMBIENT_PRIORITY, tag=tag)
 
     async def _synth(self, text):
         try:
@@ -238,17 +243,11 @@ class Conversation:
             return await self._silent_tts.synth(text)
 
     async def _motion_for(self, req):
-        """Cache if it is a good hit, else live generation with a
-        timeout, else cache regardless of threshold, else None (the
-        scheduler holds pose / breathes). Every request logs a
-        `motion_source` event so sessions can report their live-vs-
-        cached split (eval/metrics.motion_sources)."""
-        hit = self.cache.lookup(req.affect, seconds=req.seconds,
-                                cfg=req.cfg, rng=self.rng) \
-            if self.cache is not None else None
-        if hit is not None:
-            self._event("motion_source", tag=req.tag, source="cache")
-            return hit["x"].copy()
+        """Live generation (remote service or local engine) with a
+        timeout; on failure the nearest in-memory pool clip
+        (`pool_forced`); else None (the scheduler breathes). Every
+        request logs a `motion_source` event so sessions can report
+        their provenance split (eval/metrics.motion_sources)."""
         if self.engine is not None:
             try:
                 x = await asyncio.wait_for(
@@ -256,17 +255,15 @@ class Conversation:
                     C.TIMEOUT_MOTION)
                 self._event("motion_source", tag=req.tag, source="engine")
                 return x
-            except Exception as e:  # noqa: BLE001 -- timeout or torch error
+            except Exception as e:  # noqa: BLE001 -- timeout, breaker,
+                #                        transport, or torch error
                 self._event("motion_fallback", error=type(e).__name__)
-        if self.cache is not None and len(self.cache):
-            best = self.cache.lookup(req.affect, seconds=req.seconds,
-                                     rng=self.rng)
-            self._event("motion_source", tag=req.tag, source="cache_forced")
-            if best is None:        # below threshold: take nearest anyway
-                cos = self.cache._A @ (req.affect
-                                       / np.linalg.norm(req.affect))
-                return self.cache.entries[int(np.argmax(cos))]["x"].copy()
-            return best["x"].copy()
+        if self.pool is not None:
+            x = self.pool.nearest(req.affect)
+            if x is not None:
+                self._event("motion_source", tag=req.tag,
+                            source="pool_forced")
+                return x
         self._event("motion_source", tag=req.tag, source="none")
         return None
 

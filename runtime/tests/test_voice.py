@@ -8,8 +8,7 @@ from runtime.audio.asr import ScriptedAsr
 from runtime.audio.tts import SilentTts
 from runtime.audio.vad import EnergyVad
 from runtime.dialogue.affect import estimate_react_affect
-from runtime.dialogue.agent import (REPLY_SCHEMA, SYSTEM_PROMPT, CannedAgent,
-                                    STALL_REPLY)
+from runtime.dialogue.agent import REPLY_SCHEMA, STALL_REPLY, SYSTEM_PROMPT
 from runtime.dialogue.affect import validate_reply
 from runtime.motion.align import fit_to_duration
 
@@ -50,10 +49,10 @@ def test_reply_schema_is_strict():
                ["properties"]["affect"]["properties"]) == set(C.EMOTIONS)
 
 
-def test_canned_agent_valid_replies():
-    agent = CannedAgent()
-    for text in ["hello lamp", "how are you", "what is the weather?",
-                 "mumble mumble"]:
+def test_fake_agent_valid_replies():
+    from runtime.tests.fakes import FakeAgent
+    agent = FakeAgent()
+    for text in ["hello lamp", "what is the weather?", "mumble mumble"]:
         segs = run(agent.reply(text))
         assert segs, text
         for s in segs:

@@ -52,7 +52,7 @@ class MotionEngine:
         return float(np.clip(seconds, lo, hi))
 
     # ---- generation -------------------------------------------------------
-    def clip(self, req):
+    def clip(self, req, steps=None):
         """MotionRequest -> (T, 9) float32, physical units, projected.
         The affect->motion contract (plan section 5) is asserted, not
         handled: violations are internal bugs upstream."""
@@ -66,7 +66,8 @@ class MotionEngine:
 
         t0 = time.perf_counter()
         xn = generate(self.model, v, T, n=1, cfg_w=float(req.cfg),
-                      steps=10, device=self.device, seed=req.seed)
+                      steps=steps or C.ENGINE_STEPS, device=self.device,
+                      seed=req.seed)
         x = project(denormalize(xn[0], self.stats)).astype(np.float32)
         self.last_gen_ms = (time.perf_counter() - t0) * 1000.0
         assert x.shape == (T, C.N_CHANNELS) and np.isfinite(x).all()

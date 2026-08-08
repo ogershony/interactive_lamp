@@ -28,9 +28,15 @@ T_MIN = 8                      # sample.py's floor on generated length
 FPS = 30
 LIGHT_CH, RGB_CH = 5, slice(6, 9)
 
-# ---- checkpoint / cache paths ---------------------------------------------
+# ---- checkpoint / generation service --------------------------------------
 DEFAULT_CKPT = MOTION_GEN_DIR / "runs" / "fm-v1" / "ckpt_best.pt"
-CACHE_DIR = ROOT / "runtime" / "cache"
+# The motion generation service (runtime/motion/service.py) runs on the
+# GPU box; the runtime is its client. MOTION_SERVICE_URL env overrides.
+MOTION_SERVICE_URL = "http://127.0.0.1:8031"
+MOTION_SERVICE_TIMEOUT_S = 1.0   # socket timeout, strictly < TIMEOUT_MOTION
+MOTION_BREAKER_FAILS = 3         # consecutive failures before opening
+MOTION_BREAKER_RESET_S = 5.0     # open duration (backs off to 30 s)
+ENGINE_STEPS = 10                # Euler ODE steps per generated clip
 
 # ---- endpointing ----------------------------------------------------------
 T_END_MS = 700          # silence that ends a user turn
@@ -41,13 +47,10 @@ RING_SECONDS = 30       # preallocated mic ring buffer
 HALF_DUPLEX_TAIL_MS = 150   # keep mic muted this long after playback ends
 VAD_ENERGY_THRESHOLD = 0.01  # RMS (of full-scale 1.0) for the energy VAD
 
-# ---- dialogue LLM ---------------------------------------------------------
+# ---- dialogue LLM (Gemini) ------------------------------------------------
 # The plan's latency budget (section 7) calls for a small model with a
-# short system prompt and capped max_tokens. Backend is Gemini; the
-# Anthropic client is kept behind --llm anthropic.
-LLM_BACKEND = "gemini"          # "gemini" | "anthropic" | "canned"
+# short system prompt and capped max_tokens.
 GEMINI_MODEL = "gemini-3.5-flash-lite"  # fastest tier; thinking_level=low
-ANTHROPIC_MODEL = "claude-haiku-4-5"
 LLM_MAX_TOKENS = 500
 MAX_HISTORY_TURNS = 12  # user+assistant message pairs kept per session
 
@@ -79,7 +82,6 @@ ENV_CLIP = 2.0          # normalized envelope clipped to [-ENV_CLIP, ENV_CLIP]
 
 # ---- reaction clips (section 6.4) -----------------------------------------
 REACT_MIN_S, REACT_MAX_S = 0.6, 1.2
-CACHE_COS_THRESHOLD = 0.85   # below this, generate live instead
 
 # ---- timeouts (section 5), seconds ----------------------------------------
 TIMEOUT_ASR = 3.0
@@ -89,7 +91,9 @@ TIMEOUT_MOTION = 1.5
 
 # ---- ambient motion (between speech, instead of static idle) --------------
 AMBIENT_AFFECTS = ("interest", "boredom", "understanding")
-AMBIENT_SECONDS = 2.5        # preferred cache bucket for filler clips
+AMBIENT_SECONDS = 2.5        # filler clip duration
+AMBIENT_POOL_SIZE = 2        # prefetched ambient clips kept ready
+AMBIENT_STALE_S = 60.0       # drop pooled clips older than this on pop
 
 # ---- idle motion ----------------------------------------------------------
 BREATH_PERIOD_S = 4.0
