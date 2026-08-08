@@ -160,7 +160,7 @@ def emotions_report(run, rows):
               f"Spearman rho across emotions -- speed: {rho_speed:+.2f}, "
               f"yaw activity: {rho_yaw:+.2f}", ""]
 
-    # ridge probe: predict the 16-d emotion vector from per-clip features
+    # ridge probe: predict the 11-d emotion vector from per-clip features
     src_keys = sorted(next(iter(src_f.values())))
     lamp_keys = sorted(next(iter(lamp_f.values())))
     Xs = np.array([[src_f[s][k] for k in src_keys] for s in stems])

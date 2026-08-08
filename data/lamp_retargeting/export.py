@@ -2,7 +2,9 @@
 Export: curation-filtered training dataset + manifest.
 
 Filters clips by curation verdict, drops too-short clips (explicit keeps
-override), attaches the 16-d soft emotion vector, assigns a grouped
+override), attaches the 11-d soft emotion vector (L1 sum-to-1; the
+unit-L2 encoding the model consumes is applied downstream in
+motion_generator/dataset.py), assigns a grouped
 train/val split (all _head_angle_* variants of one base animation land
 in the same fold), and writes data/dataset/lamp_dataset_<run>.npz +
 manifest_<run>.json.
@@ -82,6 +84,16 @@ def cmd_export(args):
             rejected[s] = f"short:T={T}"
             n_short += 1
             continue
+        # normalize raw annotator fractions over the model taxonomy to a
+        # probability distribution: sum(emotions) == 1 per clip,
+        # independent of annotator count (labels.csv keeps the raw
+        # 16-label fractions; per-clip ordering is unchanged by the
+        # uniform rescale). Clips whose only annotation mass sat on
+        # labels dropped from the taxonomy carry no usable signal.
+        raw = np.array([float(labels[s][e]) for e in EMOTIONS])
+        if raw.sum() <= 0:
+            rejected[s] = "no_kept_affect"
+            continue
         versions.add(str(z["mapping_version"]))
         base = base_name(s)
         is_val = (int(hashlib.sha1(base.encode()).hexdigest(), 16) % 1000
@@ -90,12 +102,6 @@ def cmd_export(args):
         light.append(z["light01"])
         rgb.append(z["rgb"])
         offsets.append(offsets[-1] + T)
-        # normalize raw annotator fractions to a probability distribution:
-        # sum(emotions) == 1 per clip, independent of annotator count
-        # (labels.csv keeps the raw fractions; per-clip ordering is
-        # unchanged by the uniform rescale)
-        raw = np.array([float(labels[s][e]) for e in EMOTIONS])
-        assert raw.sum() > 0, f"{s}: all-zero emotion vector"
         emotions.append((raw / raw.sum()).tolist())
         split.append(1 if is_val else 0)
         records.append(dict(

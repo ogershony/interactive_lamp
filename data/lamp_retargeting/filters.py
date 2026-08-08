@@ -1,6 +1,6 @@
 """
 Signal-processing primitives shared by the mapping (and by
-motion_prior/sample.py's projection): the low-pass, the ease-in/out
+motion_generator/sample.py's projection): the low-pass, the ease-in/out
 rate limiter that enforces RATE_CAP, and the light calming chain.
 """
 

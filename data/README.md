@@ -3,7 +3,7 @@
 Everything under `data/` exists to produce one thing: an
 emotion-labeled dataset of expressive 5-DOF lamp motion
 (`dataset/lamp_dataset_v1.4.npz`) that the flow-matching model in
-`motion_prior/` trains on. The motion is not authored by hand — it is
+`motion_generator/` trains on. The motion is not authored by hand — it is
 *retargeted* from 926 animation clips of Anki's Cozmo robot, each
 annotated with crowd-sourced emotion labels.
 

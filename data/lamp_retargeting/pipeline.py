@@ -29,7 +29,7 @@ implementation lives in focused sibling modules:
 
 Importing `pipeline` re-exports the public API of all of the above, so
 `from pipeline import ease_track, Lamp, METRICS_DIR` keeps working
-(curate.py and motion_prior/sample.py rely on this).
+(curate.py and motion_generator/sample.py rely on this).
 
 Human curation (GIF review app, A/B panel, batch verdicts, contact
 sheets) is optional and lives in data/lamp_retargeting/curate.py; its verdicts
@@ -107,7 +107,7 @@ collapses are the ones the mapping is destroying.
 EXPORT.  Filters clips by curation verdict (keep; --include-unreviewed
 additionally admits unreviewed clips with zero metric flags), drops
 clips shorter than --min-frames (explicit keeps override), attaches the
-16-d soft emotion vector + descriptions from labels.csv, assigns a
+11-d soft emotion vector + descriptions from labels.csv, assigns a
 grouped train/val split (all _head_angle_* variants of one base
 animation land in the same fold), and writes
 data/dataset/lamp_dataset_<run>.npz + manifest_<run>.json.

@@ -16,7 +16,7 @@ Goal: iteratively improve the Cozmo->lamp mapping (now in
 and curate the trajectory set until it is ready for generative-model
 training (flow matching as of plan v2; was CVAE). Cuteness is the lamp's
 *identity*: it lives in the mapping and in curation, so that everything
-the model learns is cute. The model conditions on the 16-d soft emotion
+the model learns is cute. The model conditions on the 11-d soft emotion
 vector (content), never on a "cute" knob.
 
 ## Layout

@@ -1,6 +1,11 @@
 """
-Emotion-label access: the 16-emotion taxonomy, the labels.csv reader,
-and clip-name utilities shared by metrics, curation, and export.
+Emotion-label access: the 11-emotion model taxonomy, the labels.csv
+reader, and clip-name utilities shared by metrics, curation, and export.
+
+The raw labels.csv keeps all 16 annotation columns; the five
+dominant-affect-thin placeholders (gratitude, desire, hope, relief,
+disgust) were dropped from the model taxonomy in dataset v1.5 and are
+excluded at export time.
 """
 
 import csv
@@ -9,8 +14,7 @@ import re
 from config import LABELS_CSV
 
 EMOTIONS = ['interest', 'alarm', 'confusion', 'understanding', 'frustration',
-            'relief', 'sorrow', 'joy', 'anger', 'gratitude', 'fear', 'hope',
-            'boredom', 'surprise', 'disgust', 'desire']
+            'sorrow', 'joy', 'anger', 'fear', 'boredom', 'surprise']
 
 
 def load_labels():

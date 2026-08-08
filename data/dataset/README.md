@@ -2,7 +2,7 @@
 
 The product of the whole `data/` pipeline: curated, emotion-labeled
 lamp motion, packed for training the flow-matching model in
-`motion_prior/`. Git-tracked so a fresh clone can train and evaluate
+`motion_generator/`. Git-tracked so a fresh clone can train and evaluate
 with zero setup.
 
 Produced by `uv run data/lamp_retargeting/pipeline.py export`; never
@@ -10,12 +10,28 @@ edit by hand. Each export is a frozen `lamp_dataset_<run>.npz` +
 `manifest_<run>.json` pair — new mapping iterations add new pairs, they
 do not overwrite old ones.
 
-## Current version: v1.4
+## Current version: v1.5
 
-819 clips (740 train / 79 val), 86,855 frames, 2,839 s of motion, from
-926 source clips (107 rejected by curation verdicts). Split is grouped:
-all `_head_angle_*` variants of one base animation land in the same
-fold (665 bases, 72 in val), so no near-duplicate leaks across splits.
+812 clips (734 train / 78 val), 86,438 frames, 2,826 s of motion, from
+926 source clips (107 rejected by curation verdicts, 7 by
+`no_kept_affect`). Split is grouped: all `_head_angle_*` variants of one
+base animation land in the same fold (659 bases, 71 in val), so no
+near-duplicate leaks across splits.
+
+v1.5 shrinks the affect space from 16 to 11 labels: **gratitude,
+desire, hope, relief, disgust** were removed (3-14 dominant train clips
+each, no recoverable motion signature — see Data caveats). Emotion
+vectors are renormalized over the kept labels; the 7 clips whose entire
+annotation mass sat on removed labels are rejected (`no_kept_affect`).
+The retargeted trajectories are identical to v1.4 (same mapping
+constants) — the dataset version now tracks the export run and is
+decoupled from `mapping_version`, which stays 1.4.
+
+## Earlier: v1.4
+
+819 clips (740 train / 79 val), 86,855 frames, 2,839 s, 16 emotion
+columns. Same trajectories as v1.5; superseded by the affect-space
+shrink.
 
 ## npz schema (`lamp_dataset_<run>.npz`)
 
@@ -27,21 +43,21 @@ Frames of all clips concatenated; `clip_offsets` delimits them.
 | `light01` | (N,) | f32 | LED intensity 0..1 (floored at 0.15, slew-limited) |
 | `rgb` | (N, 3) | u8 | LED color |
 | `clip_offsets` | (n+1,) | i64 | clip i is rows `[off[i], off[i+1])` |
-| `emotions` | (n, 16) | f32 | soft labels, **normalized to sum to 1** per clip |
+| `emotions` | (n, 11) | f32 | soft labels, **normalized to sum to 1** per clip |
 | `split` | (n,) | u8 | 0 = train, 1 = val |
-| `emotion_names` | (16,) | str | column order for `emotions` |
+| `emotion_names` | (11,) | str | column order for `emotions` |
 | `dt_ms`, `mapping_version`, `run` | scalars | | provenance |
 
 The sibling `manifest_<run>.json` carries `summary` (export stats,
 per-emotion coverage, reject reasons) and `clips` (per-clip records:
 `clip_name`, `base_name`, `prefix`, `split`, `T`, `dur_s`,
 `top_emotions`, `description`). **The manifest must stay next to the
-npz** — `motion_prior/dataset.py` resolves it as a sibling by filename.
+npz** — `motion_generator/dataset.py` resolves it as a sibling by filename.
 
 ## Consumption contract
 
-`motion_prior/dataset.py::load_clips` is the reference reader. Two
-conventions to respect (details in `motion_prior/README.md`):
+`motion_generator/dataset.py::load_clips` is the reference reader. Two
+conventions to respect (details in `motion_generator/README.md`):
 
 - labels are stored sum-to-1; the dataloader group-averages across
   head-angle variants and renormalizes to **unit L2** — conditioning at
@@ -56,13 +72,16 @@ Emotion coverage is heavily skewed, and mind which statistic you read:
 
 - the manifest's `clips_per_emotion_at_0p5` is **multi-label** coverage
   (a clip counts toward every emotion with annotator fraction ≥ 0.5):
-  interest 300 … relief 77;
+  interest 300 … boredom 124;
 - training support is better measured by the **dominant affect**
-  (argmax of the label vector): interest 241, confusion 102, … down to
-  hope 6, desire 4, gratitude 3.
+  (argmax of the group-averaged label vector): interest 231,
+  confusion 93, frustration 84, sorrow 72, alarm 71, joy 66,
+  understanding 58, surprise 44, fear 34, anger 33, boredom 26.
 
-The dominant-affect-thin emotions (gratitude, desire, hope, disgust,
-relief) cannot be generated distinctly by any model trained on this;
-treat them as vocabulary placeholders. `motion_prior/evaluate.py`'s
-affect-spread stage restricts itself to affects with ≥ 20 dominant
-clips for the same reason.
+Five dominant-affect-thin emotions (gratitude, desire, hope, relief,
+disgust — 3-14 dominant clips each in v1.4) could not be generated
+distinctly by any model trained on this data and were **removed from
+the taxonomy in v1.5**; the raw annotations in
+`data/cozmo_data/labels.csv` still carry all 16 columns.
+`motion_generator/evaluate.py`'s affect-spread stage restricts itself
+to affects with ≥ 20 dominant clips for the same reason.

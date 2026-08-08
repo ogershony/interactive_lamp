@@ -9,7 +9,7 @@ iteration loop; this README is the working reference for the code here.
 
 `pipeline.py` is the CLI entry point **and** the stable import surface —
 `from pipeline import X` reaches every public name below (curate.py and
-`motion_prior/sample.py` rely on this). Implementation modules:
+`motion_generator/sample.py` rely on this). Implementation modules:
 
 | module | role |
 |---|---|
@@ -23,7 +23,7 @@ iteration loop; this README is the working reference for the code here.
 | `metrics.py` | per-clip quality CSVs, flag thresholds, severity, cross-run diffs + `summary.csv` |
 | `emotions.py` | emotion-preservation report (per-emotion Spearman + ridge-probe R²) |
 | `export.py` | curation-filtered dataset export → `../dataset/` |
-| `labels.py` / `runs.py` | 16-emotion taxonomy + labels.csv access; run-dir bookkeeping |
+| `labels.py` / `runs.py` | 11-emotion model taxonomy (raw CSV keeps 16) + labels.csv access; run-dir bookkeeping |
 | `curate.py` | optional human tooling: `render` / `serve` / `panel` / `verdict` / `sheet` |
 
 ## Commands
@@ -51,7 +51,7 @@ uv run data/lamp_retargeting/curate.py serve                   # review UI :7788
 Everything downstream trusts what `postprocess` + `verify_clip` enforce:
 joints inside limits (2° margin), `|dq|/dt ≤ RATE_CAP` (1.8 rad/s),
 `|Δlight| ≤ LIGHT_SLEW·dt`, deterministic output. The exporter asserts
-them again, `motion_prior/evaluate.py`'s validator checks generated
-samples against the same caps, and `motion_prior/sample.py`'s
+them again, `motion_generator/evaluate.py`'s validator checks generated
+samples against the same caps, and `motion_generator/sample.py`'s
 projection re-applies `ease_track` + the slew clamp — one set of
 constants (`config.py`), enforced at every layer.

@@ -2,7 +2,7 @@
 Paths and mapping constants for the Cozmo -> lamp retargeting pipeline.
 
 Single source of truth: every other module imports paths and constants
-from here (motion_prior/dataset.py deliberately duplicates a handful to
+from here (motion_generator/dataset.py deliberately duplicates a handful to
 stay dependency-light on the GPU box -- see its header).
 
 The mapping constants below were calibrated via rendered pose probes;
