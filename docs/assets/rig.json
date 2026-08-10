@@ -1,0 +1,185 @@
+{
+ "chain": [
+  "scs215_v5",
+  "lamparm__wrist_head",
+  "lamparm__base_elbow",
+  "lamparm__elbow_wrist",
+  "lamparm__wrist_head_2",
+  "diffuser"
+ ],
+ "joints": [
+  {
+   "name": "1",
+   "index": 0,
+   "axis": [
+    6.332264420583918e-16,
+    3.798582860575679e-16,
+    -0.9999999999999969
+   ],
+   "point": [
+    2.084459216390674e-08,
+    -3.2252713045766595e-08,
+    -1.3234889800848443e-23
+   ],
+   "lo": -5.021033992714066,
+   "hi": 1.2621513144655205,
+   "segment": "lamparm__wrist_head"
+  },
+  {
+   "name": "2",
+   "index": 1,
+   "axis": [
+    -0.3037666226774701,
+    -0.9527464714954926,
+    3.340989536521113e-16
+   ],
+   "point": [
+    0.021411923638335117,
+    0.06715716446275019,
+    0.08290999999999975
+   ],
+   "lo": -1.0842575396713956,
+   "hi": 2.0573351139183975,
+   "segment": "lamparm__base_elbow"
+  },
+  {
+   "name": "3",
+   "index": 2,
+   "axis": [
+    -0.30376841423005063,
+    -0.9527459002879964,
+    7.489602357455318e-07
+   ],
+   "point": [
+    0.10501236780975955,
+    -0.015468065364690187,
+    0.30123700195675013
+   ],
+   "lo": -2.820024081304335,
+   "hi": 0.3215685722854582,
+   "segment": "lamparm__elbow_wrist"
+  },
+  {
+   "name": "4",
+   "index": 3,
+   "axis": [
+    0.9525002134607344,
+    -0.3036900986054223,
+    -0.022708310511081787
+   ],
+   "point": [
+    -0.0752945888857678,
+    0.03833346134172986,
+    0.3055102191078221
+   ],
+   "lo": -3.7865399953934267,
+   "hi": 2.4966453117861596,
+   "segment": "lamparm__wrist_head_2"
+  },
+  {
+   "name": "5",
+   "index": 4,
+   "axis": [
+    0.2557571810053153,
+    0.7572227678925556,
+    0.6010007854814616
+   ],
+   "point": [
+    -0.11391666812212585,
+    0.0430519282037235,
+    0.30093332128212175
+   ],
+   "lo": -0.8533371981959901,
+   "hi": 2.288255455393803,
+   "segment": "diffuser"
+  }
+ ],
+ "segment_nodes": {
+  "0": [
+   "scs215_v5__lamp_base__37",
+   "scs215_v5__lamp_base_cover__39",
+   "scs215_v5__\u91d1\u5c5e\u8235\u76d8_\u9a71\u52a8__v2__41",
+   "scs215_v5__\u91d1\u5c5e\u8235\u76d8_\u4ece\u52a8__v2__43",
+   "scs215_v5__motor_1723_3__55"
+  ],
+  "1": [
+   "lamparm__wrist_head__lamparm__wrist_head__19",
+   "lamparm__wrist_head__\u91d1\u5c5e\u8235\u76d8_\u9a71\u52a8__v2__21",
+   "lamparm__wrist_head__\u91d1\u5c5e\u8235\u76d8_\u4ece\u52a8__v2__23",
+   "lamparm__wrist_head__motor_1723_3__35"
+  ],
+  "2": [
+   "lamparm__base_elbow__lamparm__base_elbow__1",
+   "lamparm__base_elbow__\u91d1\u5c5e\u8235\u76d8_\u9a71\u52a8__v2__3",
+   "lamparm__base_elbow__\u91d1\u5c5e\u8235\u76d8_\u4ece\u52a8__v2__5",
+   "lamparm__base_elbow__motor_1723_3__17"
+  ],
+  "3": [
+   "lamparm__elbow_wrist__lamparm__elbow_wrist__57",
+   "lamparm__elbow_wrist__\u91d1\u5c5e\u8235\u76d8_\u9a71\u52a8__v2__59",
+   "lamparm__elbow_wrist__\u91d1\u5c5e\u8235\u76d8_\u4ece\u52a8__v2__61",
+   "lamparm__elbow_wrist__motor_1723_3__73"
+  ],
+  "4": [
+   "lamparm__wrist_head_2__lamparm__wrist_head__75",
+   "lamparm__wrist_head_2__\u91d1\u5c5e\u8235\u76d8_\u9a71\u52a8__v2__77",
+   "lamparm__wrist_head_2__\u91d1\u5c5e\u8235\u76d8_\u4ece\u52a8__v2__79",
+   "lamparm__wrist_head_2__motor_1723_3__91"
+  ],
+  "5": [
+   "diffuser__diffuser__93",
+   "diffuser__lamphead__95"
+  ]
+ },
+ "glow_nodes": [
+  "diffuser__diffuser__93",
+  "diffuser__lamphead__95"
+ ],
+ "glow_warm": [
+  1.0,
+  0.85,
+  0.45
+ ],
+ "camera": {
+  "azimuth": 330.0,
+  "elevation": -16.0,
+  "distance": 0.95,
+  "lookat": [
+   -0.02,
+   0.0,
+   0.28
+  ]
+ },
+ "limits": {
+  "lo": [
+   -5.021033992714066,
+   -1.0842575396713956,
+   -2.820024081304335,
+   -3.7865399953934267,
+   -0.8533371981959901
+  ],
+  "hi": [
+   1.2621513144655205,
+   2.0573351139183975,
+   0.3215685722854582,
+   2.4966453117861596,
+   2.288255455393803
+  ]
+ },
+ "invariants": {
+  "dt": 0.033,
+  "rate_cap": 1.8,
+  "accel_cap": 15.0,
+  "brake_mult": 2.0,
+  "limit_margin": 0.03490658503988659,
+  "light_floor": 0.15,
+  "light_slew": 0.8
+ },
+ "home": {
+  "home4": -0.643,
+  "home_pitch": -0.35,
+  "gaze_level_q5": 1.5480860211601901
+ },
+ "head_rest_z": 0.2948365666332464,
+ "fk_check_mm": 6.52811138479592e-11
+}

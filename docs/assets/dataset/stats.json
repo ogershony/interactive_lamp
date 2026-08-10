@@ -1,0 +1,71 @@
+{
+ "n_clips": 812,
+ "n_frames": 86438,
+ "seconds": 2825.7,
+ "n_source_clips": 926,
+ "n_train": 734,
+ "n_val": 78,
+ "n_bases": 659,
+ "n_val_bases": 71,
+ "affects": [
+  {
+   "name": "interest",
+   "dominant": 231,
+   "multilabel": 300
+  },
+  {
+   "name": "confusion",
+   "dominant": 93,
+   "multilabel": 225
+  },
+  {
+   "name": "frustration",
+   "dominant": 84,
+   "multilabel": 191
+  },
+  {
+   "name": "sorrow",
+   "dominant": 72,
+   "multilabel": 165
+  },
+  {
+   "name": "alarm",
+   "dominant": 71,
+   "multilabel": 168
+  },
+  {
+   "name": "joy",
+   "dominant": 66,
+   "multilabel": 186
+  },
+  {
+   "name": "understanding",
+   "dominant": 58,
+   "multilabel": 143
+  },
+  {
+   "name": "surprise",
+   "dominant": 44,
+   "multilabel": 224
+  },
+  {
+   "name": "fear",
+   "dominant": 34,
+   "multilabel": 154
+  },
+  {
+   "name": "anger",
+   "dominant": 33,
+   "multilabel": 147
+  },
+  {
+   "name": "boredom",
+   "dominant": 26,
+   "multilabel": 124
+  }
+ ],
+ "rejects": {
+  "curation:drop": 107,
+  "no_kept_affect": 7
+ }
+}

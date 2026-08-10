@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>interactive_lamp — emotion-conditioned motion for a desk lamp robot</title>
+<meta name="description" content="A 5-DOF desk lamp that moves with feeling. Cozmo animations retargeted in feature space, a 2.5M-parameter flow-matching model, and a conversational runtime — with the model running live in your browser.">
+<meta name="color-scheme" content="light dark">
+
+<meta property="og:title" content="interactive_lamp">
+<meta property="og:description" content="Emotion-conditioned motion generation for a 5-DOF desk-lamp robot. Generate motion from an affect vector, in your browser, with the real checkpoint.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:SOFT,WONK,opsz,wght@0..100,0..1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='11' fill='%23ffd973'/></svg>">
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+
+<body>
+<a class="skip" href="#demo">Skip to the demo</a>
+<canvas id="lampCanvas" aria-hidden="true"></canvas>
+
+<header class="topbar">
+  <span class="mark"><span class="bulb"></span> interactive_lamp</span>
+  <nav aria-label="Sections">
+    <a href="#demo">Generate</a>
+    <a href="#talk">Conversation</a>
+    <a href="#process">Process</a>
+    <a href="#retarget">Retargeting</a>
+    <a href="#data">Dataset</a>
+    <a href="#results">Results</a>
+  </nav>
+  <button class="iconbtn" id="themeBtn" type="button" title="Switch theme" aria-label="Switch theme">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <circle cx="12" cy="12" r="4.5"></circle>
+      <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path>
+    </svg>
+  </button>
+  <a class="btn small" href="https://github.com/ogershony/interactive_lamp">Source</a>
+</header>
+
+<main class="wrap">
+
+<!-- ------------------------------------------------------------- hero -->
+<section class="hero" id="top">
+  <div class="hero-grid">
+    <div>
+      <p class="eyebrow">LeLamp · 5 actuated joints · 30 Hz</p>
+      <h1>A desk lamp that moves&nbsp;like it <span class="warm">means it</span>.</h1>
+      <p class="lede">
+        Crowd-labelled robot animations, retargeted onto a lamp in feature
+        space, distilled into a 2.5M-parameter flow-matching model that
+        generates whole motion clips from an emotion vector — five joints,
+        brightness and colour, thirty frames a second.
+      </p>
+      <div class="hero-cta">
+        <a class="btn primary" href="#demo">Generate a motion</a>
+        <a class="btn" href="#talk">Watch it hold a conversation</a>
+      </div>
+      <div class="statline">
+        <div><span class="v">812</span><span class="k">curated clips</span></div>
+        <div><span class="v">11</span><span class="k">affect labels</span></div>
+        <div><span class="v">2.5M</span><span class="k">parameters</span></div>
+        <div><span class="v">10</span><span class="k">ODE steps per clip</span></div>
+      </div>
+    </div>
+    <div class="dock" id="dockHero" data-dock="hero">
+      <span class="badge" id="heroBadge">idle · breathing</span>
+      <span class="hint">drag to orbit &middot; two fingers on touch</span>
+    </div>
+  </div>
+</section>
+
+<!-- --------------------------------------------------------- playground -->
+<section id="demo">
+  <div class="sec-head">
+    <p class="eyebrow">The demo</p>
+    <h2>Generate motion from an emotion vector</h2>
+    <p class="lede prose">
+      This runs the real <code>fm-v1</code> checkpoint in your browser. Ten
+      Euler steps of a conditional flow-matching ODE, classifier-free guidance
+      folded into the graph, then the same rate-cap projection the robot
+      applies before anything reaches a servo.
+    </p>
+  </div>
+
+  <div class="split">
+    <div>
+      <div class="panel">
+        <h4>Affect</h4>
+        <p style="margin:0 0 .7rem;font-size:var(--step--1);color:var(--text-faint)">
+          Mixtures are the interesting part — the model was trained on soft
+          annotator fractions, so the space between labels is supervised.
+        </p>
+        <div class="chips" id="presets"></div>
+        <div class="sliders" id="affectSliders" style="margin-top:.8rem"></div>
+      </div>
+
+      <div class="panel">
+        <h4>Sampling</h4>
+        <div class="sliders">
+          <div class="sl">
+            <label for="cfg">Intensity (CFG)</label>
+            <input type="range" id="cfg" min="0" max="3.5" step="0.1" value="2.5">
+            <output for="cfg" id="cfgOut">2.5</output>
+          </div>
+          <div class="sl">
+            <label for="secs">Duration</label>
+            <input type="range" id="secs" min="0.5" max="8" step="0.1" value="3">
+            <output for="secs" id="secsOut">3.0s</output>
+          </div>
+          <div class="sl">
+            <label for="seed">Seed</label>
+            <input type="range" id="seed" min="1" max="200" step="1" value="7">
+            <output for="seed" id="seedOut">7</output>
+          </div>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:.9rem;flex-wrap:wrap">
+          <button class="btn primary" id="genBtn" type="button">Generate</button>
+          <button class="btn" id="dlBtn" type="button" disabled>Download .npz</button>
+        </div>
+        <p id="loadNote" style="margin:.8rem 0 0;font-size:var(--step--1);color:var(--text-faint)">
+          The first generation downloads the model (about 10&nbsp;MB). Until
+          then the lamp plays clips sampled offline from the same checkpoint.
+        </p>
+      </div>
+
+      <div class="panel">
+        <h4>What came out</h4>
+        <div class="readout" id="genReadout"><span>Nothing generated yet.</span></div>
+        <p style="margin:.7rem 0 0;font-size:var(--step--1);color:var(--text-faint)">
+          <b>Trimmed</b> counts frames the projection had to slow down. Raw
+          model output can break the 1.8&nbsp;rad/s cap; projection is what
+          makes guidance above&nbsp;1 safe to send to a servo.
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <div class="dock tall" id="dockDemo" data-dock="demo">
+        <span class="badge" id="demoBadge">fallback clip</span>
+        <span class="hint">drag to orbit &middot; two fingers on touch</span>
+      </div>
+      <div class="panel" style="margin-top:.75rem">
+        <h4>Conditioning vector</h4>
+        <p style="margin:0 0 .6rem;font-size:var(--step--1);color:var(--text-faint)">
+          Normalized to unit L2 — the same form the training labels take.
+        </p>
+        <div class="vec" id="vecView"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- -------------------------------------------------------- conversation -->
+<section id="talk">
+  <div class="sec-head">
+    <p class="eyebrow">The runtime</p>
+    <h2>Forty-seven seconds of a real conversation</h2>
+    <p class="lede prose">
+      Speech in, speech out, motion the whole time. This is a recorded
+      session played back frame for frame: the transcript is what was
+      actually said, and the lamp is replaying the exact commands the 30&nbsp;Hz
+      scheduler wrote. The video is the MuJoCo render of the same stream.
+    </p>
+  </div>
+
+  <div class="split">
+    <div>
+      <div class="dock" id="dockTalk" data-dock="talk">
+        <span class="badge" id="talkBadge">0.0s</span>
+      </div>
+      <div style="display:flex;gap:.5rem;align-items:center;margin-top:.7rem;flex-wrap:wrap">
+        <button class="btn" id="talkBtn" type="button">Play</button>
+        <span style="font:400 var(--step--1) var(--mono);color:var(--text-faint)">
+          click the timeline or a line to jump
+        </span>
+      </div>
+      <div class="timeline" id="talkTimeline" style="margin-top:.7rem"></div>
+      <div class="tl-legend" id="talkLegend"></div>
+      <p style="font-size:var(--step--1);color:var(--text-faint);margin-top:.8rem">
+        Every clip in this session was generated live by the model. The
+        run finished with <b>0 invariant violations</b> on the commanded
+        stream and 462 governor trims — trims are expected during blends;
+        a violation would be a hard failure.
+      </p>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h4>Transcript</h4>
+        <div class="transcript" id="talkTranscript"></div>
+      </div>
+      <figure style="margin-top:.75rem">
+        <video id="talkVideo" controls preload="metadata" playsinline
+               poster="" src="media/replay-20260809-005601.mp4"></video>
+        <figcaption>
+          The rendered replay, subtitles burned in by
+          <code>runtime/eval/replay.py</code>. White is the lamp, yellow is
+          the person.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- -------------------------------------------------------------- process -->
+<section id="process">
+  <div class="sec-head">
+    <p class="eyebrow">How it was built</p>
+    <h2>From someone else's robot to this one</h2>
+    <p class="lede prose">
+      The lamp has no expressive motion of its own and no corpus to learn
+      from. The pipeline borrows both: it takes a published set of robot
+      animations that people have already labelled with emotions, moves the
+      <em>meaning</em> of that motion onto a different body, and trains a
+      generator on the result.
+    </p>
+  </div>
+
+  <div class="stages" id="stages"></div>
+</section>
+
+<!-- ----------------------------------------------------------- retargeting -->
+<section id="retarget">
+  <div class="sec-head">
+    <p class="eyebrow">The hard part</p>
+    <h2>Retargeting, and the cost of calm</h2>
+    <p class="lede prose">
+      Cozmo is a wheeled robot with a lift and an animated face. The lamp is
+      a five-joint arm with one LED. No joint maps to another, so the mapping
+      works in feature space: read what the motion <em>means</em> — attention,
+      posture, drive, gaze, brightness — then synthesize a lamp pose that says
+      the same thing with its own body.
+    </p>
+  </div>
+
+  <div class="split">
+    <div>
+      <div class="panel">
+        <h4>What the mapping reads</h4>
+        <p style="margin:0 0 .8rem;font-size:var(--step--1);color:var(--text-faint)">
+          Derived features from <span id="exName" class="num"></span>.
+          Pick the other exemplar:
+          <span class="chips" id="exPicker" style="display:inline-flex;margin-left:.4rem"></span>
+        </p>
+        <div id="featChart"></div>
+      </div>
+      <div class="panel">
+        <h4>What it synthesizes</h4>
+        <p style="margin:0 0 .6rem;font-size:var(--step--1);color:var(--text-faint)">
+          Grey is the raw mapping; amber is after the 2.5&nbsp;Hz filter and
+          the 1.8&nbsp;rad/s tracker.
+        </p>
+        <div id="jointChart"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="dock" id="dockRetarget" data-dock="retarget">
+        <span class="badge" id="retargetBadge">calmed</span>
+        <span class="hint">drag to orbit &middot; two fingers on touch</span>
+      </div>
+      <div class="chips" style="margin-top:.7rem" id="rawToggle">
+        <button class="chip" type="button" data-mode="raw">Raw mapping</button>
+        <button class="chip" type="button" data-mode="calmed" aria-pressed="true">Post-processed</button>
+      </div>
+      <div class="readout" id="retargetReadout" style="margin-top:.7rem"></div>
+      <p style="font-size:var(--step--1);color:var(--text-dim);margin-top:.9rem">
+        The raw mapping asks for <strong>10.21&nbsp;rad/s</strong> — roughly
+        six times what the servos will do. Post-processing lands it exactly
+        on the cap, which is why the corpus is trainable at all.
+      </p>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:2rem">
+    <h4>Five passes over the whole corpus</h4>
+    <p style="margin:0 0 1rem;font-size:var(--step--1);color:var(--text-faint);max-width:var(--measure)">
+      Each mapping revision was measured against every one of the 926 source
+      clips before it was kept. Two measures, two frames — putting them on
+      one pair of axes would only flatter the result.
+    </p>
+    <div id="mappingChart"></div>
+    <p style="margin:1rem 0 0;font-size:var(--step--1);color:var(--text-dim);max-width:var(--measure)">
+      Calming is not free. Correlation with the source head channel falls
+      from 0.963 to 0.918 across these runs — the lamp deliberately stops
+      tracking its source exactly, because a lamp that twitches at
+      4&nbsp;rad/s reads as broken rather than alive.
+    </p>
+  </div>
+</section>
+
+<!-- ----------------------------------------------------------- explorer -->
+<section id="data">
+  <div class="sec-head">
+    <p class="eyebrow">The training set</p>
+    <h2>All 812 clips, on the actual lamp</h2>
+    <p class="lede prose">
+      Every clip the model learned from, playable. The labels are soft —
+      annotator fractions, not one-hot tags — and the coverage is lopsided in
+      a way worth seeing before you trust any per-affect claim.
+    </p>
+  </div>
+
+  <div class="explorer-grid">
+    <div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.7rem">
+        <label class="sr" for="affectFilter">Dominant affect</label>
+        <select id="affectFilter"><option value="">All affects</option></select>
+        <label class="sr" for="splitFilter">Split</label>
+        <select id="splitFilter">
+          <option value="">Train + val</option>
+          <option value="train">Train only</option>
+          <option value="val">Val only</option>
+        </select>
+        <label class="sr" for="clipSearch">Search descriptions</label>
+        <input type="search" id="clipSearch" placeholder="search descriptions…" style="flex:1;min-width:11rem">
+      </div>
+      <div class="cliplist" id="clipList"></div>
+      <p id="clipCount" style="font:400 var(--step--1) var(--mono);color:var(--text-faint);margin-top:.5rem"></p>
+
+      <figure style="margin-top:1.5rem">
+        <h3 style="margin-bottom:.3rem">Coverage is not uniform</h3>
+        <figcaption style="margin-bottom:.8rem">
+          Two counts per affect, and they disagree. Surprise is labelled on
+          224 clips but dominates only 44 — that gap is why five affects were
+          dropped from the taxonomy entirely.
+        </figcaption>
+        <div id="affectChart"></div>
+      </figure>
+    </div>
+
+    <div>
+      <div class="dock" id="dockData" data-dock="data">
+        <span class="badge" id="dataBadge">pick a clip</span>
+        <span class="hint">drag to orbit &middot; two fingers on touch</span>
+      </div>
+      <div class="panel" style="margin-top:.75rem">
+        <h4 id="clipTitle" style="font-family:var(--mono);font-size:var(--step--1)">No clip selected</h4>
+        <p id="clipDesc" style="margin:.3rem 0 .8rem;font-size:var(--step--1);color:var(--text-dim)"></p>
+        <div class="vec" id="clipVec"></div>
+        <div class="readout" id="clipMeta" style="margin-top:.7rem"></div>
+        <button class="btn small" id="clipDl" type="button" disabled style="margin-top:.7rem">Download .npz</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------- results -->
+<section id="results">
+  <div class="sec-head">
+    <p class="eyebrow">Does it work</p>
+    <h2>Evaluated without asking anyone to rate anything</h2>
+    <p class="lede prose">
+      A rater study was out of reach, so the model is gated on measurements
+      that need no raters: can a probe trained on real motion read the
+      generated motion, does intensity move monotonically with guidance, and
+      does every sample survive the validator.
+    </p>
+  </div>
+
+  <div class="cards" id="resultCards"></div>
+
+  <div class="split" style="margin-top:2rem">
+    <div>
+      <h3 style="margin-bottom:.7rem">The projection story</h3>
+      <div class="prose">
+        <p>
+          Guidance above 1 is what makes affects distinguishable — and it is
+          also what pushes samples past the joint speed limit. At
+          <code>cfg 2.5</code> the raw model output failed the validator on
+          <strong>every one of eight test affects</strong>.
+        </p>
+        <p>
+          Re-applying the mapping's own rate tracker fixed all eight while
+          keeping <strong>99% of mean joint speed</strong>. Guidance and
+          projection together took the spread of mean speed across affects
+          from 1.98× to <strong>3.21×</strong>, against 3.24× in the real
+          data — so the generated corpus varies by affect almost exactly as
+          much as the real one does.
+        </p>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:.7rem">Latency, from the last sample of speech</h3>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>stage</th><th class="n">p50</th><th class="n">p95</th></tr></thead>
+          <tbody>
+            <tr><td>endpoint detection</td><td class="n">700 ms</td><td class="n">700 ms</td></tr>
+            <tr><td><strong>first motion (react)</strong></td><td class="n">+150 ms</td><td class="n">+250 ms</td></tr>
+            <tr><td>speech recognition</td><td class="n">+200 ms</td><td class="n">+500 ms</td></tr>
+            <tr><td>dialogue reply</td><td class="n">+600 ms</td><td class="n">+1500 ms</td></tr>
+            <tr><td>speech synthesis</td><td class="n">+300 ms</td><td class="n">+700 ms</td></tr>
+            <tr><td><strong>first audio out</strong></td><td class="n">+1100 ms</td><td class="n">+2700 ms</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:var(--step--1);color:var(--text-faint);margin-top:.7rem">
+        The lamp moves within about 150 ms of you stopping — long before it
+        knows what you said. That reaction is prefetched, so it survives the
+        generation service being down entirely.
+      </p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <div class="cols">
+    <div>
+      <h4>The code</h4>
+      <ul>
+        <li><a href="https://github.com/ogershony/interactive_lamp">github.com/ogershony/interactive_lamp</a></li>
+        <li>Dataset, checkpoint and MJCF are all in the repo</li>
+        <li><code>uv run motion_generator/infer.py "joy=0.7,surprise=0.3"</code></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Built on</h4>
+      <ul>
+        <li>LeLamp (Human Computer Lab) — the open hardware and its MJCF</li>
+        <li>McNeill &amp; Kennington, RSS 2019 — the affect annotations</li>
+        <li>ELEGNT (Apple, 2025) — expressive vs functional motion</li>
+        <li>RMG (2025) — retargeting human motion to a desktop arm</li>
+      </ul>
+    </div>
+    <div>
+      <h4>On this page</h4>
+      <ul>
+        <li>three.js for the lamp, ONNX Runtime Web for the model</li>
+        <li>No server, no API keys, no analytics</li>
+        <li>Kinematics verified against MuJoCo to under a millimetre</li>
+      </ul>
+    </div>
+  </div>
+  <p class="fineprint">
+    The source animations are Anki's and are not redistributed here: this
+    page ships only the retargeted lamp motion and the scalar features the
+    mapping derives. The conversation replay is a real recorded session — the
+    dialogue model that produced those words does not run on this page.
+  </p>
+</footer>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
