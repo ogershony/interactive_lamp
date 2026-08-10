@@ -91,12 +91,11 @@ const RESULTS = [
 /* ------------------------------------------------------------------ theme */
 
 function initTheme() {
+  // dark unless the visitor has explicitly chosen light before
   const stored = localStorage.getItem("lamp-theme");
-  if (stored) document.documentElement.dataset.theme = stored;
+  if (stored === "light") document.documentElement.dataset.theme = "light";
   $("#themeBtn").addEventListener("click", () => {
-    const dark = matchMedia("(prefers-color-scheme: dark)").matches;
-    const cur = document.documentElement.dataset.theme
-      || (dark ? "dark" : "light");
+    const cur = document.documentElement.dataset.theme || "dark";
     const next = cur === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
     localStorage.setItem("lamp-theme", next);
@@ -504,6 +503,12 @@ async function initRetarget(lamp) {
 
   function render() {
     $("#exName").textContent = cur.name;
+    const sbs = $("#sbsVideo");
+    const src = `media/retarget-${cur.name}.mp4`;
+    if (sbs && !sbs.src.endsWith(src)) {
+      sbs.src = src;
+      sbs.load();
+    }
     RT.renderFeatures($("#featChart"), cur);
     RT.renderJoints($("#jointChart"), cur, "both");
     player.play(RT.clipOf(cur, mode), { loop: true });

@@ -5,7 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>interactive_lamp — emotion-conditioned motion for a desk lamp robot</title>
 <meta name="description" content="A 5-DOF desk lamp that moves with feeling. Cozmo animations retargeted in feature space, a 2.5M-parameter flow-matching model, and a conversational runtime — with the model running live in your browser.">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="dark light">
+<script>
+  // Set before first paint so a returning light-mode visitor never sees a
+  // dark flash. Dark needs nothing: it is what :root already defines.
+  try {
+    if (localStorage.getItem("lamp-theme") === "light") {
+      document.documentElement.dataset.theme = "light";
+    }
+  } catch (e) { /* private mode: stay on the default */ }
+</script>
 
 <meta property="og:title" content="interactive_lamp">
 <meta property="og:description" content="Emotion-conditioned motion generation for a 5-DOF desk-lamp robot. Generate motion from an affect vector, in your browser, with the real checkpoint.">
@@ -245,6 +254,17 @@
       the same thing with its own body.
     </p>
   </div>
+
+  <figure style="margin-bottom:2rem">
+    <video id="sbsVideo" controls loop muted playsinline preload="metadata"></video>
+    <figcaption style="max-width:var(--measure)">
+      The same instant on both bodies. Cozmo raises its lift and turns; the
+      lamp stretches tall and swings its base. Nothing is copied joint to
+      joint — the lift became a posture, the drive became a lean, the eyes
+      became the LED. The Cozmo on the left is this project's own box
+      replica built to pycozmo's dimensions, replaying the source channels.
+    </figcaption>
+  </figure>
 
   <div class="split">
     <div>

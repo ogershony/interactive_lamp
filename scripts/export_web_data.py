@@ -263,6 +263,54 @@ def pack_retarget(out, stems):
 
 # ---------------------------------------------------------------- mapping log
 
+def render_side_by_side(stems, media_dir, width=420, height=300):
+    """Cozmo | lamp, the same frame, for each exemplar.
+
+    Reuses data/lamp_retargeting/media.py's layout and the two renderers it
+    drives. The Cozmo side is `cozmo_model.py`'s box replica -- the project's
+    own geometry built to pycozmo dimensions, not Anki artwork -- replaying
+    the source channels, so what the pair shows is the mapping's argument:
+    same instant, same intent, two different bodies.
+    """
+    import imageio.v2 as imageio
+    from PIL import Image, ImageDraw
+    from cozmo_model import ClipRenderer
+    from lamp_model import Lamp, LampRenderer
+    from mapping import retarget_clip
+    from media import _font
+
+    lamp = Lamp()
+    media_dir.mkdir(parents=True, exist_ok=True)
+    out = []
+    for stem in stems:
+        z, _, arrays = retarget_clip(stem, lamp)
+        q, light = arrays["qpos"], arrays["light01"]
+        cozmo = ClipRenderer(width, height)
+        lampr = LampRenderer(lamp)
+        label = _font(13)
+        frames = []
+        for i in range(len(q)):
+            canvas = Image.new("RGB", (width * 2, height + 26), (10, 15, 21))
+            canvas.paste(Image.fromarray(cozmo.frame(z, i)), (0, 26))
+            canvas.paste(Image.fromarray(lampr.frame(q[i], float(light[i]))),
+                         (width, 26))
+            dr = ImageDraw.Draw(canvas)
+            dr.text((10, 6), "source: Cozmo channels", font=label,
+                    fill=(126, 162, 232))
+            dr.text((width + 10, 6), "retargeted: the lamp", font=label,
+                    fill=(255, 198, 74))
+            dr.text((width * 2 - 10, 6), f"t={float(z['t'][i]):5.2f}s",
+                    font=label, fill=(120, 135, 150), anchor="ra")
+            frames.append(np.asarray(canvas))
+        cozmo.close()
+        lampr.close()
+        path = media_dir / f"retarget-{stem}.mp4"
+        imageio.mimwrite(path, frames, fps=30, codec="libx264", quality=8,
+                         macro_block_size=1, pixelformat="yuv420p")
+        out.append((stem, path.stat().st_size))
+    return out
+
+
 MAPPING_RUNS = [
     ("v1.0-baseline", "1.0", "baseline feature-space mapping"),
     ("v1.1", "1.1", "motion easing + light calming"),
@@ -358,6 +406,9 @@ def main():
 
     for name, sz in copy_media(_webpaths.DOCS / "media"):
         print(f"media: {name} {sz / 1e6:.2f} MB")
+
+    for stem, sz in render_side_by_side(got, _webpaths.DOCS / "media"):
+        print(f"side-by-side: retarget-{stem}.mp4 {sz / 1e6:.2f} MB")
 
 
 if __name__ == "__main__":

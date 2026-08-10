@@ -1,5 +1,12 @@
 # interactive_lamp
 
+**[Live demo → ogershony.github.io/interactive_lamp](https://ogershony.github.io/interactive_lamp/)**
+— generate motion from an affect vector in your browser (the real fm-v1
+checkpoint via ONNX Runtime Web), watch a recorded conversation replay
+frame-for-frame, and browse all 812 training clips on the actual lamp.
+Built by `docs/` + `scripts/export_*.py`; deployed by
+`.github/workflows/pages.yml`.
+
 Emotion-conditioned motion generation for a 5-DOF desk-lamp robot
 (LeLamp). Cozmo robot animations with crowd-sourced emotion labels are
 retargeted in feature space onto the lamp, curated into a training set,
@@ -19,7 +26,7 @@ uv run motion_generator/infer.py "joy=0.7,surprise=0.3" --seconds 3
 # talk to the lamp (typed turns; needs GEMINI_API_KEY in .env, and the
 # motion service -- or --motion local to run the model in-process):
 uv run runtime/motion/service.py --device cpu &
-uv run --env-file .env runtime/main.py --turn "hello lamp"
+uv run runtime/main.py --turn "hello lamp"
 ```
 
 The production checkpoint (`motion_generator/runs/fm-v1/ckpt_best.pt`,
