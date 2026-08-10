@@ -94,8 +94,8 @@ class GeminiAgent:
             key = os.environ.get("GEMINI_API_KEY") \
                 or os.environ.get("GOOGLE_API_KEY")
             if not key:
-                raise AgentError("GEMINI_API_KEY not set (run with "
-                                 "`uv run --env-file .env ...`)")
+                raise AgentError("GEMINI_API_KEY not set (put it in the "
+                                 "repo-root .env; see .env.example)")
             # the Gemini API endpoint, not Vertex: the project's key is
             # service-restricted to generativelanguage.googleapis.com
             # (Vertex calls return API_KEY_SERVICE_BLOCKED)

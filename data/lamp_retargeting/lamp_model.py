@@ -10,7 +10,8 @@ import numpy as np
 import config  # sets MUJOCO_GL before mujoco import  # noqa: F401
 import mujoco
 
-from config import BASE_BODY, HEAD_BODY, HOME4, JOINTS, SCENE_XML
+from config import (BASE_BODY, CAM_AZIMUTH, CAM_DISTANCE, CAM_ELEVATION,
+                    CAM_LOOKAT, HEAD_BODY, HOME4, JOINTS, SCENE_XML)
 
 
 class Lamp:
@@ -116,10 +117,10 @@ class LampRenderer:
         self.lamp = lamp
         self.renderer = mujoco.Renderer(lamp.model, self.H, self.W)
         self.cam = mujoco.MjvCamera()
-        self.cam.distance = 0.85
-        self.cam.azimuth = 215
-        self.cam.elevation = -14
-        self.cam.lookat[:] = (-0.02, 0.0, 0.20)
+        self.cam.distance = CAM_DISTANCE
+        self.cam.azimuth = CAM_AZIMUTH
+        self.cam.elevation = CAM_ELEVATION
+        self.cam.lookat[:] = CAM_LOOKAT
         b = lamp.model.body(HEAD_BODY)
         adr, num = int(b.geomadr[0]), int(b.geomnum[0])
         self.head_geoms = list(range(adr, adr + num))

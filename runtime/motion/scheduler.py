@@ -90,9 +90,10 @@ class Scheduler:
     injected; all optional so the core is testable bare."""
 
     def __init__(self, servos=None, leds=None, idle_fn=None, recorder=None,
-                 yaw_relative=None, alpha=None, filler_fn=None):
+                 yaw_relative=None, alpha=None, filler_fn=None, viewer=None):
         self.servos = servos
         self.leds = leds
+        self.viewer = viewer         # runtime/view.py LiveViewer, or None
         self.idle_fn = idle_fn
         self.filler_fn = filler_fn   # () -> ScheduledClip | None; called
         #                              when nothing is active or due, so
@@ -227,6 +228,8 @@ class Scheduler:
             self.leds.write(float(cmd[C.LIGHT_CH]), cmd[C.RGB_CH])
         if self.recorder:
             self.recorder.frame(self.frame, cmd, tag)
+        if self.viewer is not None:
+            self.viewer.write(cmd)       # self-throttling, self-disabling
         self.frame += 1
         return cmd
 

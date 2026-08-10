@@ -27,6 +27,9 @@ class ScriptedAsr:
         self.delay_s = delay_s
         self.calls = 0
 
+    def warm(self):
+        """No model to load; here so callers need not special-case."""
+
     async def transcribe(self, pcm, sr):
         if self.delay_s:
             await asyncio.sleep(self.delay_s)
@@ -37,9 +40,14 @@ class ScriptedAsr:
 
 
 class WhisperAsr:
-    """Local faster-whisper, int8, small.en. 400 ms to 1.5 s per short
-    utterance on a Pi 5 -- viable fallback, noticeably slower than cloud.
-    Model load (~1 s) happens on first call, off the event loop."""
+    """Local faster-whisper, int8, small.en. ~1.5-2.0 s per short utterance
+    on the demo box (16 threads), the upper end while the motion engine is
+    generating -- viable fallback, noticeably slower than cloud.
+
+    Loading costs ~3.0 s, which is why warm() exists: left to happen on the
+    first call it lands *inside* TIMEOUT_ASR, so the first turn of every
+    session times out with an empty transcript and the lamp answers "Sorry,
+    I missed that." Call warm() during startup instead."""
 
     def __init__(self, model_size="small.en"):
         self.model_size = model_size
@@ -51,6 +59,10 @@ class WhisperAsr:
             self._model = WhisperModel(self.model_size, device="cpu",
                                        compute_type="int8")
         return self._model
+
+    def warm(self):
+        """Load the model now, so no turn pays for it. Safe to call twice."""
+        self._load()
 
     def _run(self, pcm, sr):
         model = self._load()

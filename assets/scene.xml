@@ -5,7 +5,12 @@
     <visual>
         <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0" />
         <rgba haze="0.15 0.25 0.35 1" />
-        <global azimuth="160" elevation="-20" />
+        <!-- free-camera default, for `python -m mujoco.viewer`; kept in
+             step with CAM_AZIMUTH/CAM_ELEVATION in
+             data/lamp_retargeting/config.py, which the Python renderers
+             (review gifs, replay mp4, runtime/view.py) use. Both put the
+             lamp face-on to the viewer. -->
+        <global azimuth="330" elevation="-16" />
     </visual>
 
     <asset>

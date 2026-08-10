@@ -7,6 +7,7 @@ on real users lives here.
 
 import numpy as np
 
+from runtime import _dotenv  # noqa: F401 (loads .env into os.environ)
 from runtime._paths import MOTION_GEN_DIR, RETARGET_DIR, ROOT  # noqa: F401 (sys.path shim)
 
 # ---- offline-pipeline constants (single source of truth) ------------------
@@ -45,7 +46,19 @@ AUDIO_BLOCK_MS = 10     # VAD granularity (160 samples @ 16 kHz)
 AUDIO_SR = 16000
 RING_SECONDS = 30       # preallocated mic ring buffer
 HALF_DUPLEX_TAIL_MS = 150   # keep mic muted this long after playback ends
-VAD_ENERGY_THRESHOLD = 0.01  # RMS (of full-scale 1.0) for the energy VAD
+VAD_ENERGY_THRESHOLD = 0.005  # RMS (of full-scale 1.0) for the energy VAD.
+                      # Calibrated on the demo box (Blue Snowball over WSLg)
+                      # with scripts/calibrate_vad.py: room tone p95 0.0024,
+                      # voiced speech p90 0.0124 -- 14 dB apart. Picked as
+                      # the most sensitive threshold that still leaks zero
+                      # room tone, because the failure mode here is
+                      # under-accumulation: at 0.01 only the loudest blocks
+                      # counted (550 ms of speech per sample vs 750 at
+                      # 0.005), voiced runs came out short, the gaps between
+                      # them ran past T_END_MS, and utterances closed below
+                      # MIN_SPEECH_MS -- onsets with no endpoint, so no turn
+                      # ever started. Re-measure per box; --vad-threshold
+                      # overrides per run.
 
 # ---- dialogue LLM (Gemini) ------------------------------------------------
 # The plan's latency budget (section 7) calls for a small model with a
@@ -84,7 +97,15 @@ ENV_CLIP = 2.0          # normalized envelope clipped to [-ENV_CLIP, ENV_CLIP]
 REACT_MIN_S, REACT_MAX_S = 0.6, 1.2
 
 # ---- timeouts (section 5), seconds ----------------------------------------
-TIMEOUT_ASR = 3.0
+TIMEOUT_ASR = 8.0       # local faster-whisper, not the cloud streaming ASR
+                        # the plan's latency budget assumed. Measured on the
+                        # demo box: 1.5 s idle, 2.0 s with the motion engine
+                        # generating, and the live viewer + 30 Hz scheduler
+                        # push it further (a --view --motion local session
+                        # logged 3 overruns, i.e. a saturated CPU). At 3.0 s
+                        # every turn timed out into "Sorry, I missed that.";
+                        # 8 s covers the loaded case with margin. Lower it
+                        # when a streaming cloud ASR replaces WhisperAsr.
 TIMEOUT_LLM = 4.0
 TIMEOUT_TTS = 3.0
 TIMEOUT_MOTION = 1.5

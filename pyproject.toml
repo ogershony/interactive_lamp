@@ -20,6 +20,12 @@ package = false
 # mujoco's EGL/OSMesa rendering with a confusing missing-Renderer
 # AttributeError (mujoco swallows the ImportError); 3.1.9 is fine
 constraint-dependencies = ["pyopengl==3.1.9"]
+# `voice` is default so `--converse` works without `--group voice`, and so
+# a later plain `uv sync` cannot silently uninstall the ASR out from under
+# it (uv run leaves it alone, but uv sync prunes non-default groups). The
+# cost is ~500 MB of ML deps (ctranslate2/onnxruntime/av) on every sync;
+# on the Pi, where ASR may live off-board, sync with --no-group voice.
+default-groups = ["dev", "voice"]
 
 # torch pinned to the CPU wheel locally (inference/demo box); train on
 # the GPU box with a CUDA build instead (see motion_generator/README.md)
@@ -39,4 +45,11 @@ dev = [
 ]
 voice = [
     "faster-whisper>=1.2.1",
+]
+# scripts/export_onnx.py only: converts the checkpoint for the browser demo
+# (docs/). Deliberately not a default group -- nothing at train or run time
+# needs it, and onnxruntime already arrives with `voice`.
+web = [
+    "onnx>=1.17",
+    "onnxscript>=0.1",
 ]

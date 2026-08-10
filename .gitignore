@@ -53,3 +53,6 @@ lamp_plan.md
 # Secrets: real values live in .env (never committed); .env.example
 # documents the expected variables
 .env
+
+# VAD calibration samples (scripts/calibrate_vad.py)
+runtime/vad_calib*.npz

@@ -43,6 +43,21 @@ JOINTS = ["1", "2", "3", "4", "5"]
 BASE_BODY = "scs215_v5"          # contains lamp_base; welded/re-anchored
 HEAD_BODY = "diffuser"
 
+# ---- viewing camera (every lamp view: review gifs, replay mp4, the live
+# viewer) ------------------------------------------------------------------
+# The lamp faces the viewer. mjvCamera.azimuth is the direction the camera
+# *looks*, not where it sits, so a front view is the gaze bearing minus 180
+# -- at the idle pose the head's gaze axis bears 162 deg, giving 342. (170,
+# the gaze bearing itself, put the camera behind the lamp's head: the
+# opposite of the intent.) 330 backs off 12 deg from dead-on so the arm
+# stays visible beside the shade instead of hiding behind it, which matters
+# for a project about motion. Verified against a 30-deg azimuth sweep and
+# held to frame across both yaw extremes, a full head lift, and a crouch.
+CAM_AZIMUTH = 330.0
+CAM_ELEVATION = -16.0
+CAM_DISTANCE = 0.95
+CAM_LOOKAT = (-0.02, 0.0, 0.28)
+
 # ---- mapping constants (calibrated via rendered pose probes) -------------
 HOME4 = -0.643        # wrist roll that levels the J5 nod axis
 HOME_PITCH = -0.35    # home gaze elevation (rad): classic desk-lamp droop

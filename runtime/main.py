@@ -15,15 +15,20 @@ Motion comes from the generation service (start it on the GPU box:
 `uv run runtime/motion/service.py --device cuda --host 0.0.0.0`, then
 point MOTION_SERVICE_URL at it) or in-process with --motion local:
 
-    uv run --env-file .env runtime/main.py --turn "hello lamp"
-    uv run --env-file .env runtime/main.py --turn "hi" --motion local
+    uv run runtime/main.py --turn "hello lamp"
+    uv run runtime/main.py --turn "hi" --motion local
 
 Full interactive loop (mic -> VAD -> ASR -> Gemini -> TTS -> speaker +
 motion). Needs audio hardware + PortAudio, faster-whisper (or a future
 cloud ASR), GEMINI_API_KEY, and espeak-ng/piper for audible speech:
 
-    uv run --env-file .env --group voice runtime/main.py --converse \\
+    uv run runtime/main.py --converse --motion local \\
         --tts auto [--port /dev/ttyACM0]
+
+--view opens a live MuJoCo window on the commanded stream; --record
+renders the session to replay.mp4 when it ends (both desktop-only):
+
+    uv run runtime/main.py --converse --motion local --view --record
 
 Dialogue is Gemini-only (GEMINI_API_KEY in .env). A prefetched
 MotionPool (react bank + ambient clips) covers the sub-200 ms reaction
@@ -51,6 +56,46 @@ from runtime.log import SessionRecorder
 from runtime.motion.idle import IdleMotion
 from runtime.motion.scheduler import Scheduler
 from runtime.types import ScheduledClip
+
+
+RENDER_MS_PER_FRAME = 200   # measured: ~196 ms/frame, 420x300 at scale 2
+
+
+def finish_session(args, sched, out):
+    """Shared session teardown: close the live window, then render the
+    mp4 if --record. A render failure is reported, never fatal -- the
+    session on disk is the artifact, the video is a convenience."""
+    if getattr(sched, "viewer", None) is not None:
+        sched.viewer.close()
+    if not args.record:
+        return
+    import numpy as np
+
+    from runtime.eval.replay import render_session
+
+    # Announce it *before* starting: rendering runs ~5 fps, so a couple of
+    # minutes of dead terminal is normal for a real conversation. Without
+    # this line the run looks hung, you hit ^C, and -- because
+    # KeyboardInterrupt is a BaseException that `except Exception` misses
+    # -- the render dies leaving no mp4. Both halves of that are fixed here.
+    try:
+        n_frames = int(np.load(pathlib.Path(out) / "commanded.npz")
+                       ["cmd"].shape[0])
+        eta = n_frames * RENDER_MS_PER_FRAME / 1000.0
+        print(f"rendering replay.mp4: {n_frames} frames, ~{eta:.0f}s "
+              f"(^C to skip; `uv run runtime/eval/replay.py {out}` later)",
+              flush=True)
+    except Exception:           # noqa: BLE001  (no frames -> render reports it)
+        pass
+    try:
+        path, n = render_session(out)
+        print(f"recorded {path}  ({n} frames)")
+    except KeyboardInterrupt:
+        print(f"\nrender skipped; the session is intact -- render it with "
+              f"`uv run runtime/eval/replay.py {out}`")
+    except Exception as e:      # noqa: BLE001  (GL-less box, empty session)
+        print(f"warning: could not render the mp4 ({e}); the session is "
+              f"intact -- retry with `uv run runtime/eval/replay.py {out}`")
 
 
 def load_clip_npz(path):
@@ -90,6 +135,15 @@ def main():
                    default="remote",
                    help="remote = generation service (MOTION_SERVICE_URL); "
                         "local = in-process checkpoint; none = speech only")
+    p.add_argument("--vad-threshold", type=float, default=None,
+                   help="energy-VAD block RMS threshold (default "
+                        f"{C.VAD_ENERGY_THRESHOLD}); measure yours with "
+                        "scripts/calibrate_vad.py")
+    p.add_argument("--view", action="store_true",
+                   help="live MuJoCo window showing the commanded stream "
+                        "(desktop GL; not the Pi)")
+    p.add_argument("--record", action="store_true",
+                   help="render the session to replay.mp4 when it ends")
     args = p.parse_args()
 
     out = pathlib.Path(args.out) if args.out else \
@@ -103,12 +157,20 @@ def main():
         servos = MockServoBus()
     leds = MockLedRing()
 
+    viewer = None
+    if args.view:
+        from runtime.view import LiveViewer
+        viewer = LiveViewer()            # window opens on the first frame
+
     sched = Scheduler(servos=servos, leds=leds, idle_fn=IdleMotion(),
-                      recorder=rec)
+                      recorder=rec, viewer=viewer)
 
     if args.turn or args.converse:
-        run_conversation(args, sched, rec, out)
-        servos.close()
+        try:
+            run_conversation(args, sched, rec, out)
+        finally:
+            servos.close()
+            finish_session(args, sched, out)
         return
 
     frame = 0
@@ -131,6 +193,7 @@ def main():
               overruns=sched.overruns)
     rec.close()
     servos.close()
+    finish_session(args, sched, out)
 
     events, frames = metrics.load_session(out)
     scan = metrics.invariant_scan(frames["cmd"])
@@ -151,8 +214,9 @@ def make_agent():
     import os
     if not (os.environ.get("GEMINI_API_KEY")
             or os.environ.get("GOOGLE_API_KEY")):
-        sys.exit("GEMINI_API_KEY is not set -- run with "
-                 "`uv run --env-file .env ...` (see .env.example)")
+        sys.exit("GEMINI_API_KEY is not set -- put it in the repo-root "
+                 ".env, which runtime/_dotenv.py loads automatically "
+                 "(see .env.example)")
     from runtime.dialogue.agent import GeminiAgent
     print("dialogue: gemini", C.GEMINI_MODEL)
     return GeminiAgent()
@@ -180,7 +244,11 @@ def make_motion(args):
                   f"device {health.get('device')})")
         except Exception as e:  # noqa: BLE001
             print(f"warning: motion service unreachable at {url} ({e}); "
-                  f"the lamp will speak and breathe until it comes back")
+                  f"the lamp will speak and breathe until it comes back.\n"
+                  f"         On a one-box setup you probably want "
+                  f"`--motion local` (runs the checkpoint in-process), or "
+                  f"start the service:\n"
+                  f"           uv run runtime/motion/service.py --device cpu")
     from runtime.motion.prefetch import MotionPool
     pool = MotionPool(engine)
     made = pool.warm()
@@ -201,12 +269,26 @@ def run_interactive(args, sched, rec, out, engine, pool, agent):
     from runtime.audio.tts import make_tts
     from runtime.behavior import Conversation
 
+    from runtime.audio.vad import EnergyVad
+
     audio = AudioIO()
     audio.start()                       # raises without PortAudio/devices
+    vad = EnergyVad(threshold=args.vad_threshold) \
+        if args.vad_threshold else None
+    if vad is not None:
+        print(f"vad: energy threshold {args.vad_threshold}")
+
+    asr = WhisperAsr() if args.asr == "whisper" else ScriptedAsr(["hello"])
+    # Load before the loop, never on the first turn: the model costs ~3 s,
+    # which would otherwise be spent inside that turn's TIMEOUT_ASR.
+    t_warm = time.monotonic()
+    asr.warm()
+    print(f"asr: {args.asr} ready ({time.monotonic() - t_warm:.1f}s)")
+
     convo = Conversation(sched, agent=agent, engine=engine, pool=pool,
-                         asr=WhisperAsr() if args.asr == "whisper"
-                         else ScriptedAsr(["hello"]),
-                         tts=make_tts(args.tts), audio=audio, recorder=rec)
+                         asr=asr,
+                         tts=make_tts(args.tts), audio=audio, recorder=rec,
+                         vad=vad)
 
     stop = threading.Event()
     control = threading.Thread(target=sched.run, kwargs=dict(stop=stop),

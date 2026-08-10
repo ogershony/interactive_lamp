@@ -49,29 +49,62 @@ uv run runtime/motion/service.py --device cuda --host 0.0.0.0
 
 # typed conversational turns, no mic needed (needs GEMINI_API_KEY and
 # the service; or --motion local to run the model in-process):
-uv run --env-file .env runtime/main.py --turn "hello lamp" --turn "how are you?"
-uv run --env-file .env runtime/main.py --turn "hi" --motion local
+uv run runtime/main.py --turn "hello lamp" --turn "how are you?"
+uv run runtime/main.py --turn "hi" --motion local
 
 # full interactive mic loop (audio-capable box / the Pi):
-uv run --env-file .env --group voice runtime/main.py --converse
+uv run runtime/main.py --converse --motion local
+
+# ...watching it move live, and saving the mp4 when the session ends:
+uv run runtime/main.py --converse --motion local --view --record
 
 # render a recorded session as video, conversation as subtitles:
 uv run runtime/eval/replay.py runtime/sessions/<name>   # -> replay.mp4
 ```
 
-`--converse` prerequisites: a mic + speaker with the PortAudio library
-installed (`apt/dnf install portaudio` — this repo's dev box has no
-sound hardware at all, so it runs on the Pi or a laptop), the `voice`
-dependency group (faster-whisper; first run downloads the small.en
-model), `GEMINI_API_KEY` in `.env`, the generation service reachable
-(`MOTION_SERVICE_URL`), and espeak-ng or piper for audible speech
-(silent otherwise). Servos attach with `--port /dev/ttyACM0`; without
-it motion goes to mock drivers.
+`--view` opens a passive MuJoCo window fed the same governed frames the
+servos get (`runtime/view.py`, a scheduler sink beside the drivers), so
+it shows the commanded stream rather than raw model output. It throttles
+itself to 30 Hz and disables itself if the window is closed or GL throws,
+so the display can never stall the control loop; opening the window costs
+one tick overrun on the first frame. Needs a desktop GL context — under
+WSL2 that is WSLg's display — so it is not for the Pi.
+
+`--record` renders `replay.mp4` in the session dir when the run ends,
+equivalent to running `eval/replay.py` afterwards. A render failure is
+reported but never fatal: the session on disk is the artifact.
+
+`--converse` prerequisites: a mic + speaker reachable through PortAudio,
+the `voice` dependency group (faster-whisper — a default group as of the
+`default-groups` setting in `pyproject.toml`, so a plain `uv sync`
+installs it; the first `--converse` run downloads the small.en model.
+Skip it on a box that doesn't need on-device ASR with `uv sync
+--no-group voice`), `GEMINI_API_KEY` in `.env`, a motion backend
+(`--motion local`, or the service reachable at `MOTION_SERVICE_URL`),
+and espeak-ng or piper for audible speech (silent otherwise). Servos
+attach with `--port /dev/ttyACM0`; without it motion goes to mock
+drivers.
+
+On Ubuntu (including WSL2, where WSLg bridges the Windows mic and
+speaker through `/mnt/wslg/PulseServer`) that means:
+
+```
+sudo apt install libportaudio2 libasound2-plugins espeak-ng
+```
+
+`libasound2-plugins` is the easy one to miss under WSLg: `/dev/snd` there
+has only `timer` and no PCM devices, so without ALSA's pulse plugin
+PortAudio loads but enumerates nothing.
 
 Dialogue runs on the **Gemini API** (`GEMINI_MODEL` in
 `runtime/config.py`, currently `gemini-3.5-flash-lite` with
 thinking_level=low per the plan's section-7 latency budget).
-`GEMINI_API_KEY` lives in the gitignored `.env`.
+
+`GEMINI_API_KEY` lives in the gitignored `.env` at the repo root, which
+`runtime/_dotenv.py` loads into `os.environ` on import (pulled in by
+`runtime.config`, so every entry point gets it) — no `--env-file .env`
+needed. Real environment variables take precedence over the file, so an
+exported variable or `--env-file` still overrides it.
 
 `main.py` reports the safety numbers after every run; a nonzero
 invariant count on the commanded stream is a hard failure (exit 1).
