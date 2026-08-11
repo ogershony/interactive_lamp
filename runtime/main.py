@@ -129,16 +129,31 @@ def main():
                    help="interactive mic loop (needs audio hardware)")
     p.add_argument("--asr", choices=["whisper", "scripted"],
                    default="whisper", help="--converse ASR backend")
+    p.add_argument("--asr-model", default=C.ASR_MODEL,
+                   help=f"faster-whisper size (default {C.ASR_MODEL}; "
+                        "small.en is more accurate and ~3x slower)")
+    p.add_argument("--output-lag-ms", type=float, default=None,
+                   help="speaker latency for half-duplex gating (default "
+                        f"{C.OUTPUT_LAG_MS}); measure with "
+                        "scripts/calibrate_audio_loop.py")
     p.add_argument("--tts", choices=["auto", "silent", "espeak"],
                    default="auto")
     p.add_argument("--motion", choices=["remote", "local", "none"],
                    default="remote",
                    help="remote = generation service (MOTION_SERVICE_URL); "
                         "local = in-process checkpoint; none = speech only")
+    p.add_argument("--vad", choices=["silero", "energy"],
+                   default=C.VAD_DEFAULT,
+                   help="speech detector; silero is box-independent, "
+                        "energy needs a calibrated threshold")
     p.add_argument("--vad-threshold", type=float, default=None,
-                   help="energy-VAD block RMS threshold (default "
-                        f"{C.VAD_ENERGY_THRESHOLD}); measure yours with "
-                        "scripts/calibrate_vad.py")
+                   help="VAD decision threshold: block RMS for energy "
+                        f"(default {C.VAD_ENERGY_THRESHOLD}, measure yours "
+                        "with scripts/calibrate_vad.py), speech probability "
+                        f"for silero (default {C.VAD_SILERO_THRESHOLD})")
+    p.add_argument("--mood-state", default=None,
+                   help="json file the conversation's mood is loaded from "
+                        "and saved to (default: fresh mood each session)")
     p.add_argument("--view", action="store_true",
                    help="live MuJoCo window showing the commanded stream "
                         "(desktop GL; not the Pi)")
@@ -222,7 +237,34 @@ def make_agent():
     return GeminiAgent()
 
 
-def make_motion(args):
+def load_mood(args):
+    """The conversation's opening mood. Default is a fresh one each
+    session; --mood-state points at a json file so a session can pick up
+    where the last one left off. Cross-session memory of the *dialogue*
+    (GeminiAgent.history) is not wired to this yet -- the body remembering
+    without the words remembering would be worse than neither."""
+    import json
+
+    from runtime.dialogue.mood import Mood
+    if not args.mood_state:
+        return None
+    path = pathlib.Path(args.mood_state)
+    if not path.exists():
+        return None
+    mood = Mood.from_dict(json.loads(path.read_text()))
+    print(f"mood: resumed {mood.dominant()} at {mood.intensity():.2f} "
+          f"from {path}")
+    return mood
+
+
+def save_mood(args, mood):
+    import json
+    if not args.mood_state or mood is None:
+        return
+    pathlib.Path(args.mood_state).write_text(json.dumps(mood.to_dict()))
+
+
+def make_motion(args, recorder=None):
     """(engine, pool) for the chosen --motion mode. `remote` talks to
     the generation service (GPU box); `local` runs the checkpoint
     in-process (one-box mode, slow on CPU); `none` -> speech only."""
@@ -250,7 +292,7 @@ def make_motion(args):
                   f"start the service:\n"
                   f"           uv run runtime/motion/service.py --device cpu")
     from runtime.motion.prefetch import MotionPool
-    pool = MotionPool(engine)
+    pool = MotionPool(engine, recorder=recorder)
     made = pool.warm()
     print(f"motion pool warmed: {made} clips "
           f"(react bank {len(pool._react)}/{len(C.EMOTIONS)})")
@@ -269,26 +311,30 @@ def run_interactive(args, sched, rec, out, engine, pool, agent):
     from runtime.audio.tts import make_tts
     from runtime.behavior import Conversation
 
-    from runtime.audio.vad import EnergyVad
+    from runtime.audio.vad import make_vad
 
-    audio = AudioIO()
+    audio = AudioIO(output_lag_ms=args.output_lag_ms)
     audio.start()                       # raises without PortAudio/devices
-    vad = EnergyVad(threshold=args.vad_threshold) \
-        if args.vad_threshold else None
-    if vad is not None:
-        print(f"vad: energy threshold {args.vad_threshold}")
+    print(f"audio: half-duplex gate holds "
+          f"{audio.output_lag_ms:.0f} ms speaker lag "
+          f"+ {C.HALF_DUPLEX_TAIL_MS} ms tail")
+    vad, vad_kind = make_vad(args.vad, args.vad_threshold)
+    print(f"vad: {vad_kind} threshold {vad.threshold}")
 
-    asr = WhisperAsr() if args.asr == "whisper" else ScriptedAsr(["hello"])
+    asr = WhisperAsr(args.asr_model) if args.asr == "whisper" \
+        else ScriptedAsr(["hello"])
     # Load before the loop, never on the first turn: the model costs ~3 s,
     # which would otherwise be spent inside that turn's TIMEOUT_ASR.
     t_warm = time.monotonic()
     asr.warm()
-    print(f"asr: {args.asr} ready ({time.monotonic() - t_warm:.1f}s)")
+    print(f"asr: {args.asr} {getattr(asr, 'model_size', '')} ready "
+          f"({time.monotonic() - t_warm:.1f}s)")
 
+    mood = load_mood(args)
     convo = Conversation(sched, agent=agent, engine=engine, pool=pool,
                          asr=asr,
                          tts=make_tts(args.tts), audio=audio, recorder=rec,
-                         vad=vad)
+                         vad=vad, mood=mood)
 
     stop = threading.Event()
     control = threading.Thread(target=sched.run, kwargs=dict(stop=stop),
@@ -303,6 +349,7 @@ def run_interactive(args, sched, rec, out, engine, pool, agent):
         stop.set()
         control.join(timeout=2.0)
         audio.stop()
+        save_mood(args, convo.mood)
         if pool is not None:
             pool.close()
         rec.event("run_end", trims=sched.trims,
@@ -321,7 +368,7 @@ def run_conversation(args, sched, rec, out):
     from runtime.behavior import Conversation
 
     agent = make_agent()
-    engine, pool = make_motion(args)
+    engine, pool = make_motion(args, recorder=rec)
 
     if args.converse:
         run_interactive(args, sched, rec, out, engine, pool, agent)
@@ -329,7 +376,7 @@ def run_conversation(args, sched, rec, out):
 
     convo = Conversation(sched, asr=ScriptedAsr(), agent=agent,
                          tts=make_tts(args.tts), engine=engine,
-                         pool=pool, recorder=rec)
+                         pool=pool, recorder=rec, mood=load_mood(args))
 
     async def turns():
         for text in args.turn:
@@ -350,6 +397,7 @@ def run_conversation(args, sched, rec, out):
     try:
         asyncio.run(turns())
     finally:
+        save_mood(args, convo.mood)
         if pool is not None:
             pool.close()
 
