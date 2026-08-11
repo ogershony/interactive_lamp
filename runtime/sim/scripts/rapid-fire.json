@@ -1,0 +1,14 @@
+{
+  "name": "rapid-fire",
+  "_why": "Short lines with short gaps, including two-word utterances -- the endpointing stress case. A fixed 700ms window fires mid-thought on these; the adaptive one should wait. Also the pool-starvation case: every turn dirties a react-bank entry, so a burst of turns is when the ambient FIFO is most likely to run dry.",
+  "noise_db": -50,
+  "rms": 0.05,
+  "lead_s": 1.0,
+  "turns": [
+    {"say": "hey", "pause_s": 5.0},
+    {"say": "what do you think", "pause_s": 6.0},
+    {"say": "no really", "pause_s": 5.0},
+    {"say": "tell me", "pause_s": 5.0},
+    {"say": "okay", "pause_s": 5.0}
+  ]
+}

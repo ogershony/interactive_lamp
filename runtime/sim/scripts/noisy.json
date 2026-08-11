@@ -1,0 +1,12 @@
+{
+  "name": "noisy",
+  "_why": "The same conversation with a fan in the room (-38 dBFS room tone, ~16 dB above quiet) and a quieter talker. The energy VAD's threshold is calibrated against a specific noise floor, so this is where it should fall apart and Silero should not. Run it both ways: --vad silero and --vad energy.",
+  "noise_db": -38,
+  "rms": 0.03,
+  "lead_s": 2.0,
+  "turns": [
+    {"say": "hello lamp can you hear me", "pause_s": 7.0},
+    {"say": "it is quite loud in here today", "pause_s": 8.0},
+    {"say": "how are you doing", "pause_s": 7.0}
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "sad-then-cheer",
+  "_why": "The headline case: does the lamp still look sad a quarter of a minute after being told so, and does it turn around when the news does? The 14s pause is the test -- with a mood that decays to a floor the lamp should stay sorrow-dominant at a lower level throughout it, never reverting to generic ambient.",
+  "noise_db": -54,
+  "rms": 0.05,
+  "lead_s": 1.5,
+  "turns": [
+    {"say": "hey lamp, are you there", "pause_s": 7.0},
+    {"say": "I've had a pretty sad day today", "pause_s": 8.0},
+    {"pause_s": 14.0},
+    {"say": "actually, some good news just came in", "pause_s": 8.0},
+    {"say": "thanks for listening", "pause_s": 6.0}
+  ]
+}

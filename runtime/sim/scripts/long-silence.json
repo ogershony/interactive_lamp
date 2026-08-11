@@ -1,0 +1,11 @@
+{
+  "name": "long-silence",
+  "_why": "One turn, then nothing for a minute. Exercises the mood's decay to its floor and, more importantly, whether the ambient pool keeps up unattended -- this is the script that catches the lamp dropping into procedural breathing when nobody is talking to it.",
+  "noise_db": -54,
+  "rms": 0.05,
+  "lead_s": 2.0,
+  "turns": [
+    {"say": "hello there lamp", "pause_s": 8.0},
+    {"pause_s": 60.0}
+  ]
+}
