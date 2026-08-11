@@ -1,12 +1,15 @@
 import asyncio
 import json
+import shutil
 
 import numpy as np
+import pytest
 
 import runtime.config as C
 from runtime.audio.asr import ScriptedAsr
 from runtime.audio.tts import SilentTts
 from runtime.audio.vad import EnergyVad
+from runtime.dialogue import affect
 from runtime.dialogue.affect import estimate_react_affect
 from runtime.dialogue.agent import REPLY_SCHEMA, STALL_REPLY, SYSTEM_PROMPT
 from runtime.dialogue.affect import validate_reply
@@ -218,3 +221,174 @@ def test_scripted_asr_cycles():
     assert run(asr.transcribe(pcm, 16000)).text == "one"
     assert run(asr.transcribe(pcm, 16000)).text == "two"
     assert run(asr.transcribe(pcm, 16000)).text == "one"
+
+
+# ---- valence / arousal -> the lamp's voice ---------------------------------
+
+def test_tables_cover_the_taxonomy_and_stay_in_range():
+    assert set(affect.VALENCE) == set(C.EMOTIONS) == set(affect.AROUSAL)
+    for t in (affect.VALENCE, affect.AROUSAL):
+        assert all(-1.0 <= v <= 1.0 for v in t.values())
+
+
+def test_valence_orders_the_obvious_pairs():
+    pure = lambda e: affect.valence_arousal({e: 1.0}, 1.0)          # noqa: E731
+    assert pure("joy").valence > pure("interest").valence > 0
+    assert pure("sorrow").valence < pure("boredom").valence < 0
+    # the reason arousal exists: as negative as sorrow, nothing like it
+    assert pure("anger").valence < 0 and pure("anger").arousal > 0
+    assert pure("anger").arousal > pure("sorrow").arousal
+
+
+def test_a_blend_lands_between_its_parts():
+    joy = affect.valence_arousal({"joy": 1.0}, 1.0).valence
+    sorrow = affect.valence_arousal({"sorrow": 1.0}, 1.0).valence
+    mix = affect.valence_arousal({"joy": 0.5, "sorrow": 0.5}, 1.0).valence
+    assert sorrow < mix < joy
+
+
+def test_intensity_scales_toward_neutral_but_never_to_flat():
+    full = affect.valence_arousal({"sorrow": 1.0}, 1.0).valence
+    weak = affect.valence_arousal({"sorrow": 1.0}, 0.0).valence
+    assert full < weak < 0
+    assert abs(weak / full - C.VOICE_INTENSITY_FLOOR) < 1e-5
+
+
+def test_espeak_flags_track_valence_and_clamp():
+    from runtime.audio.tts import espeak_args, rate_wpm
+    from runtime.types import Prosody
+
+    def flags(p):
+        a = espeak_args(p)
+        return {a[i]: int(a[i + 1]) for i in (0, 2, 4)}
+
+    happy, sad = flags(Prosody(1.0, 0.0)), flags(Prosody(-1.0, 0.0))
+    assert happy["-p"] > flags(Prosody(0.0, 0.0))["-p"] > sad["-p"]
+    assert sad["-g"] > 0 and happy["-g"] == 0        # sad drags between words
+    assert happy["-a"] > sad["-a"]
+    # espeak's own ranges, whatever we ask for
+    for p in (Prosody(9.0, 0.0), Prosody(-9.0, 0.0)):
+        assert 0 <= flags(p)["-p"] <= 99 and 0 <= flags(p)["-a"] <= 200
+    # rate follows arousal, not valence
+    assert rate_wpm(Prosody(-1.0, 1.0)) > rate_wpm(Prosody(1.0, -1.0))
+    assert rate_wpm(None) == C.TTS_WPM
+
+
+def test_silent_tts_duration_follows_the_same_rate():
+    """Its estimate feeds motion alignment in every simulated session; if
+    it ignored prosody the sim would run on a different timeline than the
+    live loop it predicts."""
+    import asyncio
+
+    from runtime.audio.tts import SilentTts
+    from runtime.types import Prosody
+    t = SilentTts()
+    calm = asyncio.run(t.synth("one two three four", Prosody(0.0, -1.0)))
+    quick = asyncio.run(t.synth("one two three four", Prosody(0.0, 1.0)))
+    assert calm.duration_s > quick.duration_s
+
+
+@pytest.mark.skipif(shutil.which("espeak-ng") is None
+                    and shutil.which("espeak") is None,
+                    reason="espeak-ng not installed")
+def test_real_espeak_sounds_different_when_sad():
+    import asyncio
+
+    from runtime.audio.tts import EspeakTts
+    tts = EspeakTts()
+    line = "well that is something to think about"
+    sad = asyncio.run(tts.synth(line, affect.valence_arousal(
+        {"sorrow": 1.0}, 1.0)))
+    glad = asyncio.run(tts.synth(line, affect.valence_arousal(
+        {"joy": 1.0}, 1.0)))
+    assert sad.duration_s > glad.duration_s * 1.05    # slower and gappier
+    assert sad.pcm.any() and glad.pcm.any()
+
+
+# ---- streaming: speak the first phrase before the model finishes ----------
+
+def test_segment_scanner_survives_chunking_and_braces():
+    from runtime.dialogue.agent import SegmentScanner
+    raw = json.dumps({"segments": [
+        {"text": "Oh {no} \"really\"", "affect": {"joy": 1}, "intensity": 0.5},
+        {"text": "Two", "affect": {"sorrow": 1}, "intensity": 0.2}]})
+    for size in (1, 3, 7, 40, len(raw)):
+        s, got = SegmentScanner(), []
+        for i in range(0, len(raw), size):
+            got += s.feed(raw[i:i + size])
+        assert [g["text"] for g in got] == ["Oh {no} \"really\"", "Two"], size
+
+
+def test_segment_scanner_yields_before_the_reply_closes():
+    from runtime.dialogue.agent import SegmentScanner
+    s = SegmentScanner()
+    head = '{"segments": [{"text": "One", "affect": {"joy": 1}, ' \
+           '"intensity": 0.5}'
+    assert len(s.feed(head)) == 1              # ... no closing ] or } yet
+    assert s.feed(', {"text": "Two", "affect": {"joy": 1}, '
+                  '"intensity": 0.5}]}')[0]["text"] == "Two"
+
+
+def test_segment_scanner_skips_a_malformed_object():
+    from runtime.dialogue.agent import SegmentScanner
+    s = SegmentScanner()
+    got = s.feed('{"segments": [{"text": bad}, '
+                 '{"text": "ok", "affect": {"joy": 1}, "intensity": 0.5}]}')
+    assert [g["text"] for g in got] == ["ok"]
+
+
+class _FakeGeminiStream:
+    """genai.Client whose stream hands back the reply in fixed slices."""
+
+    def __init__(self, text, size=12, raises=None):
+        self.calls = []
+        outer = self
+
+        class _Models:
+            async def generate_content_stream(self, **kw):
+                outer.calls.append(kw)
+                if raises:
+                    raise raises
+
+                async def gen():
+                    for i in range(0, len(text), size):
+                        chunk = type("C", (), {})()
+                        chunk.text = text[i:i + size]
+                        yield chunk
+                return gen()
+
+        class _Aio:
+            models = _Models()
+        self.aio = _Aio()
+
+
+def test_reply_stream_yields_segments_and_keeps_history():
+    from runtime.dialogue.agent import GeminiAgent
+    payload = json.dumps({"segments": [
+        {"text": "Oh, hello!", "affect": {"joy": 1.0}, "intensity": 0.7},
+        {"text": "Good to hear you.", "affect": {"joy": 0.8},
+         "intensity": 0.4}]})
+    agent = GeminiAgent(client=_FakeGeminiStream(payload))
+
+    async def collect():
+        return [s async for s in agent.reply_stream("hi")]
+
+    segs = run(collect())
+    assert [s.text for s in segs] == ["Oh, hello!", "Good to hear you."]
+    assert [m["role"] for m in agent.history] == ["user", "model"]
+
+
+def test_reply_stream_failure_pops_the_pending_turn():
+    from runtime.dialogue.agent import AgentError, GeminiAgent
+    agent = GeminiAgent(client=_FakeGeminiStream("", raises=RuntimeError("x")))
+
+    async def collect():
+        return [s async for s in agent.reply_stream("hi")]
+
+    try:
+        run(collect())
+    except AgentError:
+        pass
+    else:
+        raise AssertionError("expected AgentError")
+    assert agent.history == []          # consistent for the next turn
