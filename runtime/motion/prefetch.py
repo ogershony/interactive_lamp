@@ -25,6 +25,8 @@ from collections import deque
 import numpy as np
 
 import runtime.config as C
+from runtime.dialogue.affect import intensity_to_cfg
+from runtime.motion.align import damp_amplitude
 from runtime.types import MotionRequest
 
 
@@ -34,18 +36,24 @@ def _unit(v):
 
 
 class MotionPool:
-    def __init__(self, engine, rng=None):
+    def __init__(self, engine, rng=None, recorder=None):
         self.engine = engine
         self.rng = rng or np.random.default_rng()
+        # react and ambient clips used to leave no trace of what generated
+        # them -- only an argmax name in a downstream tag. They are most of
+        # the motion a session plays, so their conditioning is logged too.
+        self.rec = recorder
         self._lock = threading.Lock()
         self._react = {}             # emotion -> (x, affect_vec)
         self._dirty = set(C.EMOTIONS)   # react entries needing (re)gen
         self._ambient = deque()      # (x, affect_vec, born_monotonic)
         self._bias = None            # conversation-mood affect vector
+        self._level = C.MOOD_BASE_LEVEL   # conversation-mood intensity
         self._wake = threading.Event()
         self._stop = False
         self._thread = None
         self.failures = 0            # refill errors, informational
+        self.flushes = 0             # ambient queues dropped on a mood turn
 
     # ---- consumers (any thread; must never block) --------------------------
     def react_clip(self, v):
@@ -66,17 +74,28 @@ class MotionPool:
         return None
 
     def pop_ambient(self):
-        """FIFO pop for the scheduler filler. Drops entries older than
-        AMBIENT_STALE_S; returns (x, tag) or None (-> idle breathing)."""
+        """FIFO pop for the scheduler filler. Returns (x, tag) or None
+        (-> idle breathing).
+
+        Entries older than AMBIENT_STALE_S are stale -- the mood has
+        probably moved since -- but staleness is a reason to prefer a
+        fresher clip, not a reason to stop performing. When everything in
+        the queue is stale the newest one is served anyway: an old mood
+        clip still looks alive, and procedural breathing is what "the
+        lamp forgot the conversation" looks like."""
         now = time.monotonic()
         with self._lock:
+            self._wake.set()
+            hit = None
             while self._ambient:
-                x, _, born = self._ambient.popleft()
-                self._wake.set()
+                x, a, born = self._ambient.popleft()
+                hit = (x, a)              # newest candidate seen so far
                 if now - born <= C.AMBIENT_STALE_S:
-                    return x, "ambient"
-        self._wake.set()
-        return None
+                    break                 # fresh: take it
+            if hit is None:
+                return None               # the queue really was empty
+            x, a = hit
+            return x, f"ambient:{C.EMOTIONS[int(np.argmax(a))]}"
 
     def nearest(self, v):
         """Best in-memory clip by affect cosine (react bank + ambient
@@ -93,17 +112,69 @@ class MotionPool:
                     best, best_cos = x, cos
         return None if best is None else best.copy()
 
-    def set_affect(self, v):
-        """Bias future ambient refills toward the conversation's mood."""
+    def set_mood(self, v, level=None):
+        """Point future ambient refills at the conversation's mood.
+
+        A mood change has to be *visible*, not merely queued: with a
+        three-deep FIFO of 2.5 s clips, silently biasing the next refill
+        means the lamp keeps performing the old mood for seven seconds
+        after the user's tone changed, which reads as not listening. So a
+        real turn (cosine below AMBIENT_MOOD_REFRESH_COS, or a large
+        level move) drops what is queued and the new mood lands within
+        one clip. Small drifts leave the queue alone -- flushing on every
+        turn would waste generation and jitter the performance."""
+        v = _unit(v)
         with self._lock:
-            self._bias = _unit(v)
+            # the first call is the session's opening mood, not a turn:
+            # what `warm()` queued was generated unbiased, which is the
+            # right thing to open with. Flushing it here would throw away
+            # the warm-up and leave the scheduler breathing at hello.
+            turned = self._bias is not None \
+                and float(self._bias @ v) < C.AMBIENT_MOOD_REFRESH_COS
+            if level is not None:
+                turned = turned or abs(level - self._level) \
+                    > C.AMBIENT_MOOD_REFRESH_LEVEL
+                self._level = float(np.clip(level, 0.0, 1.0))
+            self._bias = v
+            if turned and self._ambient:
+                self._ambient.clear()
+                self.flushes += 1
         self._wake.set()
 
     # ---- refilling ---------------------------------------------------------
+    def _ambient_request(self):
+        """An ambient clip in the current mood, at reduced exaggeration.
+        `AMBIENT_MOOD_MIX` of the affect is the mood and the rest a random
+        draw from AMBIENT_AFFECTS, so a held mood stays recognisable
+        without becoming a loop. The mood level drives both knobs: the
+        guidance weight, and the post-hoc `amp` damping applied after
+        generation (CFG bottoms out at a full-size gesture; `amp` is what
+        makes a sad lamp *quietly* sad)."""
+        base = np.zeros(len(C.EMOTIONS), np.float32)
+        base[C.EMOTIONS.index(self.rng.choice(C.AMBIENT_AFFECTS))] = 1.0
+        v = base if self._bias is None else _unit(
+            C.AMBIENT_MOOD_MIX * self._bias
+            + (1.0 - C.AMBIENT_MOOD_MIX) * base)
+        level = float(np.clip(self._level, 0.0, 1.0))
+        amp = C.AMBIENT_AMP_MIN \
+            + (C.AMBIENT_AMP_MAX - C.AMBIENT_AMP_MIN) * level
+        return ("ambient", amp, MotionRequest(
+            affect=v, cfg=intensity_to_cfg(level * C.AMBIENT_INTENSITY_SCALE),
+            seconds=C.AMBIENT_SECONDS, tag="ambient",
+            seed=int(self.rng.integers(1 << 31))))
+
     def _next_request(self):
         """(kind, key, MotionRequest) for the most useful missing clip,
-        or None when the pool is full."""
+        or None when the pool is full.
+
+        An empty ambient queue outranks the react bank. Every reaction
+        dirties one bank entry, so after a burst of turns the old
+        react-first order left the scheduler with nothing to play while
+        eleven one-second clips regenerated serially -- the pool starving
+        exactly when the conversation is busiest."""
         with self._lock:
+            if not self._ambient:
+                return self._ambient_request()
             if self._dirty:
                 emo = sorted(self._dirty)[0]
                 v = np.zeros(len(C.EMOTIONS), np.float32)
@@ -113,14 +184,7 @@ class MotionPool:
                     affect=v, cfg=2.0, seconds=seconds, tag=f"react:{emo}",
                     seed=int(self.rng.integers(1 << 31))))
             if len(self._ambient) < C.AMBIENT_POOL_SIZE:
-                base = np.zeros(len(C.EMOTIONS), np.float32)
-                base[C.EMOTIONS.index(
-                    self.rng.choice(C.AMBIENT_AFFECTS))] = 1.0
-                v = base if self._bias is None \
-                    else _unit(0.5 * base + 0.5 * self._bias)
-                return ("ambient", None, MotionRequest(
-                    affect=v, cfg=1.5, seconds=C.AMBIENT_SECONDS,
-                    tag="ambient", seed=int(self.rng.integers(1 << 31))))
+                return self._ambient_request()
         return None
 
     def _refill_once(self):
@@ -130,6 +194,12 @@ class MotionPool:
         if job is None:
             return False
         kind, key, req = job
+        if self.rec is not None:
+            from runtime.dialogue.affect import named
+            self.rec.event("pool_request", role=kind, tag=req.tag,
+                           affect=named(req.affect), cfg=round(req.cfg, 3),
+                           seconds=round(req.seconds, 3),
+                           amp=round(key, 3) if kind == "ambient" else None)
         try:
             x = self.engine.clip(req)
         except Exception:  # noqa: BLE001 -- breaker/transport/engine
@@ -141,7 +211,9 @@ class MotionPool:
                 self._react[key] = (np.asarray(x), v)
                 self._dirty.discard(key)
             else:
-                self._ambient.append((np.asarray(x), v, time.monotonic()))
+                # `key` is the amplitude damping for ambient clips
+                self._ambient.append(
+                    (damp_amplitude(x, key), v, time.monotonic()))
         return True
 
     def warm(self, tries=None):

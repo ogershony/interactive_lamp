@@ -78,3 +78,27 @@ def test_tail_blend_lands_on_next_start():
     assert np.allclose(y[-1, 0], x[-1, 0])           # yaw untouched (L1's job)
     M = int(round(C.TAIL_BLEND_MS / 1000.0 / C.DT))
     assert np.allclose(y[:-M], x[:-M])               # head untouched
+
+
+def test_damp_amplitude_keeps_the_pose_and_shrinks_the_gesture():
+    """The mood's "same emotion, less exaggerated" knob. Posture is where
+    the affect lives, so damping is about the clip's own mean pose."""
+    from runtime.motion.align import damp_amplitude
+    x = _clip(T=90, seed=3)
+    y = damp_amplitude(x, 0.5)
+    assert np.allclose(y[:, :5].mean(axis=0), x[:, :5].mean(axis=0),
+                       atol=2e-2)                       # pose preserved
+    def spread(a):
+        return np.abs(a[:, :5] - a[:, :5].mean(axis=0)).mean()
+    assert spread(y) < 0.7 * spread(x)                  # gesture smaller
+    assert np.allclose(y[:, 5:], x[:, 5:])              # light untouched
+
+
+def test_damp_amplitude_identity_and_invariants():
+    from runtime.motion.align import damp_amplitude
+    x = _clip(T=90, seed=4)
+    assert np.array_equal(damp_amplitude(x, 1.0), x)    # s=1 is a no-op
+    y = damp_amplitude(x, 0.3)
+    dq = np.abs(np.diff(y[:, :5], axis=0)) / C.DT
+    assert dq.max() <= C.RATE_CAP + 1e-6                # re-projected
+    assert np.isfinite(y).all()

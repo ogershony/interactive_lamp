@@ -39,13 +39,16 @@ def test_react_clip_dominant_and_regenerates(pool):
 def test_pop_ambient_fifo_and_empty(pool):
     for _ in range(C.AMBIENT_POOL_SIZE):
         hit = pool.pop_ambient()
-        assert hit is not None and hit[1] == "ambient"
+        assert hit is not None and hit[1].startswith("ambient:")
     assert pool.pop_ambient() is None         # empty -> idle breathing
 
 
-def test_stale_ambient_dropped(pool, monkeypatch):
+def test_stale_ambient_served_rather_than_dropped(pool, monkeypatch):
     monkeypatch.setattr(C, "AMBIENT_STALE_S", -1.0)
-    assert pool.pop_ambient() is None         # everything counts as stale
+    hit = pool.pop_ambient()                  # everything counts as stale
+    assert hit is not None                    # ... served anyway: an old
+    assert len(pool._ambient) == 0            # mood clip beats breathing,
+    assert pool.pop_ambient() is None         # and the queue is drained
 
 
 def test_nearest_by_cosine(pool):
@@ -54,13 +57,46 @@ def test_nearest_by_cosine(pool):
     assert np.array_equal(x, bank_x)
 
 
-def test_set_affect_biases_refills(pool):
+def test_set_mood_biases_refills(pool):
     pool.pop_ambient()
-    pool.set_affect(_onehot("joy"))
+    pool.set_mood(_onehot("joy"), 0.8)
     pool._refill_once()
     refill_req = pool.engine.calls[-1]
     assert refill_req.tag == "ambient"
-    assert refill_req.affect[C.EMOTIONS.index("joy")] > 0.3
+    assert refill_req.affect[C.EMOTIONS.index("joy")] > 0.5
+
+
+def test_set_mood_flushes_queue_on_a_real_turn(pool):
+    pool.set_mood(_onehot("interest"), 0.4)
+    assert pool._ambient and pool.flushes == 0    # opening mood, not a turn
+    pool.set_mood(_onehot("interest"), 0.42)      # drift: keep the queue
+    assert pool._ambient and pool.flushes == 0
+    pool.set_mood(_onehot("sorrow"), 0.9)         # turn: land it now
+    assert not pool._ambient and pool.flushes == 1
+
+
+def test_ambient_level_scales_guidance_and_damping(pool):
+    def ambient_call(level):
+        pool._ambient.clear()
+        pool.set_mood(_onehot("sorrow"), level)
+        pool._refill_once()
+        return pool.engine.calls[-1], pool._ambient[-1][0]
+
+    loud_req, loud_x = ambient_call(1.0)
+    quiet_req, quiet_x = ambient_call(0.0)
+    assert quiet_req.cfg < loud_req.cfg           # less guidance ...
+    def excursion(x):
+        return float(np.abs(x[:, :5] - x[:, :5].mean(axis=0)).mean())
+    assert excursion(quiet_x) < excursion(loud_x)  # ... and smaller gestures
+
+
+def test_empty_ambient_outranks_a_dirty_react_bank(pool):
+    """A burst of turns dirties bank entries; the scheduler must not be
+    left with nothing to play while eleven react clips regenerate."""
+    pool._ambient.clear()
+    pool._dirty.update(C.EMOTIONS)
+    kind, _, _ = pool._next_request()
+    assert kind == "ambient"
 
 
 def test_engine_failure_counts_and_bank_survives(pool):

@@ -30,6 +30,37 @@ def _project_lite(x):
     return y
 
 
+def damp_amplitude(x, s):
+    """Scale a clip's joint excursions about its own mean pose by `s`,
+    keeping the pose and shrinking the gesture.
+
+    This is the "same emotion, less exaggerated" knob the mood needs, and
+    it is not the same thing as lowering CFG: CFG_MIN=1.0 is the plain
+    conditional model, still a full-size gesture. Damping about the mean
+    is the right axis because posture is where the affect lives (the
+    retargeting's CROUCH23/TALL23/K_SLUMP features are all mean-pose
+    properties) -- so a damped sorrow clip stays slumped and just stops
+    waving.
+
+    Mechanically identical to motion_generator/dataset.py::amplitude_scale,
+    which trains this as a +/-10% augmentation; reimplemented here in
+    numpy because dataset.py imports torch and the Pi's control path must
+    not. Runtime uses a wider range than training saw, so the result is
+    re-projected: slowing motion down can only relax the rate cap, but
+    the light channel and the invariant contract still get checked.
+
+    Light and rgb are left alone -- dimming the lamp is a separate
+    expressive channel, and the light floor already lives in the
+    governor."""
+    s = float(np.clip(s, 0.0, 1.0))
+    y = np.array(x, np.float64, copy=True)
+    if len(y) == 0 or s == 1.0:
+        return y
+    mean = y[:, :5].mean(axis=0)
+    y[:, :5] = mean + s * (y[:, :5] - mean)
+    return _project_lite(y)
+
+
 def _resample(x, T2):
     src = np.linspace(0.0, len(x) - 1, T2)
     return np.stack([np.interp(src, np.arange(len(x)), x[:, c])

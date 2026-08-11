@@ -44,6 +44,19 @@ class Segment:
 
 
 @dataclass
+class Prosody:
+    """How an utterance should sound, on the two axes the affect
+    taxonomy is projected onto (dialogue/affect.py::valence_arousal).
+    Both in [-1, 1], 0 being the lamp's neutral voice."""
+    valence: float = 0.0     # pleasant <-> unpleasant: pitch, gap, volume
+    arousal: float = 0.0     # calm <-> activated: speaking rate
+
+    def as_dict(self):
+        return dict(valence=round(self.valence, 3),
+                    arousal=round(self.arousal, 3))
+
+
+@dataclass
 class MotionRequest:
     """What the motion prior needs for one clip. Produced by the affect
     director; `affect` is unit-L2 over the 11-label taxonomy."""
