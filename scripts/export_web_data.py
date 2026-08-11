@@ -159,6 +159,7 @@ def pack_session(out, sid=FEATURED):
         rec = {"k": e["kind"], "t": round(e["t"], 3),
                "f": int(f if f is not None else round(a * e["t"] + b))}
         for k in ("text", "tag", "source", "reason", "seconds", "seg",
+                  "affect", "intensity", "cfg", "prosody",
                   "violations", "trims", "overruns", "n_segments"):
             if k in e:
                 rec[k] = e[k]

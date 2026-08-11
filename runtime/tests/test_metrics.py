@@ -61,8 +61,8 @@ def test_subtitle_track():
         {"kind": "user_turn", "text": "", "frame": 200},   # empty: dropped
     ]
     subs = subtitle_track(events)
-    assert subs[0] == (10, 60, "you", "hello lamp")        # ends at reply
-    assert subs[1] == (60, 90, "lamp", "Hi!")
+    assert subs[0] == (10, 60, "you", "hello lamp", None)  # ends at reply
+    assert subs[1][:4] == (60, 90, "lamp", "Hi!")
     assert subs[2][1] == 90 + round(2.0 / C.DT)
     assert len(subs) == 3
 
@@ -75,10 +75,13 @@ def test_stage_latencies_and_sync():
         {"t": 2.0, "kind": "endpoint"},
         {"t": 2.2, "kind": "react_motion"},
         {"t": 3.4, "kind": "first_audio"},
-        {"t": 5.0, "kind": "audio_seg_start", "seg": 0},
-        {"t": 5.03, "kind": "motion_seg_start", "seg": 0},
-        {"t": 7.0, "kind": "audio_seg_start", "seg": 1},
-        {"t": 7.12, "kind": "motion_seg_start", "seg": 1},
+        # sync is measured against the plan, not against the audio events:
+        # play() enqueues, so an audio timestamp is when a segment joined
+        # the queue rather than when it was heard
+        {"t": 5.0, "kind": "segment_planned", "seg": 0, "start_frame": 150},
+        {"t": 5.03, "kind": "motion_seg_start", "seg": 0, "frame": 151},
+        {"t": 7.0, "kind": "segment_planned", "seg": 1, "start_frame": 210},
+        {"t": 7.12, "kind": "motion_seg_start", "seg": 1, "frame": 213},
     ]
     lat = stage_latencies(events, [("endpoint", "react_motion", "react"),
                                    ("endpoint", "first_audio", "audio")])
@@ -87,4 +90,15 @@ def test_stage_latencies_and_sync():
 
     sync = sync_errors(events)
     assert sync["n"] == 2
-    assert abs(sync["mean"] - 0.075) < 1e-9
+    assert abs(sync["mean"] - 2 * C.DT) < 1e-9      # 1 frame late, then 3
+
+
+def test_dead_motion_finds_the_longest_hole():
+    from runtime.eval.metrics import dead_motion
+    tags = (["ambient:joy"] * 10 + ["idle"] * 5 + ["speak:0"] * 10
+            + ["idle"] * 20 + ["hold"] * 5 + ["ambient:joy"] * 10)
+    d = dead_motion({"tag": np.array(tags)})
+    assert d["n_frames"] == 60
+    assert d["runs"] == 2                       # idle+hold at the end is one
+    assert abs(d["fraction"] - 30 / 60) < 1e-9
+    assert abs(d["longest_s"] - 25 * C.DT) < 1e-3

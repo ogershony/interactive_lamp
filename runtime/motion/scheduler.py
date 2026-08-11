@@ -177,6 +177,14 @@ class Scheduler:
             self.recorder.event("clip_start", tag=clip.tag,
                                 frame=self.frame, T=len(x),
                                 offset=round(offset, 4))
+            # the frame a speech segment's motion actually starts moving,
+            # compared by eval/metrics.sync_errors against the frame
+            # behavior._speak planned for it. Only the head clip of a
+            # chain counts; continuation clips are tagged "speak:i+".
+            if clip.tag.startswith("speak:") and not clip.tag.endswith("+"):
+                self.recorder.event("motion_seg_start",
+                                    seg=int(clip.tag.split(":")[1]),
+                                    frame=self.frame)
 
     def _maybe_activate(self):
         due = [c for c in self.queue if c.start_frame <= self.frame]

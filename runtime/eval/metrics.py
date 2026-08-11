@@ -108,14 +108,71 @@ def motion_sources(events, frames=None):
     return out
 
 
+# tags the scheduler falls back to when it has no clip to play. `idle` is
+# procedural breathing, `hold` is the last commanded frame repeated, `cold`
+# is the constant start pose -- all three read to a viewer as the lamp
+# having stopped performing.
+DEAD_TAGS = ("idle", "hold", "cold")
+
+
+def dead_motion(frames, dead_tags=DEAD_TAGS):
+    """How much of the session the lamp spent not performing -- the
+    numeric form of "movement gaps". `fraction` is the share of commanded
+    frames on a dead tag; `longest_s` is the longest continuous stretch,
+    which is what a viewer actually notices (thirty scattered frames are
+    invisible, one three-second hole is not)."""
+    tags = [str(t).split(":")[0] for t in frames["tag"]]
+    n = len(tags)
+    if n == 0:
+        return dict(n_frames=0, fraction=0.0, longest_s=0.0, runs=0)
+    dead = [t in dead_tags for t in tags]
+    longest = run = runs = 0
+    for d in dead:
+        if d:
+            run += 1
+            if run == 1:
+                runs += 1
+            longest = max(longest, run)
+        else:
+            run = 0
+    return dict(n_frames=n, fraction=round(sum(dead) / n, 4),
+                longest_s=round(longest * C.DT, 3), runs=runs)
+
+
+# ---- mood -----------------------------------------------------------------
+
+def mood_track(events):
+    """The conversation's affect memory over time, from the `mood` events
+    the behavior layer emits on every update: [(t, emotion, level)]. This
+    is how "did it stay sad?" gets answered without watching the video."""
+    return [(e["t"], e["emotion"], e["level"]) for e in events
+            if e["kind"] == "mood"]
+
+
 # ---- latency / sync -------------------------------------------------------
 
-def stage_latencies(events, stages):
+# The turn pipeline's stage boundaries, as (from_kind, to_kind, name) for
+# stage_latencies(). `reaction` is the plan's sub-200 ms promise; `answer`
+# is what the user experiences as "how long until it says something".
+TURN_STAGES = [
+    ("endpoint", "react_motion", "reaction"),
+    ("endpoint", "asr_final", "asr"),
+    # `llm_first` is when the first phrase became speakable, `llm_reply`
+    # when the model stopped writing. The gap between them is what
+    # streaming the reply buys back.
+    ("asr_final", "llm_first", "llm_first"),
+    ("asr_final", "llm_reply", "llm_full"),
+    ("endpoint", "segment_planned", "answer"),
+]
+
+
+def stage_latencies(events, stages=None):
     """Per-turn deltas between event kinds. `stages` is a list of
     (from_kind, to_kind, name); within each turn the first `to` after
-    each `from` is matched. Returns name -> dict(n, p50, p95) seconds."""
+    each `from` is matched. Defaults to TURN_STAGES. Returns
+    name -> dict(n, p50, p95) seconds."""
     out = {}
-    for src, dst, name in stages:
+    for src, dst, name in (TURN_STAGES if stages is None else stages):
         deltas = []
         t_src = None
         for e in events:
@@ -133,13 +190,24 @@ def stage_latencies(events, stages):
 
 
 def sync_errors(events):
-    """Per speech segment, |motion_start - audio_start| in seconds.
-    Events carry a shared `seg` id. Target p95 < 0.100."""
-    audio = {e["seg"]: e["t"] for e in events
-             if e["kind"] == "audio_seg_start"}
-    errs = [abs(e["t"] - audio[e["seg"]]) for e in events
-            if e["kind"] == "motion_seg_start" and e.get("seg") in audio]
+    """Per speech segment, how far the motion actually started from where
+    it was planned to, in seconds. Target p95 < 0.100.
+
+    Measured against the plan rather than against the audio events,
+    because the audio player is a queue: `play()` returns as soon as a
+    segment is enqueued, so an audio_seg_start timestamp is when the
+    segment joined the queue, not when it was heard. Motion and audio are
+    laid out from one cursor of measured TTS durations (behavior._speak),
+    so a clip that starts on its planned frame is aligned with its
+    speech by construction -- and a clip that starts late is exactly the
+    desync a viewer sees."""
+    planned = {e["seg"]: e["start_frame"] for e in events
+               if e["kind"] == "segment_planned" and "start_frame" in e}
+    errs = [abs(e["frame"] - planned[e["seg"]]) * C.DT for e in events
+            if e["kind"] == "motion_seg_start" and e.get("seg") in planned
+            and "frame" in e]
     if not errs:
         return dict(n=0)
     return dict(n=len(errs), mean=float(np.mean(errs)),
-                p95=float(np.percentile(errs, 95)))
+                p95=float(np.percentile(errs, 95)),
+                max=float(np.max(errs)))
