@@ -61,20 +61,36 @@ class MicRing:
 class AudioIO:
     """Duplex stream: mic -> ring (gated), playback queue -> speaker."""
 
-    def __init__(self, sr=None, block_ms=None):
+    def __init__(self, sr=None, block_ms=None, output_lag_ms=None):
         self.sr = sr or C.AUDIO_SR
-        self.block = int(self.sr * (block_ms or C.AUDIO_BLOCK_MS) / 1000)
+        self.block_ms = block_ms or C.AUDIO_BLOCK_MS
+        self.block = int(self.sr * self.block_ms / 1000)
         self.ring = MicRing(sr=self.sr, block_ms=block_ms)
         self._lock = threading.Lock()      # guards the playback queue only;
         # taken by play()/stop_playback() briefly, and by the callback via
         # acquire(blocking=False) -- the audio thread never waits on it
         self._play_queue = []              # list of int16 arrays
         self._play_pos = 0
+        self.output_lag_ms = C.OUTPUT_LAG_MS if output_lag_ms is None \
+            else output_lag_ms
         self._tail_blocks_left = 0
-        self._tail_blocks = int(round(C.HALF_DUPLEX_TAIL_MS
-                                      / (block_ms or C.AUDIO_BLOCK_MS)))
+        self._tail_blocks = 0
+        self._set_tail()
+        self.gate_opens = 0                # closed->open transitions, so the
+        #                                    behaviour layer can drop an
+        #                                    utterance that is really the tail
+        #                                    of the lamp's own speech
         self._zero = np.zeros(self.block, np.int16)
         self._stream = None
+
+    def _set_tail(self):
+        """The gate has to stay shut for the speaker's latency *and* the
+        room's reverb tail. The queue emptying only means PortAudio has
+        the samples -- with PulseAudio behind it, the lamp is still
+        audibly talking well after that, and an open mic then records the
+        end of its own sentence as the user's next turn."""
+        self._tail_blocks = int(round(
+            (self.output_lag_ms + C.HALF_DUPLEX_TAIL_MS) / self.block_ms))
 
     # ---- control (any thread) ---------------------------------------------
     def play(self, pcm):
@@ -84,13 +100,24 @@ class AudioIO:
             self._play_queue.append(pcm)
 
     def stop_playback(self):
-        """Drop all queued/playing audio (barge-in, interruption)."""
+        """Drop all queued audio (barge-in). The gate stays shut for the
+        tail: whatever is already inside PortAudio and PulseAudio is
+        still on its way to the speaker and would be heard as the user."""
         with self._lock:
             self._play_queue.clear()
             self._play_pos = 0
+            self._tail_blocks_left = self._tail_blocks
 
     @property
     def is_playing(self):
+        """Samples still queued for the device. Not the same as audible --
+        use `is_gated` for anything about the microphone."""
+        return bool(self._play_queue)
+
+    @property
+    def is_gated(self):
+        """Is the mic muted? True while playing and for the speaker
+        latency + reverb tail afterwards."""
         return bool(self._play_queue) or self._tail_blocks_left > 0
 
     # ---- the per-block body (audio thread; also driven by tests) ----------
@@ -118,9 +145,11 @@ class AudioIO:
                     self._tail_blocks_left = self._tail_blocks
                 elif self._tail_blocks_left > 0:
                     self._tail_blocks_left -= 1
+                    if self._tail_blocks_left == 0:
+                        self.gate_opens += 1
             finally:
                 self._lock.release()
-        muted = self.is_playing or not got
+        muted = self.is_gated or not got
         self.ring.write(self._zero if muted else
                         np.asarray(indata, np.int16))
         return out
@@ -137,6 +166,15 @@ class AudioIO:
             samplerate=self.sr, blocksize=self.block, channels=1,
             dtype="int16", callback=callback)
         self._stream.start()
+        # PortAudio's figure is a floor, not the truth: on a PulseAudio
+        # device it reports the ALSA-level latency and knows nothing about
+        # the sound server's own buffer, so trust the larger of the two and
+        # measure properly with scripts/calibrate_audio_loop.py.
+        reported = float(self._stream.latency[1]) * 1000.0
+        if reported > self.output_lag_ms:
+            self.output_lag_ms = reported
+            self._set_tail()
+        return self
 
     def stop(self):
         if self._stream is not None:

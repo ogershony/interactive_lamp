@@ -55,15 +55,37 @@ def test_half_duplex_gates_mic():
     io._process_block(mic)
     blocks = list(r.read_blocks())
     assert all((b == 0).all() for b in blocks)
-    assert io.is_playing                        # tail still active
+    assert io.is_gated                          # tail still active
+    assert not io.is_playing                    # ... though nothing is queued
 
-    # drain the 150 ms tail
+    # the tail covers the speaker's latency, not just the room's reverb:
+    # the queue emptying means PortAudio has the samples, not that the
+    # sound has left the speaker
+    assert io._tail_blocks == round(
+        (io.output_lag_ms + C.HALF_DUPLEX_TAIL_MS) / io.block_ms)
     for _ in range(io._tail_blocks):
         io._process_block(mic)
-    assert not io.is_playing
+    assert not io.is_gated
+    assert io.gate_opens == 1                   # the edge is observable
     r2 = io.ring.reader()
     io._process_block(mic)                      # gate open again
     assert all((b == 100).all() for b in r2.read_blocks())
+
+
+def test_barge_in_keeps_the_gate_shut_for_the_tail():
+    """stop_playback() drops the queue, but whatever is already inside
+    PortAudio is still on its way to the speaker and must not come back
+    as the user."""
+    io = AudioIO()
+    mic = _blocks(1)[0]
+    io.play(np.full(io.block * 10, 500, np.int16))
+    io._process_block(mic)
+    io.stop_playback()
+    assert not io.is_playing                    # queue dropped ...
+    assert io.is_gated                          # ... mic still muted
+    r = io.ring.reader()
+    io._process_block(mic)
+    assert all((b == 0).all() for b in r.read_blocks())
 
 
 def test_playback_emits_queued_audio():

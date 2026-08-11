@@ -8,6 +8,12 @@ dependencies = [
     "matplotlib>=3.10.9",
     "mujoco>=3.2",
     "numpy>=1.26",
+    # runtime/audio/vad.py's Silero VAD. Core, not `voice`: turn-taking has
+    # to work wherever the control loop runs, even when ASR lives off-board.
+    # The model itself is vendored (runtime/assets/silero_vad_16k.onnx)
+    # rather than taken from the `silero-vad` package, whose import chain
+    # pulls torchaudio -- ~90 MB and a CUDA link, for a 1.3 MB file.
+    "onnxruntime>=1.24.3",
     "pillow>=12.3.0",
     "scipy>=1.15.3",
     "sounddevice>=0.5.5",
@@ -48,7 +54,7 @@ voice = [
 ]
 # scripts/export_onnx.py only: converts the checkpoint for the browser demo
 # (docs/). Deliberately not a default group -- nothing at train or run time
-# needs it, and onnxruntime already arrives with `voice`.
+# needs it, and onnxruntime is already a core dependency.
 web = [
     "onnx>=1.17",
     "onnxscript>=0.1",

@@ -18,6 +18,12 @@ have ended a turn.
 
     uv run scripts/calibrate_vad.py
     uv run scripts/calibrate_vad.py --seconds 6
+    uv run scripts/calibrate_vad.py --compare      # ... vs the silero VAD
+
+The energy VAD is the fallback now (VAD_DEFAULT = "silero"), so the
+threshold below only matters on a box without onnxruntime, or when
+--compare says silero did worse here. --compare is the honest way to
+decide: it replays both detectors over the same two recordings.
 
 Then either put the recommendation in runtime/config.py
 (VAD_ENERGY_THRESHOLD) or pass it per-run:
@@ -62,23 +68,55 @@ def pct(a, p):
     return float(np.percentile(a, p)) if len(a) else float("nan")
 
 
-def simulate(pcm, block, threshold):
-    """Run the real VAD + Endpointer at `threshold`; return the counts."""
-    vad = EnergyVad(threshold=threshold)
+def _runs(pcm, block, vad):
+    """Number of separate voiced runs a VAD finds in one sample."""
+    dec = [bool(vad(pcm[i:i + block]))
+           for i in range(0, len(pcm) - block + 1, block)]
+    return sum(1 for i, d in enumerate(dec) if d and not (i and dec[i - 1]))
+
+
+def replay(pcm, block, vad):
+    """Run a VAD + the real Endpointer over a sample; return the counts."""
     ep = Endpointer()
     onsets = endpoints = 0
     speech_blocks = 0
     for i in range(0, len(pcm) - block + 1, block):
-        b = pcm[i:i + block]
-        is_speech = vad(b)
+        is_speech = vad(pcm[i:i + block])
         speech_blocks += bool(is_speech)
         ev = ep.update(is_speech)
         onsets += ev == ONSET
         endpoints += ev == ENDPOINT
     # a turn also ends when the stream stops: flush trailing silence
-    for _ in range(int(C.T_END_MS / C.AUDIO_BLOCK_MS) + 1):
+    for _ in range(int(C.T_END_SHORT_MS / C.AUDIO_BLOCK_MS) + 1):
         endpoints += ep.update(False) == ENDPOINT
     return onsets, endpoints, speech_blocks * C.AUDIO_BLOCK_MS
+
+
+def simulate(pcm, block, threshold):
+    """Energy VAD at `threshold`, replayed through the real endpointer."""
+    return replay(pcm, block, EnergyVad(threshold=threshold))
+
+
+def compare_silero(quiet, speech, block):
+    """Score the Silero VAD on the same two samples as the energy sweep.
+
+    Worth its own section because the interesting number is not the
+    threshold -- Silero's is box-independent, which is the point -- but
+    *fragmentation*: how many separate voiced runs one utterance breaks
+    into. Every extra run is a gap the endpointer might mistake for the
+    end of a turn."""
+    from runtime.audio.vad import SileroVad
+
+    out = {}
+    for label, pcm in (("speech", speech), ("silence", quiet)):
+        vad = SileroVad()
+        dec = [bool(vad(pcm[i:i + block]))
+               for i in range(0, len(pcm) - block + 1, block)]
+        runs = sum(1 for i, d in enumerate(dec) if d and not (i and dec[i - 1]))
+        vad.reset()
+        o, e, ms = replay(pcm, block, vad)
+        out[label] = dict(onsets=o, endpoints=e, speech_ms=ms, runs=runs)
+    return out
 
 
 def main():
@@ -90,6 +128,8 @@ def main():
                    help="where to keep the raw samples ('' to skip)")
     p.add_argument("--analyze", default=None,
                    help="re-analyze a saved .npz instead of recording")
+    p.add_argument("--compare", action="store_true",
+                   help="also score the silero VAD on the same samples")
     args = p.parse_args()
 
     if args.analyze:
@@ -152,6 +192,32 @@ def main():
         rows.append((t, o, e, ms, false_ms))
         mark = "   (current)" if t == C.VAD_ENERGY_THRESHOLD else ""
         print(f"{t:10.5f} {o:7d} {e:10d} {ms:10.0f} {false_ms:9.0f}{mark}")
+
+    if args.compare:
+        print("\n---- silero VAD on the same samples ----")
+        try:
+            sil = compare_silero(quiet, speech, block)
+        except Exception as e:      # noqa: BLE001 -- missing model or ORT
+            print(f"unavailable: {type(e).__name__}: {e}")
+        else:
+            eng_runs = _runs(speech, block, EnergyVad(
+                threshold=C.VAD_ENERGY_THRESHOLD))
+            print(f"{'':10s} {'onsets':>7s} {'endpoints':>10s} "
+                  f"{'speech ms':>10s} {'runs':>6s}")
+            for label in ("speech", "silence"):
+                r = sil[label]
+                print(f"{label:10s} {r['onsets']:7d} {r['endpoints']:10d} "
+                      f"{r['speech_ms']:10.0f} {r['runs']:6d}")
+            print(f"\nvoiced runs in one utterance: silero "
+                  f"{sil['speech']['runs']}, energy {eng_runs} "
+                  f"(fewer is better -- each gap is a chance to cut you off)")
+            if sil["silence"]["endpoints"] == 0 \
+                    and sil["speech"]["endpoints"] >= 1 \
+                    and sil["speech"]["runs"] <= max(1, eng_runs):
+                print("silero wins on this box; keep VAD_DEFAULT = 'silero'")
+            else:
+                print("silero did not clearly beat the energy VAD here; "
+                      "run with --vad energy and the threshold below")
 
     # good = ends a turn, clears MIN_SPEECH_MS, and barely triggers on room
     # tone; among those prefer the largest (most noise margin)

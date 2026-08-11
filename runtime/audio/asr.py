@@ -40,17 +40,24 @@ class ScriptedAsr:
 
 
 class WhisperAsr:
-    """Local faster-whisper, int8, small.en. ~1.5-2.0 s per short utterance
-    on the demo box (16 threads), the upper end while the motion engine is
-    generating -- viable fallback, noticeably slower than cloud.
+    """Local faster-whisper, int8, C.ASR_MODEL (base.en).
+
+    small.en measured 2.0-2.35 s per utterance across a live session --
+    two thirds of the endpoint-to-speech budget, and long enough that the
+    user routinely started their next sentence inside it. base.en is
+    roughly 3x faster for a modest accuracy cost, which is the right
+    trade for a desk lamp: being answered promptly matters more than
+    catching every word, and the dialogue layer already tolerates a
+    scrappy transcript.
 
     Loading costs ~3.0 s, which is why warm() exists: left to happen on the
     first call it lands *inside* TIMEOUT_ASR, so the first turn of every
     session times out with an empty transcript and the lamp answers "Sorry,
     I missed that." Call warm() during startup instead."""
 
-    def __init__(self, model_size="small.en"):
-        self.model_size = model_size
+    def __init__(self, model_size=None):
+        import runtime.config as C
+        self.model_size = model_size or C.ASR_MODEL
         self._model = None
 
     def _load(self):
